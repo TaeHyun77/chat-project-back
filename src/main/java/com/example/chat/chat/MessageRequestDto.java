@@ -6,4 +6,6 @@ import lombok.Getter;
 public class MessageRequestDto {
 
     private String content;
+
+    private String sessionId;
 }
