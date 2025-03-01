@@ -13,8 +13,7 @@ public class WebCorsConfig implements WebMvcConfigurer {
                 .allowedOrigins("http://localhost:3000")
                 .allowedMethods("*")
                 .allowedHeaders("*")
-                .exposedHeaders("location")
-                .exposedHeaders("Authorization")
+                .exposedHeaders("Authorization", "location")
                 .allowCredentials(true);
     }
 }

@@ -70,5 +70,4 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         response.sendRedirect("http://localhost:3000/");
     }
-
 }
