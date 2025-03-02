@@ -8,12 +8,14 @@ import lombok.Setter;
 @Getter
 public class MessageResponseDto {
     private String content;
-    private String sessionId;
+    private String username;
+    private String timestamp;
 
     @Builder
-    public MessageResponseDto(String content, String sessionId) {
+    public MessageResponseDto(String content, String username, String timestamp) {
         this.content = content;
-        this.sessionId = sessionId;
+        this.username = username;
+        this.timestamp = timestamp;
     }
 }
 

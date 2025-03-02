@@ -7,5 +7,7 @@ public class MessageRequestDto {
 
     private String content;
 
-    private String sessionId;
+    private String accessToken;
+
+    private String timestamp;
 }

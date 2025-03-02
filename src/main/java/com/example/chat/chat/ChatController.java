@@ -15,9 +15,8 @@ public class ChatController {
     // client "/app/chat" 경로로 보내면 여기서 받음
     @MessageMapping("/chat")
     @SendTo("/topic/chat")
-    public MessageResponseDto sendMessage(MessageRequestDto requestDto, SimpMessageHeaderAccessor accessor) {
-        System.out.println(accessor.getSessionId());
+    public MessageResponseDto sendMessage(MessageRequestDto requestDto) {
 
-        return chatService.pushMessage(requestDto, accessor.getSessionId());
+        return chatService.pushMessage(requestDto);
     }
 }
