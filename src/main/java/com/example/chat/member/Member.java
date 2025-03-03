@@ -1,7 +1,6 @@
 package com.example.chat.member;
 
 import com.example.chat.chat.chatRoom.ChatRoom;
-import com.example.chat.chat.chatRoom.ChatRoomRequestDto;
 import com.example.chat.config.BaseTime;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -9,6 +8,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,6 +21,7 @@ public class Member extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "memberId")
     private Long id;
 
     private String username;
@@ -30,10 +33,9 @@ public class Member extends BaseTime {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "roomId")
-    @JsonIgnore
-    private ChatRoom chatRoom;
+    // 해당 member가 만든 채팅 방 리스트
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChatRoom> chatRooms = new ArrayList<>();
 
     @Builder
     public Member(String username, String name, String email, Role role) {

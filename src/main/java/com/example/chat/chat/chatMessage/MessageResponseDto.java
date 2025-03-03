@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class MessageResponseDto {
+    private MessageType messageType;
     private String content;
     private String username;
     private String name;
@@ -15,7 +16,8 @@ public class MessageResponseDto {
     private String roomId;
 
     @Builder
-    public MessageResponseDto(String content, String username, String name, String email, String timestamp, String roomId) {
+    public MessageResponseDto(MessageType messageType, String content, String username, String name, String email, String timestamp, String roomId) {
+        this.messageType = messageType;
         this.content = content;
         this.username = username;
         this.name = name;
