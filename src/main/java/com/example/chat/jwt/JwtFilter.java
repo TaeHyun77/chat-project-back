@@ -60,7 +60,13 @@ public class JwtFilter extends OncePerRequestFilter {
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ACCESSTOKEN_IS_EXPIRED);
         }
 
-        String username = jwtUtil.getUsername(authorization);
+        String username = null;
+        try {
+            username = jwtUtil.getUsername(authorization);
+        } catch (ChatException e) {
+            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ACCESSTOKEN_IS_EXPIRED);
+        }
+
         String role = jwtUtil.getRole(authorization);
 
         Member member = Member.builder()

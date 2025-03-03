@@ -1,5 +1,7 @@
 package com.example.chat.member;
 
+import com.example.chat.exception.ChatException;
+import com.example.chat.exception.ErrorCode;
 import com.example.chat.jwt.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,10 +29,16 @@ public class MemberService {
         try {
 
             if (jwtUtil.isExpired(token)) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("UNAUTHORIZED");
+                throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ACCESSTOKEN_IS_EXPIRED);
             }
 
-            String username = jwtUtil.getUsername(token);
+            String username = null;
+            try {
+                username = jwtUtil.getUsername(token);
+            } catch (ChatException e) {
+                throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ACCESSTOKEN_IS_EXPIRED);
+            }
+
             String role = jwtUtil.getRole(token);
 
             Optional<Member> member = memberRepository.findByUsername(username);
