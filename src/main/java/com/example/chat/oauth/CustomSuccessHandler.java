@@ -2,24 +2,23 @@ package com.example.chat.oauth;
 
 import com.example.chat.config.CookieUtil;
 import com.example.chat.jwt.JwtUtil;
-import com.example.chat.refresh_retoken.RefreshToken;
-import com.example.chat.refresh_retoken.RefreshTokenRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -27,7 +26,7 @@ import java.util.Iterator;
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtUtil jwtUtil;
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final StringRedisTemplate redisTemplate;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -39,18 +38,18 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
+
         String role = auth.getAuthority();
 
         String access_token = jwtUtil.createJwt("access", username, role, 1800000L); // 30분
         String refresh_token = jwtUtil.createJwt("refresh", username, role, 259200000L); // 3일
 
-        RefreshToken refresh = RefreshToken.builder()
-                .username(username)
-                .refresh(refresh_token)
-                .expiration((new Date(System.currentTimeMillis() + 60*60*10000L)).toString())
-                .build();
-
-        refreshTokenRepository.save(refresh);
+        redisTemplate.opsForValue().set(
+                "refresh_token:" + username,
+                refresh_token,
+                259200000L,
+                TimeUnit.MILLISECONDS
+        );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 

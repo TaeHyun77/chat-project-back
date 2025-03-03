@@ -2,6 +2,7 @@ package com.example.chat.config;
 
 import com.example.chat.jwt.JwtFilter;
 import com.example.chat.jwt.JwtUtil;
+import com.example.chat.member.MemberRepository;
 import com.example.chat.oauth.CustomOAuth2UserService;
 import com.example.chat.oauth.CustomSuccessHandler;
 import lombok.RequiredArgsConstructor;

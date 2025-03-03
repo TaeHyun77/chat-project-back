@@ -33,10 +33,16 @@ public class ChatService {
         token = token.substring(7);
 
         if (jwtUtil.isExpired(token)) {
-            throw new IllegalArgumentException("Token expired");
+            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ACCESSTOKEN_IS_EXPIRED);
         }
 
-        String username = jwtUtil.getUsername(token);
+
+        String username = null;
+        try {
+            username = jwtUtil.getUsername(token);
+        } catch (ChatException e) {
+            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ACCESSTOKEN_IS_EXPIRED);
+        }
 
         Optional<Member> member = memberRepository.findByUsername(username);
 

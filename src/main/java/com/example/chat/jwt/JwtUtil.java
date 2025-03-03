@@ -1,6 +1,8 @@
 package com.example.chat.jwt;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -9,6 +11,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+@Slf4j
 @Component
 public class JwtUtil {
 
@@ -21,8 +24,20 @@ public class JwtUtil {
     }
 
     public String getUsername(String token) {
-
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("username", String.class);
+        try {
+            return Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .get("username", String.class);
+        } catch (ExpiredJwtException e) {
+            log.warn("JWT가 만료됨: " + e.getMessage());
+            return null;  // 만료된 경우 null 반환
+        } catch (Exception e) {
+            log.error("JWT 검증 중 오류 발생: " + e.getMessage());
+            return null;  // 예외 발생 시 null 반환
+        }
     }
 
     public String getRole(String token) {
@@ -35,8 +50,21 @@ public class JwtUtil {
     }
 
     public Boolean isExpired(String token) {
-
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+        try {
+            return Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .getExpiration()
+                    .before(new Date());
+        } catch (ExpiredJwtException e) {
+            log.warn("JWT가 만료됨: " + e.getMessage());
+            return true;
+        } catch (Exception e) {
+            log.error("JWT 검증 중 오류 발생: " + e.getMessage());
+            return true;
+        }
     }
 
     public Date getExpiration(String token) {
