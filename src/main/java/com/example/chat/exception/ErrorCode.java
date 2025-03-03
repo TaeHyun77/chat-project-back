@@ -19,7 +19,9 @@ public enum ErrorCode {
 
     IS_NOT_REFRESHTOKEN("IS_NOT_REFRESHTOKEN", "refresh 토큰이 아닙니다."),
 
-    OPTIMISTICLOCKING("OPTIMISTICLOCKING", "낙관적 락 발생");
+    INVALID_MESSAGE_TYPE("INVALID_MESSAGE_TYPE", "지원하지 않는 메세지 타입입니다."),
+
+    NOT_FOUND_CHATROOM("NOT_FOUND_CHATROOM", "채팅방을 찾을 수 없습니다.");
 
     private final String errorCode;
 

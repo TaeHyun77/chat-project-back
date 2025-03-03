@@ -1,7 +1,9 @@
 package com.example.chat.chat.chatRoom;
 
+import com.example.chat.chat.chatMessage.Chat;
 import com.example.chat.config.BaseTime;
 import com.example.chat.member.Member;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,15 +31,18 @@ public class ChatRoom extends BaseTime {
 
     private String chatRoomName;
 
-    @OneToMany(mappedBy = "chatRoom")
-    private List<Member> chatRoomMembers = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "memberId")
+    @JsonIgnore
+    private Member member;
 
-    public void selectChatRoomMembers(Member member) {
-        chatRoomMembers.add(member);
-        member.setChatRoom(this);
-    }
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Chat> chats = new ArrayList<>();
+
+
 
     @Builder
+
     public ChatRoom(String chatRoomId, String chatRoomName) {
         this.chatRoomId = UUID.randomUUID().toString();
         this.chatRoomName = chatRoomName;

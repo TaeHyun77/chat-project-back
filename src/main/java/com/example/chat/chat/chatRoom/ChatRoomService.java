@@ -27,7 +27,7 @@ public class ChatRoomService {
                 .chatRoomName(dto.getChatRoomName())
                 .build();
 
-        chatRoom.selectChatRoomMembers(member);
+        chatRoom.setMember(member);
 
         chatRoomRepository.save(chatRoom);
     }

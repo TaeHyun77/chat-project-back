@@ -23,10 +23,4 @@ public class ChatRoomController {
         return chatRoomService.selectAllChatRoom();
     }
 
-    // 특정 채팅방 조회
-//    @GetMapping("/chat/room/{roomId}")
-//    public ChatRoom getRoom(@PathVariable String roomId) {
-//        return chatRoomRepository.findRoomById(roomId);
-//    }
-
 }
