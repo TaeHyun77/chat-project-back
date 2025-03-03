@@ -1,9 +1,7 @@
-package com.example.chat.chat;
+package com.example.chat.chat.chatMessage;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 @Setter
 @Getter

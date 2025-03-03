@@ -1,4 +1,4 @@
-package com.example.chat.chat;
+package com.example.chat.chat.chatMessage;
 
 import com.example.chat.exception.ChatException;
 import com.example.chat.exception.ErrorCode;

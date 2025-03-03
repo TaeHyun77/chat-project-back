@@ -1,4 +1,4 @@
-package com.example.chat.chat;
+package com.example.chat.chat.chatMessage;
 
 public enum MessageType {
     ENTER,
