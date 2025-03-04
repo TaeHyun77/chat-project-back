@@ -5,9 +5,9 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class MessageRequestDto {
+public class ChatRequestDto {
 
-    private MessageType messageType;
+    private ChatType chatType;
 
     private String content;
 

@@ -1,6 +1,6 @@
 package com.example.chat.chat.chatMessage;
 
-public enum MessageType {
+public enum ChatType {
     ENTER,
     TALK,
     EXIT,

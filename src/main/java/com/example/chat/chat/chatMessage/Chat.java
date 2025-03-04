@@ -27,9 +27,16 @@ public class Chat extends BaseTime {
     @JsonIgnore
     private ChatRoom chatRoom;
 
+    @Enumerated(EnumType.STRING)
+    private ChatType chatType;
+
+    private String username;
+
     @Builder
-    public Chat(String content, ChatRoom chatRoom) {
+    public Chat(String content, ChatRoom chatRoom, ChatType chatType, String username) {
         this.content = content;
         this.chatRoom = chatRoom;
+        this.chatType = chatType;
+        this.username = username;
     }
 }

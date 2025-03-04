@@ -1,8 +1,5 @@
 package com.example.chat.chat.chatMessage;
 
-import com.example.chat.chat.chatMessage.ChatService;
-import com.example.chat.chat.chatMessage.MessageRequestDto;
-import com.example.chat.chat.chatRoom.ChatRoom;
 import com.example.chat.chat.chatRoom.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -15,11 +12,22 @@ public class ChatController {
 
     private final ChatService chatService;
 
+    private final ChatRepository chatRepository;
+
     private final ChatRoomRepository chatRoomRepository;
 
     @MessageMapping("/chat/message")
-    public void sendMessage(MessageRequestDto requestDto) {
+    public void sendMessage(ChatRequestDto requestDto) {
 
         chatService.pushMessage(requestDto);
+
+    }
+
+    // 특정 채팅방의 채팅 내역 조회
+    @GetMapping("/chat/room/{roomId}/messages")
+    public List<Chat> getChatHistory(@PathVariable("roomId") String roomId) {
+
+        return chatRepository.findByChatRoomId(roomId);
+
     }
 }
