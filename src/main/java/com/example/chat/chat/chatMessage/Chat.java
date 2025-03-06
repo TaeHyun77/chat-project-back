@@ -32,11 +32,14 @@ public class Chat extends BaseTime {
 
     private String username;
 
+    private String name;
+
     @Builder
-    public Chat(String content, ChatRoom chatRoom, ChatType chatType, String username) {
+    public Chat(String content, ChatRoom chatRoom, ChatType chatType, String username, String name) {
         this.content = content;
         this.chatRoom = chatRoom;
         this.chatType = chatType;
         this.username = username;
+        this.name = name;
     }
 }

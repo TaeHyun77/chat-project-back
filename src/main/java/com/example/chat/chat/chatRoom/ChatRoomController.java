@@ -1,7 +1,10 @@
 package com.example.chat.chat.chatRoom;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.messaging.SubProtocolWebSocketHandler;
 
 import java.util.List;
 
@@ -22,5 +25,6 @@ public class ChatRoomController {
     public List<ChatRoom> getAllRooms() {
         return chatRoomService.selectAllChatRoom();
     }
+
 
 }
