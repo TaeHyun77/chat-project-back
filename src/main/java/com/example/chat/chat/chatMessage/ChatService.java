@@ -22,6 +22,7 @@ public class ChatService {
     private final MemberRepository memberRepository;
     private final ChatRepository chatRepository;
     private final ChatRoomRepository chatRoomRepository;
+
     private final SimpMessageSendingOperations messagingTemplate;
 
     public void pushMessage(ChatRequestDto requestDto) {
@@ -55,18 +56,38 @@ public class ChatService {
 
     // 메시지 타입에 따른 처리 로직 분리
     private void handleMessageByType(ChatRequestDto requestDto, Member member) {
-        if (requestDto.getChatType() == ChatType.ENTER) {
-            handleEnterMessage(requestDto, member);
-        } else if (requestDto.getChatType() == ChatType.TALK) {
+        if (requestDto.getChatType() == ChatType.TALK) {
             handleTalkMessage(requestDto, member);
+        } else if (requestDto.getChatType() == ChatType.ENTER || requestDto.getChatType() == ChatType.EXIT) {
+            handleEnterAndExitMessage(requestDto, member);
         } else {
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.INVALID_MESSAGE_TYPE);
         }
     }
 
-    // 입장 메시지 처리
-    private void handleEnterMessage(ChatRequestDto requestDto, Member member) {
-        requestDto.setContent(member.getName() + "님이 입장하였습니다.");
+    // 입장, 퇴장 메시지 처리
+    private void handleEnterAndExitMessage(ChatRequestDto requestDto, Member member) {
+
+        if (requestDto.getChatType() == ChatType.ENTER) {
+            requestDto.setContent(member.getName() + "님이 입장하였습니다.");
+        } else if (requestDto.getChatType() == ChatType.EXIT) {
+            requestDto.setContent(member.getName() + "님이 퇴장하였습니다.");
+        }
+
+        ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(requestDto.getRoomId());
+
+        if (chatRoom == null) {
+            throw new ChatException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_CHATROOM);
+        }
+
+        Chat chat = Chat.builder()
+                .content(requestDto.getContent())
+                .chatRoom(chatRoom)
+                .chatType(requestDto.getChatType())
+                .build();
+
+        chatRepository.save(chat);
+
         messagingTemplate.convertAndSend("/topic/chat/" + requestDto.getRoomId(), requestDto);
     }
 
@@ -79,25 +100,32 @@ public class ChatService {
             throw new ChatException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_CHATROOM);
         }
 
+        // 채팅 저장
         Chat chat = Chat.builder()
                 .content(requestDto.getContent())
                 .chatRoom(chatRoom)
                 .chatType(requestDto.getChatType())
                 .username(member.getUsername())
+                .name(member.getName())
                 .build();
 
         chatRepository.save(chat);
 
+        // 클라이언트에서 발송된 메세지 전송
         ChatResponseDto sendMessage = ChatResponseDto.builder()
                 .chatType(requestDto.getChatType())
                 .content(requestDto.getContent())
                 .username(member.getUsername())
                 .name(member.getName())
                 .email(member.getEmail())
-                .timestamp(requestDto.getTimestamp())
+                .createdAt(requestDto.getCreatedAt())
                 .roomId(requestDto.getRoomId())
                 .build();
 
         messagingTemplate.convertAndSend("/topic/chat/" + requestDto.getRoomId(), sendMessage);
+    }
+
+    public void sendUserCount(int count) {
+        messagingTemplate.convertAndSend("/topic/chat/number", count);
     }
 }

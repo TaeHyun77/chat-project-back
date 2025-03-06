@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Setter
 @Getter
 public class ChatResponseDto {
@@ -12,17 +14,17 @@ public class ChatResponseDto {
     private String username;
     private String name;
     private String email;
-    private String timestamp;
+    private LocalDateTime createdAt;
     private String roomId;
 
     @Builder
-    public ChatResponseDto(ChatType chatType, String content, String username, String name, String email, String timestamp, String roomId) {
+    public ChatResponseDto(ChatType chatType, String content, String username, String name, String email, LocalDateTime createdAt, String roomId) {
         this.chatType = chatType;
         this.content = content;
         this.username = username;
         this.name = name;
         this.email = email;
-        this.timestamp = timestamp;
+        this.createdAt = createdAt;
         this.roomId = roomId;
     }
 }
