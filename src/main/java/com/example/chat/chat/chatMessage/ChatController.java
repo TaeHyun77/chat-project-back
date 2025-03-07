@@ -14,8 +14,6 @@ public class ChatController {
 
     private final ChatRepository chatRepository;
 
-    private final ChatRoomRepository chatRoomRepository;
-
     @MessageMapping("/chat/message")
     public void sendMessage(ChatRequestDto requestDto) {
 
