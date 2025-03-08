@@ -76,16 +76,9 @@ public class ChatService {
 
         if (requestDto.getChatType() == ChatType.ENTER) {
             requestDto.setContent(member.getName() + "님이 입장하였습니다.");
-
-            chatRoom.setUserCount(chatRoom.getUserCount() + 1);
-
         } else if (requestDto.getChatType() == ChatType.EXIT) {
             requestDto.setContent(member.getName() + "님이 퇴장하였습니다.");
-
-            chatRoom.setUserCount(chatRoom.getUserCount() - 1);
         }
-
-        chatRoomRepository.save(chatRoom);
 
         Chat chat = Chat.builder()
                 .content(requestDto.getContent())
