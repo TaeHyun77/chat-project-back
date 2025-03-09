@@ -15,11 +15,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,18 +32,18 @@ public class AirService {
     @Value("${data.api.key}") // 공공 데이터 API 키
     private String API_KEY;
     private final RestTemplate restTemplate = new RestTemplate();
-
     private final DepartureRepository departureRepository;
     private final PlaneRepository planeRepository;
-
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-
+    @Transactional
     public void getArrivalsData() {
 
         List<String> selectdates = new ArrayList<>();
-        selectdates.add("0");
-        selectdates.add("1");
+        selectdates.add("0"); // 오늘
+        selectdates.add("1"); // 내일
+
+        departureRepository.deleteAll();
 
         String endPoint = "http://apis.data.go.kr/B551177/PassengerNoticeKR/getfPassengerNoticeIKR";
 
@@ -57,6 +59,7 @@ public class AirService {
                 URI uri = new URI(url);
 
                 ResponseEntity<String> response = restTemplate.getForEntity(uri, String.class);
+
                 saveArrivalData(response.getBody(), selectdate);
             }
 
@@ -67,16 +70,33 @@ public class AirService {
         }
     }
 
+    /*
+    바꿀 수 있는 값 : estimatedDatetime, flightId, gateNumber, ** remark, terminalId
+    */
+    @Transactional
     public void getPlane() {
 
         List<String> searchDates = new ArrayList<>();
 
-        LocalDate today = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        LocalDateTime today = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
 
-        searchDates.add(today.format(formatter));  // 오늘
-        searchDates.add(today.plusDays(1).format(formatter));  // 내일
-        searchDates.add(today.plusDays(2).format(formatter));  // 내일 모레
+        String yesterday = today.minusDays(1).format(formatter);  // 어제
+        String now = today.format(formatter);  // 오늘
+
+        // 어제 데이터 있으면 삭제
+        if (planeRepository.existsByScheduleDatetime(yesterday)) {
+            planeRepository.deleteByScheduleDatetime(yesterday);
+        }
+
+        // 내일(D+1)과 내일모레(D+2)는 항상 추가
+        searchDates.add(today.plusDays(1).format(formatter));  // 내일 (D+1)
+        searchDates.add(today.plusDays(2).format(formatter));  // 내일모레 (D+2)
+
+        // 오늘(D+0) 데이터가 없으면 추가
+        if (!planeRepository.existsByScheduleDatetime(now)) {
+            searchDates.add(0, now);
+        }
 
         String endPoint = "http://apis.data.go.kr/B551177/statusOfAllFltDeOdp/getFltDeparturesDeOdp";
 
