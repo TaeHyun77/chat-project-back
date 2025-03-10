@@ -4,9 +4,6 @@ import com.example.chat.config.CookieUtil;
 import com.example.chat.exception.ChatException;
 import com.example.chat.exception.ErrorCode;
 import com.example.chat.jwt.JwtUtil;
-import com.example.chat.member.Member;
-import com.example.chat.member.MemberRepository;
-import jakarta.persistence.OptimisticLockException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,11 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -27,7 +21,6 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class ReissueService {
 
-    private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
     private final StringRedisTemplate redisTemplate;
 

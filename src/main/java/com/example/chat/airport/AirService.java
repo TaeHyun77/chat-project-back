@@ -11,7 +11,10 @@ import com.example.chat.exception.ErrorCode;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,7 +28,12 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class AirService {
@@ -35,15 +43,17 @@ public class AirService {
     private final DepartureRepository departureRepository;
     private final PlaneRepository planeRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final RedisTemplate<String, Object> redisTemplate;
+
 
     @Transactional
     public void getArrivalsData() {
 
+        departureRepository.deleteAll();
+
         List<String> selectdates = new ArrayList<>();
         selectdates.add("0"); // 오늘
         selectdates.add("1"); // 내일
-
-        departureRepository.deleteAll();
 
         String endPoint = "http://apis.data.go.kr/B551177/PassengerNoticeKR/getfPassengerNoticeIKR";
 
@@ -66,7 +76,7 @@ public class AirService {
         } catch (ChatException e) {
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_SAVE_ARRIVAL_DATA);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("출국장 데이터 저장 예외 발생: {}", e.getMessage(), e);
         }
     }
 
@@ -76,27 +86,15 @@ public class AirService {
     @Transactional
     public void getPlane() {
 
-        List<String> searchDates = new ArrayList<>();
+        planeRepository.deleteAll();
 
         LocalDateTime today = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 
-        String yesterday = today.minusDays(1).format(formatter);  // 어제
-        String now = today.format(formatter);  // 오늘
-
-        // 어제 데이터 있으면 삭제
-        if (planeRepository.existsByScheduleDatetime(yesterday)) {
-            planeRepository.deleteByScheduleDatetime(yesterday);
-        }
-
-        // 내일(D+1)과 내일모레(D+2)는 항상 추가
+        List<String> searchDates = new ArrayList<>();
+        searchDates.add(today.format(formatter)); // 오늘 (D+0)
         searchDates.add(today.plusDays(1).format(formatter));  // 내일 (D+1)
         searchDates.add(today.plusDays(2).format(formatter));  // 내일모레 (D+2)
-
-        // 오늘(D+0) 데이터가 없으면 추가
-        if (!planeRepository.existsByScheduleDatetime(now)) {
-            searchDates.add(0, now);
-        }
 
         String endPoint = "http://apis.data.go.kr/B551177/statusOfAllFltDeOdp/getFltDeparturesDeOdp";
 
@@ -111,13 +109,13 @@ public class AirService {
                 URI uri = new URI(url);
 
                 ResponseEntity<String> response = restTemplate.getForEntity(uri, String.class);
-                savePlaneData(response.getBody());
+                savePlaneData(response.getBody(), today);
             }
 
         } catch (ChatException e) {
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_SAVE_PLANE_DATA);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("항공편 데이터 저장 예외 발생: {}", e.getMessage(), e);
         }
     }
 
@@ -155,36 +153,50 @@ public class AirService {
         } catch (ChatException e) {
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_SAVE_ARRIVAL_DATA);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("출국장 데이터 저장 예외 발생: {}", e.getMessage(), e);
         }
     }
 
-    private void savePlaneData(String jsonData) {
+    private void savePlaneData(String jsonData, LocalDateTime nowDateTime) {
         try {
             JsonNode root = objectMapper.readTree(jsonData);
             JsonNode items = root.path("response").path("body").path("items");
 
             List<Plane> planes = new ArrayList<>();
 
+            ValueOperations<String, Object> valueOps = redisTemplate.opsForValue();
+
             for (JsonNode item : items) {
 
-                if (item.path("codeshare").asText().equals("Master")) {
-                    PlaneDto dto = PlaneDto.builder()
-                            .flightId(item.path("flightId").asText())
-                            .airLine(item.path("airline").asText())
-                            .airport(item.path("airport").asText())
-                            .airportCode(item.path("airportCode").asText())
-                            .scheduleDatetime(item.path("scheduleDatetime").asText())
-                            .estimatedDatetime(item.path("estimatedDatetime").asText())
-                            .gateNumber(item.path("gateNumber").asText())
-                            .terminalId(item.path("terminalId").asText())
-                            .remark(item.path("remark").asText())
-                            .aircraftRegNo(item.path("aircraftRegNo").asText())
-                            .codeShare(item.path("codeshare").asText())
-                            .build();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
 
-                    planes.add(dto.toPlane());
+                String codeshare = item.path("codeshare").asText(); // 본 항공편만 조회
+                String scheduleDatetime = item.path("scheduleDatetime").asText(); // 항공편 예정 시간
+                String remark = item.path("remark").asText(); // 출발 여부
+
+                // 현재보다 출발 예정 시각이 이전이면서 "출발" 상태인 것은 x , Master가 아니면 x
+                if ((scheduleDatetime.compareTo(nowDateTime.format(formatter)) < 0 && remark.equals("출발")) || (!codeshare.equals("Master"))) {
+                    continue;
                 }
+
+                PlaneDto dto = PlaneDto.builder()
+                        .flightId(item.path("flightId").asText())
+                        .airLine(item.path("airline").asText())
+                        .airport(item.path("airport").asText())
+                        .airportCode(item.path("airportCode").asText())
+                        .scheduleDatetime(item.path("scheduleDatetime").asText())
+                        .estimatedDatetime(item.path("estimatedDatetime").asText())
+                        .gateNumber(item.path("gateNumber").asText())
+                        .terminalId(item.path("terminalId").asText())
+                        .remark(item.path("remark").asText())
+                        .aircraftRegNo(item.path("aircraftRegNo").asText())
+                        .codeShare(item.path("codeshare").asText())
+                        .build();
+
+                planes.add(dto.toPlane());
+
+                String redisKey = "plane:" + dto.getFlightId() + ":" + dto.getScheduleDatetime();
+                valueOps.set(redisKey, dto, 1, TimeUnit.HOURS); // TTL 1시간 설정
             }
 
             // 저장
@@ -192,7 +204,47 @@ public class AirService {
         } catch (ChatException e) {
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_SAVE_PLANE_DATA);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("항공편 데이터 저장 예외 발생: {}", e.getMessage(), e);
         }
+    }
+
+    public List<Departure> getDepartures() {
+        return departureRepository.findAll();
+    }
+
+    public List<Plane> getPlanes() {
+        return planeRepository.findAll();
+    }
+
+    public List<PlaneDto> getAllPlanesFromRedis() {
+        Set<String> keys = redisTemplate.keys("plane:*"); // 모든 항공편 키 조회
+        if (keys.isEmpty()) {
+            return new ArrayList<>(); // 레디스에 데이터가 없으면 빈 리스트 반환
+        }
+
+        List<Object> planes = redisTemplate.opsForValue().multiGet(keys); // 여러 값 가져오기
+        return planes.stream()
+                .filter(Objects::nonNull)
+                .map(obj -> (PlaneDto) obj) // 객체 변환
+                .collect(Collectors.toList());
+    }
+
+    public List<PlaneDto> getAllPlanes() {
+        List<PlaneDto> planes = getAllPlanesFromRedis(); // 먼저 Redis에서 조회
+
+        if (planes.isEmpty()) { // 레디스에 데이터가 없으면 DB에서 조회
+            planes = planeRepository.findAll().stream()
+                    .map(PlaneDto::fromEntity) // Plane -> PlaneDto 변환
+                    .collect(Collectors.toList());
+
+            // 가져온 데이터를 Redis에 캐싱
+            ValueOperations<String, Object> valueOps = redisTemplate.opsForValue();
+            for (PlaneDto plane : planes) {
+                String redisKey = "plane:" + plane.getFlightId();
+                valueOps.set(redisKey, plane, 1, TimeUnit.HOURS);
+            }
+        }
+
+        return planes;
     }
 }
