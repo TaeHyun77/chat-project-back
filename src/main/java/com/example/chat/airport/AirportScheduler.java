@@ -30,6 +30,7 @@ public class AirportScheduler {
         }
     }
 
+    /*
     @Scheduled(fixedDelay = 300000)
     public void runPlaneData() {
         try {
@@ -40,4 +41,6 @@ public class AirportScheduler {
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_SAVE_PLANE_DATA);
         }
     }
+    */
+
 }
