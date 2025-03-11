@@ -6,8 +6,4 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface PlaneRepository extends JpaRepository<Plane, Long> {
 
-    boolean existsByScheduleDatetime(String scheduleDatetime);
-
-    void deleteByScheduleDatetime(String scheduleDatetime);
-
 }

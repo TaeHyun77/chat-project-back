@@ -39,12 +39,9 @@ public class ChatRoom extends BaseTime {
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Chat> chats = new ArrayList<>();
 
-    private Long userCount;
-
     @Builder
-    public ChatRoom(String chatRoomId, String chatRoomName, Long userCount) {
+    public ChatRoom(String chatRoomId, String chatRoomName) {
         this.chatRoomId = UUID.randomUUID().toString();
         this.chatRoomName = chatRoomName;
-        this.userCount = userCount;
     }
 }
