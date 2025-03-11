@@ -6,7 +6,4 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface DepartureRepository  extends JpaRepository<Departure, Long> {
 
-    boolean existsByDate(String date);
-
-    void deleteByDate(String date);
 }

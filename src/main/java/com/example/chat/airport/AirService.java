@@ -216,34 +216,33 @@ public class AirService {
         return planeRepository.findAll();
     }
 
-    public List<PlaneDto> getAllPlanesFromRedis() {
-        Set<String> keys = redisTemplate.keys("plane:*"); // 모든 항공편 키 조회
-        if (keys.isEmpty()) {
-            return new ArrayList<>(); // 레디스에 데이터가 없으면 빈 리스트 반환
-        }
-
-        List<Object> planes = redisTemplate.opsForValue().multiGet(keys); // 여러 값 가져오기
-        return planes.stream()
-                .filter(Objects::nonNull)
-                .map(obj -> (PlaneDto) obj) // 객체 변환
-                .collect(Collectors.toList());
-    }
-
+    // 레디스 조회 후 없으면 DB에서 조회
     public List<PlaneDto> getAllPlanes() {
-        List<PlaneDto> planes = getAllPlanesFromRedis(); // 먼저 Redis에서 조회
 
-        if (planes.isEmpty()) { // 레디스에 데이터가 없으면 DB에서 조회
-            planes = planeRepository.findAll().stream()
-                    .map(PlaneDto::fromEntity) // Plane -> PlaneDto 변환
+        // 우선 redis에서 항공편 데이터 조회
+        Set<String> keys = redisTemplate.keys("plane:*");
+
+        if (!keys.isEmpty()) {
+            List<Object> redisPlanes = redisTemplate.opsForValue().multiGet(keys);
+
+            List<PlaneDto> planesFromRedis = redisPlanes.stream()
+                    .filter(Objects::nonNull)
+                    .map(obj -> (PlaneDto) obj)
                     .collect(Collectors.toList());
 
-            // 가져온 데이터를 Redis에 캐싱
-            ValueOperations<String, Object> valueOps = redisTemplate.opsForValue();
-            for (PlaneDto plane : planes) {
-                String redisKey = "plane:" + plane.getFlightId();
-                valueOps.set(redisKey, plane, 1, TimeUnit.HOURS);
+            if (!planesFromRedis.isEmpty()) {
+                return planesFromRedis;
             }
         }
+
+        // Redis에 데이터가 없으면 DB에서 조회
+        List<PlaneDto> planes = planeRepository.findAll().stream()
+                .map(PlaneDto::fromEntity)
+                .collect(Collectors.toList());
+
+        // 조회한 데이터를 Redis에 캐싱
+        ValueOperations<String, Object> valueOps = redisTemplate.opsForValue();
+        planes.forEach(plane -> valueOps.set("plane:" + plane.getFlightId() + ":" + plane.getScheduleDatetime(), plane, 1, TimeUnit.HOURS));
 
         return planes;
     }

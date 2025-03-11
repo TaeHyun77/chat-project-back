@@ -16,7 +16,7 @@ public class PlaneDto {
     // 인천 공항 오기 전 출발한 곳
     private String airport;
 
-    // airPort의 코드
+    // airport의 코드
     private String airportCode;
 
     // 출발 시각

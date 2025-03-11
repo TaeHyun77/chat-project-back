@@ -25,7 +25,6 @@ public class ChatRoomService {
 
         ChatRoom chatRoom = ChatRoom.builder()
                 .chatRoomName(dto.getChatRoomName())
-                .userCount(0L)
                 .build();
 
         chatRoom.setMember(member);

@@ -33,10 +33,10 @@ public class JwtUtil {
                     .get("username", String.class);
         } catch (ExpiredJwtException e) {
             log.warn("JWT가 만료됨: " + e.getMessage());
-            return null;  // 만료된 경우 null 반환
+            return null;
         } catch (Exception e) {
             log.error("JWT 검증 중 오류 발생: " + e.getMessage());
-            return null;  // 예외 발생 시 null 반환
+            return null;
         }
     }
 
