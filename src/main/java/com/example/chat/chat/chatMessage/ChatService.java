@@ -89,7 +89,7 @@ public class ChatService {
         chatRepository.save(chat);
 
         messagingTemplate.convertAndSend("/topic/chat/" + requestDto.getRoomId(), requestDto);
-        messagingTemplate.convertAndSend("/topic/chat/number/" + requestDto.getRoomId(), chatRoom.getUserCount());
+        messagingTemplate.convertAndSend("/topic/chat/number/" + requestDto.getRoomId());
     }
 
     // 일반 채팅 메시지 처리

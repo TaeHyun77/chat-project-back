@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  chat-back:
+    image: ayeah77/chat01
+    container_name: chat-back-container
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env  # .env 파일 자동 로드
