@@ -68,20 +68,4 @@ public class PlaneDto {
                 .codeShare(codeShare)
                 .build();
     }
-
-    public static PlaneDto fromEntity(Plane plane) {
-        return PlaneDto.builder()
-                .flightId(plane.getFlightId())
-                .airLine(plane.getAirLine())
-                .airport(plane.getAirport())
-                .airportCode(plane.getAirportCode())
-                .scheduleDatetime(plane.getScheduleDatetime())
-                .estimatedDatetime(plane.getEstimatedDatetime())
-                .gateNumber(plane.getGateNumber())
-                .terminalId(plane.getTerminalId())
-                .remark(plane.getRemark())
-                .aircraftRegNo(plane.getAircraftRegNo())
-                .codeShare(plane.getCodeShare())
-                .build();
-    }
 }

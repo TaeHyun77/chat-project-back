@@ -51,15 +51,4 @@ public class Departure extends BaseTime {
         this.t2Depart2 = t2Depart2;
         this.t2DepartSum = t2DepartSum;
     }
-
-    public void updateDepartureData(Long t1Depart12, Long t1Depart3, Long t1Depart4, Long t1Depart56, Long t1DepartSum, Long t2Depart1, Long t2Depart2, Long t2DepartSum) {
-        this.t1Depart12 = t1Depart12;
-        this.t1Depart3 = t1Depart3;
-        this.t1Depart4 = t1Depart4;
-        this.t1Depart56 = t1Depart56;
-        this.t1DepartSum = t1DepartSum;
-        this.t2Depart1 = t2Depart1;
-        this.t2Depart2 = t2Depart2;
-        this.t2DepartSum = t2DepartSum;
-    }
 }

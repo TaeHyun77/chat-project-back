@@ -8,8 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import javax.script.ScriptEngine;
-
 @RequiredArgsConstructor
 @Slf4j
 @Component
