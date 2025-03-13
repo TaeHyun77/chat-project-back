@@ -1,10 +1,7 @@
 package com.example.chat.airport.entity;
 
 import com.example.chat.config.BaseTime;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,6 +44,9 @@ public class Plane extends BaseTime {
 
     private String codeShare;
 
+    @Version
+    private Long version;
+
     @Builder
     public Plane(String flightId, String airLine, String airport, String airportCode, String scheduleDatetime, String estimatedDatetime, String gateNumber, String terminalId, String remark, String aircraftRegNo, String codeShare) {
         this.flightId = flightId;
@@ -60,5 +60,12 @@ public class Plane extends BaseTime {
         this.remark = remark;
         this.aircraftRegNo = aircraftRegNo;
         this.codeShare = codeShare;
+    }
+
+    public void updatePlane(String remark, String estimatedDatetime, String gateNumber, String terminalId) {
+        this.remark = remark;
+        this.estimatedDatetime = estimatedDatetime;
+        this.gateNumber = gateNumber;
+        this.terminalId = terminalId;
     }
 }

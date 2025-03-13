@@ -2,8 +2,19 @@ package com.example.chat.airport.repo;
 
 import com.example.chat.airport.entity.Plane;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.Optional;
 
 public interface PlaneRepository extends JpaRepository<Plane, Long> {
+
+    @Modifying
+    @Query("DELETE FROM Plane d WHERE d.scheduleDatetime LIKE :today%")
+    void deleteByScheduleDateStartsWith(@Param("today") String today);
+
+    Plane findByFlightIdAndScheduleDatetime(String flightId, String scheduleDatetime);
+
 
 }

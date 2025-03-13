@@ -1,6 +1,5 @@
-package com.example.chat.chat.chatMessage;
+package com.example.chat.chat.chat;
 
-import com.example.chat.chat.chatRoom.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package com.example.chat.chat.chatMessage;
+package com.example.chat.chat.chat;
 
 import com.example.chat.chat.chatRoom.ChatRoom;
 import com.example.chat.chat.chatRoom.ChatRoomRepository;
@@ -89,7 +89,6 @@ public class ChatService {
         chatRepository.save(chat);
 
         messagingTemplate.convertAndSend("/topic/chat/" + requestDto.getRoomId(), requestDto);
-        messagingTemplate.convertAndSend("/topic/chat/number/" + requestDto.getRoomId());
     }
 
     // 일반 채팅 메시지 처리
@@ -124,9 +123,5 @@ public class ChatService {
                 .build();
 
         messagingTemplate.convertAndSend("/topic/chat/" + requestDto.getRoomId(), sendMessage);
-    }
-
-    public void sendUserCount(int count) {
-        messagingTemplate.convertAndSend("/topic/chat/number", count);
     }
 }

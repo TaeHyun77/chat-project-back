@@ -1,4 +1,4 @@
-package com.example.chat.chat.chatMessage;
+package com.example.chat.chat.chat;
 
 import lombok.Builder;
 import lombok.Getter;
