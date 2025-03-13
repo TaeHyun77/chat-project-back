@@ -1,6 +1,6 @@
 package com.example.chat.chat.chatRoom;
 
-import com.example.chat.chat.chatMessage.Chat;
+import com.example.chat.chat.chat.Chat;
 import com.example.chat.config.BaseTime;
 import com.example.chat.member.Member;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -26,6 +26,7 @@ public class ChatRoom extends BaseTime {
     @Column(name = "roomId")
     private Long id;
 
+
     @Column(unique = true, nullable = false)
     private String chatRoomId;
 
@@ -45,3 +46,5 @@ public class ChatRoom extends BaseTime {
         this.chatRoomName = chatRoomName;
     }
 }
+
+

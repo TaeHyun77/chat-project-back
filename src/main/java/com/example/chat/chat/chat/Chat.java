@@ -1,4 +1,4 @@
-package com.example.chat.chat.chatMessage;
+package com.example.chat.chat.chat;
 
 import com.example.chat.chat.chatRoom.ChatRoom;
 import com.example.chat.config.BaseTime;

@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.script.ScriptEngine;
+
 @RequiredArgsConstructor
 @Slf4j
 @Component
@@ -27,6 +29,16 @@ public class AirportScheduler {
         } catch (ChatException e) {
             log.info("출국장 데이터 불러오기 실패");
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_SAVE_ARRIVAL_DATA);
+        }
+    }
+
+    @Scheduled(cron = "0 0 0 * * *")
+    public void DelAndIst() {
+        try {
+            airService.PlaneDelAndIst();
+            log.info("항공편 데이터 업데이트 완료");
+        } catch (ChatException e) {
+            log.info("항공편 데이터 업데이트 실패");
         }
     }
 

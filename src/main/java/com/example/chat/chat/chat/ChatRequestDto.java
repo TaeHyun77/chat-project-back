@@ -1,7 +1,5 @@
-package com.example.chat.chat.chatMessage;
+package com.example.chat.chat.chat;
 
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.Getter;
 import lombok.Setter;
 

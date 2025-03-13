@@ -45,6 +45,12 @@ dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis' // redis
 
+	// Redis의 LocalDateTime 직렬화를 위한 의존성
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+
+
 }
 
 tasks.named('test') {
