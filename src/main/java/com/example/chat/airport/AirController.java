@@ -4,6 +4,7 @@ import com.example.chat.airport.entity.Departure;
 import com.example.chat.airport.entity.Plane;
 import com.example.chat.airport.repo.PlaneRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,5 +37,10 @@ public class AirController {
     @GetMapping("/get/planes")
     public List<Plane> getRedisPlanes() {
         return airService.getAllPlanes();
+    }
+
+    @DeleteMapping("/delete/yesterday/planes")
+    public void deleteYes() {
+        airService.PlaneDelAndIst();
     }
 }

@@ -44,9 +44,6 @@ public class Plane extends BaseTime {
 
     private String codeShare;
 
-    @Version
-    private Long version;
-
     @Builder
     public Plane(String flightId, String airLine, String airport, String airportCode, String scheduleDatetime, String estimatedDatetime, String gateNumber, String terminalId, String remark, String aircraftRegNo, String codeShare) {
         this.flightId = flightId;

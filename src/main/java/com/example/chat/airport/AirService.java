@@ -177,9 +177,11 @@ public class AirService {
 
             ValueOperations<String, Object> valueOps = redisTemplate.opsForValue();
 
-            for (JsonNode item : items) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
 
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
+            int updateDataCnt = 0;
+
+            for (JsonNode item : items) {
 
                 String flightId = item.path("flightId").asText();
                 String codeshare = item.path("codeshare").asText(); // 본 항공편만 조회
@@ -190,34 +192,24 @@ public class AirService {
                 String gateNumber = item.path("gateNumber").asText(); // 항공편 탑승 gate 번호
                 String terminalId = item.path("terminalId").asText();
 
-                String redisKey = "plane:" + flightId + ":" + scheduleDatetime;
-
-                Plane redisPlane = (Plane) redisTemplate.opsForValue().get(redisKey);
-                Plane existingPlane = null;
-
-                if (redisPlane != null) {
-                    existingPlane = redisPlane;
-                } else {
-                    existingPlane = planeRepository.findByFlightIdAndScheduleDatetime(flightId, scheduleDatetime);
-                }
-
-                // 현재보다 출발 예정 시각이 이전이면서 "출발" 상태인 것은 x , Master가 아니면 x
-                if ((scheduleDatetime.compareTo(nowDateTime.format(formatter)) < 0 && remark.equals("출발")) || (!codeshare.equals("Master"))) {
+                // 현재 보다 출발 예정 시각이 이전 이면서 "출발" 상태인 것은 x + Master가 아니면 x, 이미 출발한 항공편은 그냥 넘김
+                if (!codeshare.equals("Master")) {
                     continue;
                 }
 
-                if (existingPlane != null) {
+                String redisKey = "plane:" + flightId + ":" + scheduleDatetime;
+                Plane redisPlane = (Plane) redisTemplate.opsForValue().get(redisKey);
+                Plane existingPlane = null;
 
-                    // 데이터가 존재 하면 변경 사항 확인 후 업데이트
-                    if (planeChangeCheck(existingPlane, remark, estimatedDatetime, gateNumber, terminalId)) {
+                // Redis에 해당 데이터가 없다면
+                if (redisPlane == null) {
+                    existingPlane = planeRepository.findByFlightIdAndScheduleDatetime(flightId, scheduleDatetime);
+                } else { // Redis에 있다면
+                    existingPlane = redisPlane;
+                }
 
-                        existingPlane.updatePlane(remark, estimatedDatetime, gateNumber, terminalId);
-
-                        valueOps.set(redisKey, existingPlane, 1, TimeUnit.HOURS);
-
-                        planeRepository.save(existingPlane);
-                    }
-                } else { // 데이터가 존재 하지 x
+                // 데이터가 존재 하지 x, 새로운 데이터이므로 DB와 Redis에 저장
+                if (existingPlane == null) {
 
                     PlaneDto dto = PlaneDto.builder()
                             .flightId(item.path("flightId").asText())
@@ -233,11 +225,27 @@ public class AirService {
                             .codeShare(item.path("codeshare").asText())
                             .build();
 
-                    valueOps.set(redisKey, dto.toPlane(), 1, TimeUnit.HOURS);
+                    Plane savedPlane = planeRepository.save(dto.toPlane());
 
-                    planeRepository.save(dto.toPlane());
+                    valueOps.set(redisKey, savedPlane, 1, TimeUnit.HOURS);
+
+                } else { // 데이터가 존재 하면 변경 사항 확인 후 업데이트
+
+                    if (planeChangeCheck(existingPlane, remark, estimatedDatetime, gateNumber, terminalId)) {
+
+                        existingPlane.updatePlane(remark, estimatedDatetime, gateNumber, terminalId);
+
+                        updateDataCnt++;
+
+                        planeRepository.save(existingPlane);
+
+                        valueOps.set(redisKey, existingPlane, 1, TimeUnit.HOURS);
+
+                    }
                 }
             }
+
+            log.info("업데이트 된 항공편 개수 : " + updateDataCnt);
         } catch (ChatException e) {
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_SAVE_PLANE_DATA);
         } catch (Exception e) {
@@ -289,7 +297,7 @@ public class AirService {
     public void PlaneDelAndIst() {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        String yesterday = LocalDateTime.now().format(formatter);
+        String yesterday = LocalDateTime.now().minusDays(1).format(formatter);
 
         try {
             planeRepository.deleteByScheduleDateStartsWith(yesterday);
