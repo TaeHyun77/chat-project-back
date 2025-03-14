@@ -14,5 +14,4 @@ public interface PlaneRepository extends JpaRepository<Plane, Long> {
 
     Plane findByFlightIdAndScheduleDatetime(String flightId, String scheduleDatetime);
 
-
 }
