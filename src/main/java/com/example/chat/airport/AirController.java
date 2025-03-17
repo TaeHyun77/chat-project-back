@@ -38,9 +38,4 @@ public class AirController {
     public List<Plane> getRedisPlanes() {
         return airService.getAllPlanes();
     }
-
-    @DeleteMapping("/delete/yesterday/planes")
-    public void deleteYes() {
-        airService.PlaneDelAndIst();
-    }
 }

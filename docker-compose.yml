@@ -8,3 +8,36 @@ services:
       - "8080:8080"
     env_file:
       - .env  # .env 파일 자동 로드
+    deploy:
+      resources:
+        limits:
+          cpus: "0.4"  # 최대 CPU 50% 사용
+          memory: "400M"  # 최대 400MB RAM 사용
+
+  frontend: # 해당 이름으로 컨테이너 이름이 자동 생성됨
+    command: [ "npm", "start" ]  # docker-compose up 할 때 npm start로 실행
+    container_name: chat-front-container
+    image: ayeah77/front01
+    ports:
+      - "3000:3000"
+    depends_on:
+      - chat-back
+    deploy:
+      resources:
+        limits:
+          cpus: "0.4"
+          memory: "400M"
+    environment:
+      - CI=true
+
+  redis:
+    image: redis
+    container_name: redis-container
+    ports:
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel warning
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "400M"
