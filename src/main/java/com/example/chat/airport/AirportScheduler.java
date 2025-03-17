@@ -19,7 +19,7 @@ public class AirportScheduler {
     두 데이터 모두 실시간으로 변경될 수 있기에 짧은 주기로 스케줄링을 진행해야 함 ( 5분? )
     */
 
-    @Scheduled(fixedDelay = 300000) // 5분마다 진행
+    @Scheduled(fixedDelay = 600000) // 10분마다 진행
     public void runDepartureData() {
         try {
             airService.getArrivalsData();
@@ -50,5 +50,4 @@ public class AirportScheduler {
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_SAVE_PLANE_DATA);
         }
     }
-
 }

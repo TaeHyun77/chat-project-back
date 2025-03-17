@@ -20,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
-
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -58,6 +57,7 @@ public class AirService {
 
         try {
 
+
             for (String selectdate : selectdates) {
 
                 String url = endPoint + "?"
@@ -70,6 +70,7 @@ public class AirService {
                 URI uri = new URI(url);
 
                 ResponseEntity<String> response = restTemplate.getForEntity(uri, String.class);
+
 
                 saveArrivalData(response.getBody(), selectdate);
             }
@@ -142,7 +143,10 @@ public class AirService {
 
         String endPoint = "http://apis.data.go.kr/B551177/statusOfAllFltDeOdp/getFltDeparturesDeOdp";
 
+        long openApiLoadingTime = 0L;
+
         try {
+
             for (String searchDate : searchDates) {
                 String url = endPoint + "?"
                         + "serviceKey=" + API_KEY
@@ -152,9 +156,16 @@ public class AirService {
 
                 URI uri = new URI(url);
 
+                long startTime = System.currentTimeMillis();
                 ResponseEntity<String> response = restTemplate.getForEntity(uri, String.class);
-                updateOrSavePlaneData(response.getBody(), today);
+                long executionTime = System.currentTimeMillis() - startTime;
+
+                openApiLoadingTime += executionTime;
+
+                updateOrSavePlaneData(response.getBody());
             }
+
+            log.info("Api 로딩 시간 : " + openApiLoadingTime + "ms");
 
         } catch (ChatException e) {
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_SAVE_PLANE_DATA);
@@ -164,7 +175,7 @@ public class AirService {
     }
 
     @Transactional
-    private void updateOrSavePlaneData(String jsonData, LocalDateTime nowDateTime) {
+    private void updateOrSavePlaneData(String jsonData) {
         try {
 
             // jsonData가 "<"로 시작 한다는 에러가 발생하여 에러 처리
@@ -177,9 +188,8 @@ public class AirService {
 
             ValueOperations<String, Object> valueOps = redisTemplate.opsForValue();
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
-
             int updateDataCnt = 0;
+            long redisFetchTime = 0;
 
             for (JsonNode item : items) {
 
@@ -198,7 +208,11 @@ public class AirService {
                 }
 
                 String redisKey = "plane:" + flightId + ":" + scheduleDatetime;
+
+                long redisStartTime = System.currentTimeMillis();
                 Plane redisPlane = (Plane) redisTemplate.opsForValue().get(redisKey);
+                redisFetchTime += (System.currentTimeMillis() - redisStartTime);
+
                 Plane existingPlane = null;
 
                 // Redis에 해당 데이터가 없다면
@@ -246,6 +260,8 @@ public class AirService {
             }
 
             log.info("업데이트 된 항공편 개수 : " + updateDataCnt);
+            log.info("Redis에서 데이터 가져오는 총 시간: " + redisFetchTime + "ms");
+
         } catch (ChatException e) {
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_SAVE_PLANE_DATA);
         } catch (Exception e) {
@@ -279,6 +295,7 @@ public class AirService {
                     .collect(Collectors.toList());
 
             if (!planesFromRedis.isEmpty()) {
+                log.info("Redis에서 Plane 데이터 조회");
                 return planesFromRedis;
             }
         }
@@ -290,6 +307,7 @@ public class AirService {
         ValueOperations<String, Object> valueOps = redisTemplate.opsForValue();
         planes.forEach(plane -> valueOps.set("plane:" + plane.getFlightId() + ":" + plane.getScheduleDatetime(), plane, 1, TimeUnit.HOURS));
 
+        log.info("DB에서 Plane 데이터 조회");
         return planes;
     }
 
