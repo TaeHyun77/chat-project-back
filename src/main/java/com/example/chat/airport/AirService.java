@@ -283,22 +283,22 @@ public class AirService {
     // 항공편 데이터 조회 , 레디스 조회 후 없으면 DB에서 조회
     public List<Plane> getAllPlanes() {
 
-        // 우선 redis에서 항공편 데이터 조회
-        Set<String> keys = redisTemplate.keys("plane:*");
-
-        if (!keys.isEmpty()) {
-            List<Object> redisPlanes = redisTemplate.opsForValue().multiGet(keys);
-
-            List<Plane> planesFromRedis = redisPlanes.stream()
-                    .filter(Objects::nonNull)
-                    .map(obj -> (Plane) obj)
-                    .collect(Collectors.toList());
-
-            if (!planesFromRedis.isEmpty()) {
-                log.info("Redis에서 Plane 데이터 조회");
-                return planesFromRedis;
-            }
-        }
+//        // 우선 redis에서 항공편 데이터 조회
+//        Set<String> keys = redisTemplate.keys("plane:*");
+//
+//        if (!keys.isEmpty()) {
+//            List<Object> redisPlanes = redisTemplate.opsForValue().multiGet(keys);
+//
+//            List<Plane> planesFromRedis = redisPlanes.stream()
+//                    .filter(Objects::nonNull)
+//                    .map(obj -> (Plane) obj)
+//                    .collect(Collectors.toList());
+//
+//            if (!planesFromRedis.isEmpty()) {
+//                log.info("Redis에서 Plane 데이터 조회");
+//                return planesFromRedis;
+//            }
+//        }
 
         // Redis에 데이터가 없으면 DB에서 조회
         List<Plane> planes = planeRepository.findAll();
