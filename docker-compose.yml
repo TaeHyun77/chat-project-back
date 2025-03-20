@@ -2,8 +2,10 @@ version: "3"
 
 services:
   chat-back:
-    image: ayeah77/chat01
+    image: ayeah77/nginxback01
     container_name: chat-back-container
+    networks:
+      - park_network
     ports:
       - "8080:8080"
     env_file:
@@ -14,11 +16,13 @@ services:
           cpus: "0.4"  # 최대 CPU 50% 사용
           memory: "400M"  # 최대 400MB RAM 사용
 
-  frontend: # 해당 이름으로 컨테이너 이름이 자동 생성됨
+  frontend:
+    image: ayeah77/nginxfront
     container_name: chat-front-container
-    image: ayeah77/front01
+    networks:
+      - park_network
     ports:
-      - "3000:80"
+      - "3000:3000"
     depends_on:
       - chat-back
     deploy:
@@ -32,11 +36,7 @@ services:
   redis:
     image: redis
     container_name: redis-container
+    networks:
+      - park_network
     ports:
       - "6379:6379"
-    command: redis-server --save 20 1 --loglevel warning
-    deploy:
-      resources:
-        limits:
-          cpus: "0.5"
-          memory: "400M"
