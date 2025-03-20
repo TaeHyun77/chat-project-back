@@ -68,6 +68,6 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         log.info("Access 토큰 만료 시간: " + expirationTime);
         log.info("refresh 토큰 만료 시간: " + reExpirationTime);
 
-        response.sendRedirect("http://3.39.130.212:3000/");
+        response.sendRedirect("http://localhost:3000/");
     }
 }
