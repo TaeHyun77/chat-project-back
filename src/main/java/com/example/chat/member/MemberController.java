@@ -8,12 +8,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
+@RequestMapping("/api")
 @RestController
 public class MemberController {
 
@@ -36,7 +38,7 @@ public class MemberController {
     @GetMapping("/googleLogin")
     public ResponseEntity<?> googleLogin(HttpServletResponse response) {
         log.info("Login request success");
-        String redirectUrl = "http://localhost:8080/oauth2/authorization/google";
+        String redirectUrl = "https://incheon-airport-info.site/oauth2/authorization/google"; // AWS 도메인 적용
 
         return ResponseEntity.ok().body(Map.of("url", redirectUrl));
     }

@@ -52,7 +52,7 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/**", "/ws/**", "/oauth2/**", "/topic/**").permitAll()
+                        .requestMatchers("/", "/**", "/ws/**", "/oauth2/**", "/topic/**", "/api/**").permitAll()
                         .anyRequest().authenticated())
 
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -64,6 +64,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of("https://incheon-airport-info.site/"));
 
         configuration.setAllowedMethods(List.of("*"));
         configuration.setAllowedHeaders(List.of("*"));

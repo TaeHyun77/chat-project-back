@@ -3,10 +3,7 @@ package com.example.chat.chat.chatRoom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,13 +16,13 @@ public class ChatRoomController {
     private final SessionEventListener sessionEventListener;
 
     // 채팅방 생성
-    @PostMapping("/chat/room")
+    @PostMapping("/api/chat/room")
     public void createRoom(@RequestBody ChatRoomRequestDto dto) {
         chatRoomService.createChatRoom(dto);
     }
 
     // 채팅방 목록 조회
-    @GetMapping("/chat/rooms")
+    @GetMapping("/api/chat/rooms")
     public List<ChatRoom> getAllRooms() {
         return chatRoomService.selectAllChatRoom();
     }

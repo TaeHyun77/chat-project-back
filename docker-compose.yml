@@ -22,7 +22,7 @@ services:
     networks:
       - park_network
     ports:
-      - "3000:3000"
+      - "3000:80"
     depends_on:
       - chat-back
     deploy:
