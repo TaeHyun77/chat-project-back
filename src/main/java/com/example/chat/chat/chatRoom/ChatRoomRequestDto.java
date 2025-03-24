@@ -8,15 +8,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ChatRoomRequestDto {
 
-    private String chatRoomId;
-
     private String chatRoomName;
 
     private String creator;
 
     @Builder
-    public ChatRoomRequestDto(String chatRoomId, String chatRoomName, String creator) {
-        this.chatRoomId = chatRoomId;
+    public ChatRoomRequestDto(String chatRoomName, String creator) {
         this.chatRoomName = chatRoomName;
         this.creator = creator;
     }

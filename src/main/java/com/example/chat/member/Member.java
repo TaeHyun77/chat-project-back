@@ -29,6 +29,8 @@ public class Member extends BaseTime {
 
     private String email;
 
+    private String nickName;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -37,10 +39,11 @@ public class Member extends BaseTime {
     private List<ChatRoom> chatRooms = new ArrayList<>();
 
     @Builder
-    public Member(String username, String name, String email, Role role) {
+    public Member(String username, String name, String email, String nickName, Role role) {
         this.username = username;
         this.name = name;
         this.email = email;
+        this.nickName = nickName;
         this.role = role;
     }
 

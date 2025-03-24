@@ -43,6 +43,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                             .username(username)
                             .name(finalOAuth2Response.getName())
                             .email(finalOAuth2Response.getEmail())
+                            .nickName("익명의 사용자")
                             .role(Role.MEMBER)
                             .build();
                     return memberRepository.save(newMember);

@@ -32,6 +32,8 @@ public class ChatRoom extends BaseTime {
 
     private String chatRoomName;
 
+    private String creator;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId")
     @JsonIgnore
@@ -41,9 +43,10 @@ public class ChatRoom extends BaseTime {
     private List<Chat> chats = new ArrayList<>();
 
     @Builder
-    public ChatRoom(String chatRoomId, String chatRoomName) {
+    public ChatRoom(String chatRoomName, String creator) {
         this.chatRoomId = UUID.randomUUID().toString();
         this.chatRoomName = chatRoomName;
+        this.creator = creator;
     }
 }
 
