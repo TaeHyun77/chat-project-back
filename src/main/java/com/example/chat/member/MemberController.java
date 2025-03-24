@@ -6,10 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -35,10 +32,38 @@ public class MemberController {
         return memberService.Info(token);
     }
 
+    @GetMapping("/roomCreatorInfo/{roomCreator}")
+    public String roomCreatorInfo(@PathVariable("roomCreator") String roomCreator) {
+
+        return memberService.roomCreatorInfo(roomCreator);
+
+    }
+
+    // 닉네임 중복 여부 파악
+    @GetMapping("/isNickName/{editNickName}")
+    public boolean isNickName(@PathVariable("editNickName") String editNickName) {
+
+        log.info("editNickName : " + editNickName);
+
+        return memberService.isNickName(editNickName);
+
+    }
+
+    // 닉네임 수정
+    @PostMapping("/edit/{id}/{editNickName}")
+    public ResponseEntity<?> editUsername(@PathVariable("id") Long id, @PathVariable("editNickName") String editNickName) {
+
+        log.info("id : " + id + " , " + "editNickName : " + editNickName);
+        return memberService.editNickName(id, editNickName);
+
+    }
+
     @GetMapping("/googleLogin")
     public ResponseEntity<?> googleLogin(HttpServletResponse response) {
         log.info("Login request success");
-        String redirectUrl = "https://incheon-airport-info.site/oauth2/authorization/google"; // AWS 도메인 적용
+        String redirectUrl = "http://localhost:8080/oauth2/authorization/google"; // 로컬용
+
+//        String redirectUrl = "https://incheon-airport-info.site/oauth2/authorization/google"; // AWS 도메인 적용
 
         return ResponseEntity.ok().body(Map.of("url", redirectUrl));
     }
@@ -48,5 +73,10 @@ public class MemberController {
 
         return memberService.googleLogout(request, response);
 
+    }
+
+    @DeleteMapping("/deleteAll")
+    public void deleteAllMember() {
+        memberService.deleteAllMember();
     }
 }

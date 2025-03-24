@@ -42,19 +42,25 @@ public class MemberService {
 
             Optional<Member> member = memberRepository.findByUsername(username);
 
+            Long id = null;
             String name = null;
             String email = null;
+            String nickName = null;
 
             if (member.isPresent()) {
+                id = member.get().getId();
                 name = member.get().getName();
                 email = member.get().getEmail();
+                nickName = member.get().getNickName();
             }
 
             MemberResponseDto memberInfo = MemberResponseDto.builder()
+                    .id(id)
                     .username(username)
                     .name(name)
                     .email(email)
                     .role(Role.valueOf(role))
+                    .nickName(nickName)
                     .build();
 
             return new ResponseEntity<>(memberInfo, HttpStatus.OK);
@@ -81,4 +87,40 @@ public class MemberService {
     }
 
 
+    public boolean isNickName(String editNickName) {
+
+        return memberRepository.existsByNickName(editNickName);
+
+    }
+
+    public ResponseEntity<?> editNickName(Long id, String editNickName) {
+
+        Optional<Member> member = memberRepository.findById(id);
+
+        if (member.isPresent()) {
+            member.get().setNickName(editNickName);
+            memberRepository.save(member.get());
+        } else {
+            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.NOT_FOUND_MEMBER);
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    public void deleteAllMember() {
+        memberRepository.deleteAll();
+    }
+
+    public String roomCreatorInfo(String roomCreator) {
+
+        Optional<Member> member = memberRepository.findByUsername(roomCreator);
+
+        String nickName = null;
+
+        if (member.isPresent()) {
+            nickName = member.get().getNickName();
+        }
+
+        return nickName;
+    }
 }

@@ -25,6 +25,7 @@ public class ChatRoomService {
 
         ChatRoom chatRoom = ChatRoom.builder()
                 .chatRoomName(dto.getChatRoomName())
+                .creator(dto.getCreator())
                 .build();
 
         chatRoom.setMember(member);
@@ -35,5 +36,21 @@ public class ChatRoomService {
     // 모든 채팅방 조회
     public List<ChatRoom> selectAllChatRoom() {
         return chatRoomRepository.findAll();
+    }
+
+    public ChatRoomResDto chatRoomInfo(String roomId) {
+
+        ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(roomId);
+
+        if (chatRoom == null) {
+            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.NOT_FOUND_CHATROOM);
+        }
+
+        return ChatRoomResDto.builder()
+                .chatRoomName(chatRoom.getChatRoomName())
+                .creator(chatRoom.getCreator())
+                .createdAt(chatRoom.getCreatedAt())
+                .modifiedAt(chatRoom.getModifiedAt())
+                .build();
     }
 }

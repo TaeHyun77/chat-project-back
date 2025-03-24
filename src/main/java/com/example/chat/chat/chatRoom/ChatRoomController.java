@@ -27,6 +27,13 @@ public class ChatRoomController {
         return chatRoomService.selectAllChatRoom();
     }
 
+    @GetMapping("/api/chatRoomInfo/{roomId}")
+    public ChatRoomResDto chatRoomInfo(@PathVariable("roomId") String roomId) {
+
+        return chatRoomService.chatRoomInfo(roomId);
+
+    }
+
     // 현재 웹 소켓에 접속한 유저의 수 파악 ( 채팅방들에 존재하는 유저들의 총 합 )
     @MessageMapping("/chat/userCnt")
     public void sendAllUserCnt() {
