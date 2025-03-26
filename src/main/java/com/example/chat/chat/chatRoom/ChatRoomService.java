@@ -6,6 +6,7 @@ import com.example.chat.member.Member;
 import com.example.chat.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -52,5 +53,22 @@ public class ChatRoomService {
                 .createdAt(chatRoom.getCreatedAt())
                 .modifiedAt(chatRoom.getModifiedAt())
                 .build();
+    }
+
+    public ResponseEntity<?> deleteRoom(String roomId) {
+
+        ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(roomId);
+
+        if (chatRoom == null) {
+            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.NOT_FOUND_CHATROOM);
+        }
+
+        try {
+            chatRoomRepository.delete(chatRoom);
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
+        }
     }
 }

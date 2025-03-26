@@ -17,6 +17,8 @@ public enum ErrorCode {
 
     REFRESHTOKEN_IS_EXPIRED("REFRESHTOKEN_IS_EXPIRED", "refresh 토큰 만료"),
 
+    INVALID_TOKEN("INVALID_TOKEN", "유효하지 않은 토큰입니다."),
+
     IS_NOT_REFRESHTOKEN("IS_NOT_REFRESHTOKEN", "refresh 토큰이 아닙니다."),
 
     INVALID_MESSAGE_TYPE("INVALID_MESSAGE_TYPE", "지원하지 않는 메세지 타입입니다."),

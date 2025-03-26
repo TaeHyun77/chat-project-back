@@ -7,6 +7,7 @@ import com.example.chat.exception.ErrorCode;
 import com.example.chat.jwt.JwtUtil;
 import com.example.chat.member.Member;
 import com.example.chat.member.MemberRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -43,7 +44,9 @@ public class ChatService {
 
         token = token.substring(7);
 
-        if (jwtUtil.isExpired(token)) {
+        try {
+            jwtUtil.isExpired(token);
+        } catch (ChatException e) {
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ACCESSTOKEN_IS_EXPIRED);
         }
 

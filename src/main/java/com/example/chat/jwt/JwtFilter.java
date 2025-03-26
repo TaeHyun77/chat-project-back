@@ -32,21 +32,31 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
+        String requestURI = request.getRequestURI();
+
+        if (requestURI.equals("/api/reToken")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String authorization = null;
 
         Cookie[] cookies = request.getCookies();
 
+        // 쿠키의 유무
         if (cookies == null) {
             filterChain.doFilter(request, response);
             return;
         }
 
+        // 쿠키에서 access token을 추출
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals("authorization")) {
                 authorization = cookie.getValue();
             }
         }
 
+        // access token 유무
         if (authorization == null) {
             log.info("token is null");
             filterChain.doFilter(request, response);
@@ -57,7 +67,8 @@ public class JwtFilter extends OncePerRequestFilter {
         try {
             jwtUtil.isExpired(authorization);
         } catch (ChatException e) {
-            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ACCESSTOKEN_IS_EXPIRED);
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Access Token이 만료되었습니다.");
+            return;
         }
 
         String username = null;

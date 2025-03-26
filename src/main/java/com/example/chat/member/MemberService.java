@@ -27,7 +27,9 @@ public class MemberService {
 
         try {
 
-            if (jwtUtil.isExpired(token)) {
+            try {
+                jwtUtil.isExpired(token);
+            } catch (ChatException e) {
                 throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ACCESSTOKEN_IS_EXPIRED);
             }
 

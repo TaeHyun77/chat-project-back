@@ -52,7 +52,7 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/**", "/ws/**", "/oauth2/**", "/topic/**", "/api/**").permitAll()
+                        .requestMatchers("/", "/**", "/ws/**", "/oauth2/**", "/topic/**", "/api/**", "/api/reToken").permitAll()
                         .anyRequest().authenticated())
 
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
