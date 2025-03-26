@@ -12,14 +12,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api")
 @RestController
 public class ReissueController {
 
     private final ReissueService reissueService;
 
-    @PostMapping("/reToken")
+    @PostMapping("/api/reToken")
     public ResponseEntity<?> reissueController(@RequestHeader("refreshAuthorization") String refreshAuthorization, HttpServletRequest request, HttpServletResponse response) {
+
+        log.info("access token 재발급 시도 중 ..");
         return reissueService.reissue(refreshAuthorization, request, response);
     }
 

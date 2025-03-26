@@ -1,9 +1,12 @@
 package com.example.chat.jwt;
 
+import com.example.chat.exception.ChatException;
+import com.example.chat.exception.ErrorCode;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -49,21 +52,24 @@ public class JwtUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("category", String.class);
     }
 
-    public Boolean isExpired(String token) {
+    public void isExpired(String token) {
         try {
-            return Jwts.parser()
+            Date expiration = Jwts.parser()
                     .verifyWith(secretKey)
                     .build()
                     .parseSignedClaims(token)
                     .getPayload()
-                    .getExpiration()
-                    .before(new Date());
+                    .getExpiration();
+
+            if (expiration.before(new Date())) {
+                throw new ChatException(HttpStatus.UNAUTHORIZED, ErrorCode.ACCESSTOKEN_IS_EXPIRED);
+            }
         } catch (ExpiredJwtException e) {
             log.warn("JWT가 만료됨: " + e.getMessage());
-            return true;
+            throw new ChatException(HttpStatus.UNAUTHORIZED, ErrorCode.ACCESSTOKEN_IS_EXPIRED);
         } catch (Exception e) {
             log.error("JWT 검증 중 오류 발생: " + e.getMessage());
-            return true;
+            throw new ChatException(HttpStatus.UNAUTHORIZED, ErrorCode.INVALID_TOKEN);
         }
     }
 

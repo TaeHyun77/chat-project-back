@@ -16,7 +16,7 @@ public class CookieUtil {
     }
 
     public static Cookie createDefaultCookie(String key, String value) {
-        return createCookie(key, value, 24 * 60 * 60); // 1일 유지
+        return createCookie(key, value, 24 * 60 * 30); // 12시간
     }
 }
 

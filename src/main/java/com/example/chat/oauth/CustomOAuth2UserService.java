@@ -33,7 +33,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             oAuth2Response = new KakaoResponse(oAuth2User.getAttributes());
         }
 
-        String username = oAuth2Response.getProvider() + " " + oAuth2Response.getProviderId();
+        String username = oAuth2Response.getProvider() + oAuth2Response.getProviderId();
 
         OAuth2Response finalOAuth2Response = oAuth2Response;
 

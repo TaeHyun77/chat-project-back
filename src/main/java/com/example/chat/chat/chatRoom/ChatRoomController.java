@@ -1,6 +1,8 @@
 package com.example.chat.chat.chatRoom;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +34,11 @@ public class ChatRoomController {
 
         return chatRoomService.chatRoomInfo(roomId);
 
+    }
+
+    @DeleteMapping("/api/delete/{roomId}")
+    public ResponseEntity<?> deleteRoom(@PathVariable("roomId") String roomId) {
+        return chatRoomService.deleteRoom(roomId);
     }
 
     // 현재 웹 소켓에 접속한 유저의 수 파악 ( 채팅방들에 존재하는 유저들의 총 합 )
