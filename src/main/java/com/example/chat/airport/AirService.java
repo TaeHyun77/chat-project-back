@@ -50,13 +50,12 @@ public class AirService {
         departureRepository.deleteAll();
 
         List<String> selectdates = new ArrayList<>();
-        selectdates.add("0"); // 오늘
+        selectdates.add("0"); // 오늘 , Api에서 정한 규칙임 0은 오늘 / 1은 내일 / 2는 이틀 뒤 ...
         selectdates.add("1"); // 내일
 
         String endPoint = "http://apis.data.go.kr/B551177/PassengerNoticeKR/getfPassengerNoticeIKR";
 
         try {
-
 
             for (String selectdate : selectdates) {
 
@@ -66,11 +65,10 @@ public class AirService {
                         + "&numOfRows=" + URLEncoder.encode("9999", StandardCharsets.UTF_8)
                         + "&type=" + URLEncoder.encode("json", StandardCharsets.UTF_8);
 
-                // restTemplate으로 보낼 때 인코딩 하고 보내야 된데
+                // restTemplate으로 보낼 때 인코딩 하고 보내야 된다네요
                 URI uri = new URI(url);
 
                 ResponseEntity<String> response = restTemplate.getForEntity(uri, String.class);
-
 
                 saveArrivalData(response.getBody(), selectdate);
             }
@@ -90,6 +88,8 @@ public class AirService {
             }
 
             JsonNode root = objectMapper.readTree(jsonData);
+
+            // 어느 특정 날짜의 데이터들
             JsonNode items = root.path("response").path("body").path("items");
 
             List<Departure> departures = new ArrayList<>();
@@ -255,7 +255,6 @@ public class AirService {
                     }
 
                     valueOps.set(redisKey, existingPlane, 1, TimeUnit.HOURS);
-
                 }
             }
 

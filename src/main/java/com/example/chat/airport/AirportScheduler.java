@@ -30,17 +30,7 @@ public class AirportScheduler {
         }
     }
 
-    @Scheduled(cron = "0 0 0 * * *")
-    public void DelAndIst() {
-        try {
-            airService.PlaneDelAndIst();
-            log.info("항공편 데이터 업데이트 완료");
-        } catch (ChatException e) {
-            log.info("항공편 데이터 업데이트 실패");
-        }
-    }
-
-    @Scheduled(fixedDelay = 300000)
+    @Scheduled(fixedDelay = 300000) // 5분마다 진행
     public void runPlaneData() {
         try {
             airService.getPlane();
@@ -48,6 +38,18 @@ public class AirportScheduler {
         } catch (ChatException e) {
             log.info("항공편 데이터 불러오기 실패");
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_SAVE_PLANE_DATA);
+        }
+    }
+
+    // 매 자정에 어제 항공편 삭제 ( 상태 값이 "출발"인 것만 삭제, JPQL 사용 )
+    @Scheduled(cron = "0 0 0 * * *")
+    public void DelAndIst() {
+        try {
+            airService.PlaneDelAndIst();
+            log.info("어제 항공편 삭제 완료");
+        } catch (ChatException e) {
+            log.info("어제 항공편 삭제 실패");
+            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_DELETE_YESTERDAY_PLANE_DATA);
         }
     }
 }

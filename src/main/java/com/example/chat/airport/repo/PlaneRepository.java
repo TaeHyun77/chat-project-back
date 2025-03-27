@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 public interface PlaneRepository extends JpaRepository<Plane, Long> {
 
     @Modifying
-    @Query("DELETE FROM Plane d WHERE d.scheduleDatetime LIKE :today%")
+    @Query("DELETE FROM Plane d WHERE d.scheduleDatetime LIKE :today% AND d.remark = '출발'")
     void deleteByScheduleDateStartsWith(@Param("today") String today);
 
     Plane findByFlightIdAndScheduleDatetime(String flightId, String scheduleDatetime);

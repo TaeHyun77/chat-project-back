@@ -32,6 +32,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
+        // 재발급 요청은 필터에서 제외
         String requestURI = request.getRequestURI();
 
         if (requestURI.equals("/api/reToken")) {

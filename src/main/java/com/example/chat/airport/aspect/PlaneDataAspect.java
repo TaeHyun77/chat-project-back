@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class PlaneDataAspect {
 
     @Around("execution(* com.example.chat.airport.AirService.getPlane(..))")
-    public Object logPerf(ProceedingJoinPoint joinPoint) throws Throwable{
+    public Object aspectPlane(ProceedingJoinPoint joinPoint) throws Throwable{
 
         long start = System.currentTimeMillis();
         Object proceed = joinPoint.proceed();

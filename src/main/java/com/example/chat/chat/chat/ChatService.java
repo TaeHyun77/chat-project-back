@@ -13,6 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -36,8 +39,15 @@ public class ChatService {
         handleMessageByType(requestDto, member);
     }
 
+    public List<Chat> getChatHistory(String roomId) {
+
+        return chatRepository.findByChatRoomId(roomId);
+
+    }
+
     // 토큰 검증 및 사용자 이름 추출
     private String validateAndExtractUsername(String token) {
+
         if (token == null || !token.startsWith("Bearer ")) {
             throw new IllegalArgumentException("Invalid token format");
         }
@@ -47,13 +57,13 @@ public class ChatService {
         try {
             jwtUtil.isExpired(token);
         } catch (ChatException e) {
-            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ACCESSTOKEN_IS_EXPIRED);
+            throw new ChatException(HttpStatus.UNAUTHORIZED, ErrorCode.ACCESSTOKEN_IS_EXPIRED);
         }
 
         try {
             return jwtUtil.getUsername(token);
         } catch (Exception e) {
-            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ACCESSTOKEN_IS_EXPIRED);
+            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_GET_USERNAME);
         }
     }
 

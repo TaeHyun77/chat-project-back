@@ -29,6 +29,7 @@ public class ChatRoomController {
         return chatRoomService.selectAllChatRoom();
     }
 
+    // 채팅방 작성자 정보 조회
     @GetMapping("/api/chatRoomInfo/{roomId}")
     public ChatRoomResDto chatRoomInfo(@PathVariable("roomId") String roomId) {
 
@@ -36,6 +37,7 @@ public class ChatRoomController {
 
     }
 
+    // 채팅방 삭제
     @DeleteMapping("/api/delete/{roomId}")
     public ResponseEntity<?> deleteRoom(@PathVariable("roomId") String roomId) {
         return chatRoomService.deleteRoom(roomId);

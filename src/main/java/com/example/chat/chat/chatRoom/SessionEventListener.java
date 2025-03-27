@@ -53,6 +53,7 @@ public class SessionEventListener implements ApplicationListener<ApplicationEven
     }
 
     // 사용자가 특정 채팅방을 구독할 때 실행
+    // 특정 채팅방의 접속자 수 반환 => 증가 했을 때
     private void handleSubscription(SessionSubscribeEvent event) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
         String sessionId = accessor.getSessionId();
@@ -76,6 +77,7 @@ public class SessionEventListener implements ApplicationListener<ApplicationEven
     }
 
     // 사용자가 연결 해제할 때 실행
+    // 특정 채팅방의 접속자 수 반환 => 감소 했을 때
     private void handleDisconnect(SessionDisconnectEvent event) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
         String sessionId = accessor.getSessionId();
