@@ -14,6 +14,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+// Redis 설정 클래스
 @Configuration
 public class RedisConfig {
 
@@ -23,21 +24,28 @@ public class RedisConfig {
     @Value("${redis.port}")
     private int redisPort;
 
+    // Redis와 연결을 담당하는 메서드
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
+
+        // Standalone(단독 실행) Redis 서버 설정
         RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(redisHost, redisPort);
 
+        // Redis 연결을 관리, Lettuce는 비동기 Redis 클라이언트로, Spring Boot에서 기본적으로 사용
         return new LettuceConnectionFactory(redisConfig);
     }
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisFactory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
+
+        // redus와 연결
         template.setConnectionFactory(redisFactory);
 
         // 안전한 타입 검증기 (모든 Object 허용)
+        // 직렬화/역직렬화 시 안전한 타입 검증을 수행하는 역할
         BasicPolymorphicTypeValidator typeValidator = BasicPolymorphicTypeValidator.builder()
-                .allowIfSubType(Object.class)
+                .allowIfSubType(Object.class) // 모든 Object 타입을 허용
                 .build();
 
         // ObjectMapper 설정
@@ -46,6 +54,7 @@ public class RedisConfig {
         objectMapper.activateDefaultTyping(typeValidator, ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
 
         // GenericJackson2JsonRedisSerializer 사용
+        // Jackson(ObjectMapper 기반)으로 Redis 데이터를 JSON 형태로 저장하고 읽을 수 있도록 도와주는 직렬화 도구
         GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
 
         template.setKeySerializer(new StringRedisSerializer()); // 키 직렬화

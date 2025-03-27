@@ -13,6 +13,8 @@ public enum ErrorCode {
 
     NOT_FOUND_MEMBER("NOT_FOUND_MEMBER", "사용자를 찾을 수 없습니다."),
 
+    ERROR_TO_GET_USERNAME("ERROR_TO_GET_USERNAME", "사용자 username을 불러오는데 실패했습니다."),
+
     ACCESSTOKEN_IS_EXPIRED("ACCESSTOKEN_IS_EXPIRED", "access 토큰 만료"),
 
     REFRESHTOKEN_IS_EXPIRED("REFRESHTOKEN_IS_EXPIRED", "refresh 토큰 만료"),
@@ -28,6 +30,8 @@ public enum ErrorCode {
     ERROR_TO_SAVE_ARRIVAL_DATA("ERROR_TO_SAVE_ARRIVAL_DATA", "출국장 승객 데이터 저장 에러"),
 
     ERROR_TO_SAVE_PLANE_DATA("ERROR_TO_SAVE_PLANE_DATA", "항공기 운행 데이터 저장 에러"),
+
+    ERROR_TO_DELETE_YESTERDAY_PLANE_DATA("ERROR_TO_DELETE_YESTERDAY_PLANE_DATA", "어제 항공편 삭제 에러"),
 
     ERROR_TO_CHANGE_JSON_DATE("ERROR_TO_CHANGE_JSON_DATE", "json 데이터 변환 실패");
 

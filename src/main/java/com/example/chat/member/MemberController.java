@@ -18,6 +18,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    // 로그인 사용자 정보
     @GetMapping("/info")
     public ResponseEntity<?> memberInfo(HttpServletRequest request) {
 
@@ -32,6 +33,7 @@ public class MemberController {
         return memberService.Info(token);
     }
 
+    // 채팅방 생성자 정보
     @GetMapping("/roomCreatorInfo/{roomCreator}")
     public String roomCreatorInfo(@PathVariable("roomCreator") String roomCreator) {
 
@@ -61,9 +63,9 @@ public class MemberController {
     @GetMapping("/googleLogin")
     public ResponseEntity<?> googleLogin(HttpServletResponse response) {
         log.info("Login request success");
-        String redirectUrl = "http://localhost:8080/oauth2/authorization/google"; // 로컬용
+        //String redirectUrl = "http://localhost:8080/oauth2/authorization/google"; // 로컬용
 
-        //String redirectUrl = "https://incheon-airport-info.site/oauth2/authorization/google"; // AWS 도메인 적용
+        String redirectUrl = "https://incheon-airport-info.site/oauth2/authorization/google"; // AWS 도메인 적용
 
         return ResponseEntity.ok().body(Map.of("url", redirectUrl));
     }

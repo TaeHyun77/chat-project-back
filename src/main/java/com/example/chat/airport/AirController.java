@@ -19,7 +19,8 @@ public class AirController {
     private final AirService airService;
 
     private final PlaneRepository planeRepository;
-    // 인천 공항 출 입국 현황
+
+    // 인천 공항 출입국 현황
     @GetMapping("/arrivals")
     public void getArrivalsData() {
         airService.getArrivalsData();
@@ -31,13 +32,20 @@ public class AirController {
         airService.getPlane();
     }
 
+    // 출입국 데이터
     @GetMapping("/get/departures")
     public List<Departure> getDepartures() {
         return airService.getDepartures();
     }
 
+    // 항공편 데이터
     @GetMapping("/get/planes")
     public List<Plane> getRedisPlanes() {
         return airService.getAllPlanes();
+    }
+
+    @DeleteMapping("/delete/yesterday/planes")
+    public void deleteYesterdayPlanes() {
+        airService.PlaneDelAndIst();
     }
 }

@@ -17,6 +17,7 @@ public class ReissueController {
 
     private final ReissueService reissueService;
 
+    // access 토큰 재발급 로직
     @PostMapping("/api/reToken")
     public ResponseEntity<?> reissueController(@RequestHeader("refreshAuthorization") String refreshAuthorization, HttpServletRequest request, HttpServletResponse response) {
 
