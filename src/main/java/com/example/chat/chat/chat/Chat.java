@@ -2,7 +2,9 @@ package com.example.chat.chat.chat;
 
 import com.example.chat.chat.chatRoom.ChatRoom;
 import com.example.chat.config.BaseTime;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

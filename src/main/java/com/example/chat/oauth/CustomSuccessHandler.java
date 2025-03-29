@@ -68,7 +68,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         log.info("Access 토큰 만료 시간: " + expirationTime);
         log.info("refresh 토큰 만료 시간: " + reExpirationTime);
 
-        //response.sendRedirect("http://localhost:3000"); // 로컬용
-        response.sendRedirect("https://incheon-airport-info.site/"); // https 용
+        response.sendRedirect("http://localhost:3000"); // 로컬용
+        //response.sendRedirect("https://incheon-airport-info.site/"); // https 용
     }
 }
