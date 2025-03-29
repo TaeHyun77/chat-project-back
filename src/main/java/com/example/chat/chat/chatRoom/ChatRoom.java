@@ -3,7 +3,9 @@ package com.example.chat.chat.chatRoom;
 import com.example.chat.chat.chat.Chat;
 import com.example.chat.config.BaseTime;
 import com.example.chat.member.Member;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,7 +38,7 @@ public class ChatRoom extends BaseTime {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId")
-    @JsonIgnore
+    @JsonManagedReference
     private Member member;
 
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
