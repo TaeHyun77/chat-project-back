@@ -34,21 +34,17 @@ public class ChatRoom extends BaseTime {
 
     private String chatRoomName;
 
-    private String creator;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId")
-    @JsonManagedReference
     private Member member;
 
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Chat> chats = new ArrayList<>();
 
     @Builder
-    public ChatRoom(String chatRoomName, String creator) {
+    public ChatRoom(String chatRoomName) {
         this.chatRoomId = UUID.randomUUID().toString();
         this.chatRoomName = chatRoomName;
-        this.creator = creator;
     }
 }
 

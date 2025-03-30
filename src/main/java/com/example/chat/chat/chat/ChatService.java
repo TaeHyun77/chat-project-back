@@ -2,6 +2,7 @@ package com.example.chat.chat.chat;
 
 import com.example.chat.chat.chatRoom.ChatRoom;
 import com.example.chat.chat.chatRoom.ChatRoomRepository;
+import com.example.chat.chat.chatRoom.ChatRoomResDto;
 import com.example.chat.exception.ChatException;
 import com.example.chat.exception.ErrorCode;
 import com.example.chat.jwt.JwtUtil;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,45 +28,14 @@ public class ChatService {
     private final MemberRepository memberRepository;
     private final ChatRepository chatRepository;
     private final ChatRoomRepository chatRoomRepository;
-
     private final SimpMessageSendingOperations messagingTemplate;
 
     public void pushMessage(ChatRequestDto requestDto) {
 
-        String username = validateAndExtractUsername(requestDto.getAccessToken());
-
-        Member member = memberRepository.findByUsername(username)
+        Member member = memberRepository.findByUsername(requestDto.getUsername())
                 .orElseThrow(() -> new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.NOT_FOUND_MEMBER));
 
         handleMessageByType(requestDto, member);
-    }
-
-    public List<Chat> getChatHistory(String roomId) {
-
-        return chatRepository.findByChatRoomId(roomId);
-
-    }
-
-    // 토큰 검증 및 사용자 이름 추출
-    private String validateAndExtractUsername(String token) {
-
-        if (token == null || !token.startsWith("Bearer ")) {
-            throw new IllegalArgumentException("Invalid token format");
-        }
-
-        token = token.substring(7);
-
-        try {
-            jwtUtil.isExpired(token);
-        } catch (ChatException e) {
-            throw new ChatException(HttpStatus.UNAUTHORIZED, ErrorCode.ACCESSTOKEN_IS_EXPIRED);
-        }
-
-        try {
-            return jwtUtil.getUsername(token);
-        } catch (Exception e) {
-            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_GET_USERNAME);
-        }
     }
 
     // 메시지 타입에 따른 처리 로직 분리
@@ -81,7 +52,7 @@ public class ChatService {
     // 입장, 퇴장 메시지 처리
     private void handleEnterAndExitMessage(ChatRequestDto requestDto, Member member) {
 
-        ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(requestDto.getRoomId());
+        ChatRoom chatRoom = chatRoomRepository.findChatRoomWithChatsAndMember(requestDto.getRoomId());
 
         if (chatRoom == null) {
             throw new ChatException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_CHATROOM);
@@ -97,6 +68,7 @@ public class ChatService {
                 .content(requestDto.getContent())
                 .chatRoom(chatRoom)
                 .chatType(requestDto.getChatType())
+                .member(member)
                 .build();
 
         chatRepository.save(chat);
@@ -107,7 +79,7 @@ public class ChatService {
     // 일반 채팅 메시지 처리
     private void handleTalkMessage(ChatRequestDto requestDto, Member member) {
 
-        ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(requestDto.getRoomId());
+        ChatRoom chatRoom = chatRoomRepository.findChatRoomWithChatsAndMember(requestDto.getRoomId());
 
         if (chatRoom == null) {
             throw new ChatException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_CHATROOM);
@@ -118,8 +90,7 @@ public class ChatService {
                 .content(requestDto.getContent())
                 .chatRoom(chatRoom)
                 .chatType(requestDto.getChatType())
-                .username(member.getUsername())
-                .name(member.getName())
+                .member(member)
                 .build();
 
         chatRepository.save(chat);
@@ -128,11 +99,8 @@ public class ChatService {
         ChatResponseDto sendMessage = ChatResponseDto.builder()
                 .chatType(requestDto.getChatType())
                 .content(requestDto.getContent())
-                .username(member.getUsername())
-                .name(member.getName())
-                .email(member.getEmail())
+                .member(member)
                 .createdAt(requestDto.getCreatedAt())
-                .roomId(requestDto.getRoomId())
                 .build();
 
         messagingTemplate.convertAndSend("/topic/chat/" + requestDto.getRoomId(), sendMessage);

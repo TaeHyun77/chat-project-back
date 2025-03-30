@@ -33,14 +33,6 @@ public class MemberController {
         return memberService.Info(token);
     }
 
-    // 채팅방 생성자 정보
-    @GetMapping("/roomCreatorInfo/{roomCreator}")
-    public String roomCreatorInfo(@PathVariable("roomCreator") String roomCreator) {
-
-        return memberService.roomCreatorInfo(roomCreator);
-
-    }
-
     // 닉네임 중복 여부 파악
     @GetMapping("/isNickName/{editNickName}")
     public boolean isNickName(@PathVariable("editNickName") String editNickName) {

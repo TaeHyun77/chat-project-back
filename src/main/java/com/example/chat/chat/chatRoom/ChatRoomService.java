@@ -26,7 +26,6 @@ public class ChatRoomService {
 
         ChatRoom chatRoom = ChatRoom.builder()
                 .chatRoomName(dto.getChatRoomName())
-                .creator(dto.getCreator())
                 .build();
 
         chatRoom.setMember(member);
@@ -39,17 +38,20 @@ public class ChatRoomService {
         return chatRoomRepository.getChatRooms();
     }
 
+    // 특정 채팅방 정보 조회
     public ChatRoomResDto chatRoomInfo(String roomId) {
 
-        ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(roomId);
+        ChatRoom chatRoom = chatRoomRepository.findChatRoomWithChatsAndMember(roomId);
 
         if (chatRoom == null) {
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.NOT_FOUND_CHATROOM);
         }
 
         return ChatRoomResDto.builder()
+                .id((chatRoom.getId()))
                 .chatRoomName(chatRoom.getChatRoomName())
-                .creator(chatRoom.getCreator())
+                .member(chatRoom.getMember())
+                .chats(chatRoom.getChats())
                 .createdAt(chatRoom.getCreatedAt())
                 .modifiedAt(chatRoom.getModifiedAt())
                 .build();
@@ -57,7 +59,7 @@ public class ChatRoomService {
 
     public ResponseEntity<?> deleteRoom(String roomId) {
 
-        ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(roomId);
+        ChatRoom chatRoom = chatRoomRepository.findChatRoomWithChatsAndMember(roomId);
 
         if (chatRoom == null) {
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.NOT_FOUND_CHATROOM);

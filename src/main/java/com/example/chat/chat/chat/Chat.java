@@ -2,15 +2,16 @@ package com.example.chat.chat.chat;
 
 import com.example.chat.chat.chatRoom.ChatRoom;
 import com.example.chat.config.BaseTime;
+import com.example.chat.member.Member;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -29,19 +30,18 @@ public class Chat extends BaseTime {
     @JsonIgnore
     private ChatRoom chatRoom;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "memberId")
+    private Member member;
+
     @Enumerated(EnumType.STRING)
     private ChatType chatType;
 
-    private String username;
-
-    private String name;
-
     @Builder
-    public Chat(String content, ChatRoom chatRoom, ChatType chatType, String username, String name) {
+    public Chat(String content, ChatRoom chatRoom, ChatType chatType, Member member) {
         this.content = content;
         this.chatRoom = chatRoom;
         this.chatType = chatType;
-        this.username = username;
-        this.name = name;
+        this.member = member;
     }
 }
