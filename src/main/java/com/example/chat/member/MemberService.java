@@ -112,17 +112,4 @@ public class MemberService {
     public void deleteAllMember() {
         memberRepository.deleteAll();
     }
-
-    public String roomCreatorInfo(String roomCreator) {
-
-        Optional<Member> member = memberRepository.findByUsername(roomCreator);
-
-        String nickName = null;
-
-        if (member.isPresent()) {
-            nickName = member.get().getNickName();
-        }
-
-        return nickName;
-    }
 }

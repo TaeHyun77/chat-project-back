@@ -1,9 +1,11 @@
 package com.example.chat.member;
 
+import com.example.chat.chat.chat.Chat;
 import com.example.chat.chat.chatRoom.ChatRoom;
 import com.example.chat.config.BaseTime;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -14,6 +16,7 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -41,6 +44,10 @@ public class Member extends BaseTime {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<ChatRoom> chatRooms = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    @JsonIgnore
+    private List<Chat> chats;
 
     @Builder
     public Member(String username, String name, String email, String nickName, Role role) {
