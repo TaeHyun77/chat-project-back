@@ -1,5 +1,7 @@
 package com.example.chat.member;
 
+import com.example.chat.exception.ChatException;
+import com.example.chat.exception.ErrorCode;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +22,12 @@ public class MemberController {
 
     // 로그인 사용자 정보
     @GetMapping("/info")
-    public ResponseEntity<?> memberInfo(HttpServletRequest request) {
+    public MemberResDto memberInfo(HttpServletRequest request) {
 
         String authorizationHeader = request.getHeader("authorization");
 
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            return new ResponseEntity<>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
+            throw new ChatException(HttpStatus.UNAUTHORIZED, ErrorCode.ACCESSTOKEN_IS_EXPIRED);
         }
 
         String token = authorizationHeader.substring(7);

@@ -23,17 +23,17 @@ public class MemberService {
     private final JwtUtil jwtUtil;
     private final MemberRepository memberRepository;
 
-    public ResponseEntity<?> Info(String token) {
+    public MemberResDto Info(String token) {
 
         try {
-
             try {
                 jwtUtil.isExpired(token);
             } catch (ChatException e) {
-                throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ACCESSTOKEN_IS_EXPIRED);
+                throw new ChatException(HttpStatus.UNAUTHORIZED, ErrorCode.ACCESSTOKEN_IS_EXPIRED);
             }
 
             String username = null;
+
             try {
                 username = jwtUtil.getUsername(token);
             } catch (ChatException e) {
@@ -42,32 +42,20 @@ public class MemberService {
 
             String role = jwtUtil.getRole(token);
 
-            Optional<Member> member = memberRepository.findByUsername(username);
+            Member member = memberRepository.findByUsername(username)
+                    .orElseThrow(() -> new ChatException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_MEMBER));
 
-            Long id = null;
-            String name = null;
-            String email = null;
-            String nickName = null;
-
-            if (member.isPresent()) {
-                id = member.get().getId();
-                name = member.get().getName();
-                email = member.get().getEmail();
-                nickName = member.get().getNickName();
-            }
-
-            MemberResponseDto memberInfo = MemberResponseDto.builder()
-                    .id(id)
-                    .username(username)
-                    .name(name)
-                    .email(email)
+            return MemberResDto.builder()
+                    .id(member.getId())
+                    .username(member.getUsername())
+                    .name(member.getName())
+                    .email(member.getEmail())
                     .role(Role.valueOf(role))
-                    .nickName(nickName)
+                    .nickName(member.getNickName())
                     .build();
 
-            return new ResponseEntity<>(memberInfo, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
+            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_RESPONSE_MEMBER);
         }
     }
 
