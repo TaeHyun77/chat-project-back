@@ -2,22 +2,17 @@ package com.example.chat.chat.chat;
 
 import com.example.chat.chat.chatRoom.ChatRoom;
 import com.example.chat.chat.chatRoom.ChatRoomRepository;
-import com.example.chat.chat.chatRoom.ChatRoomResDto;
 import com.example.chat.exception.ChatException;
 import com.example.chat.exception.ErrorCode;
 import com.example.chat.jwt.JwtUtil;
 import com.example.chat.member.Member;
 import com.example.chat.member.MemberRepository;
-import jakarta.servlet.http.HttpServletResponse;
+import com.example.chat.member.MemberResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -96,10 +91,10 @@ public class ChatService {
         chatRepository.save(chat);
 
         // 클라이언트에서 발송된 메세지 전송
-        ChatResponseDto sendMessage = ChatResponseDto.builder()
+        ChatResDto sendMessage = ChatResDto.builder()
                 .chatType(requestDto.getChatType())
                 .content(requestDto.getContent())
-                .member(member)
+                .member(MemberResDto.fromMemberEntity(member))
                 .createdAt(requestDto.getCreatedAt())
                 .build();
 

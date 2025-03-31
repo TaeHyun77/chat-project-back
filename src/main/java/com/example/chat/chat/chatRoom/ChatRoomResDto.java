@@ -1,7 +1,7 @@
 package com.example.chat.chat.chatRoom;
 
-import com.example.chat.chat.chat.Chat;
-import com.example.chat.member.Member;
+import com.example.chat.chat.chat.ChatResDto;
+import com.example.chat.member.MemberResDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,21 +13,21 @@ import java.util.List;
 @Getter
 public class ChatRoomResDto {
 
-    private Long id;
+    private String chatRoomId;
 
     private String chatRoomName;
 
-    private Member member;
+    private MemberResDto member;
 
-    private List<Chat> chats;
+    private List<ChatResDto> chats;
 
     private LocalDateTime createdAt;
 
     private LocalDateTime modifiedAt;
 
     @Builder
-    public ChatRoomResDto (Long id, String chatRoomName,Member member,List<Chat> chats, LocalDateTime createdAt, LocalDateTime modifiedAt){
-        this.id = id;
+    public ChatRoomResDto (String chatRoomId, String chatRoomName, MemberResDto member, List<ChatResDto> chats, LocalDateTime createdAt, LocalDateTime modifiedAt){
+        this.chatRoomId = chatRoomId;
         this.chatRoomName = chatRoomName;
         this.member = member;
         this.chats = chats;

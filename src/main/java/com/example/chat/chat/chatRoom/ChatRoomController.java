@@ -2,7 +2,6 @@ package com.example.chat.chat.chatRoom;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +24,7 @@ public class ChatRoomController {
 
     // 채팅방 목록 조회
     @GetMapping("/api/chat/rooms")
-    public List<ChatRoom> getAllRooms() {
+    public List<ChatRoomResDto> getAllRooms() {
         return chatRoomService.selectAllChatRoom();
     }
 

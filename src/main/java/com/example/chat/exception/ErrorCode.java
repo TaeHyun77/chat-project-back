@@ -13,6 +13,8 @@ public enum ErrorCode {
 
     NOT_FOUND_MEMBER("NOT_FOUND_MEMBER", "사용자를 찾을 수 없습니다."),
 
+    ERROR_TO_RESPONSE_MEMBER("ERROR_TO_RESPONSE_MEMBER", "member 반화 중 에러 발생"),
+
     ERROR_TO_GET_USERNAME("ERROR_TO_GET_USERNAME", "사용자 username을 불러오는데 실패했습니다."),
 
     ACCESSTOKEN_IS_EXPIRED("ACCESSTOKEN_IS_EXPIRED", "access 토큰 만료"),
