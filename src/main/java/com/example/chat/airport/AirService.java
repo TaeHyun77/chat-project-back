@@ -191,6 +191,9 @@ public class AirService {
             int updateDataCnt = 0;
             long redisFetchTime = 0;
 
+            List<Plane> planesToUpdate = new ArrayList<>();  // 업데이트 할 데이터 리스트
+            List<Plane> newPlanes = new ArrayList<>();  // 새롭게 추가할 데이터 리스트
+
             for (JsonNode item : items) {
 
                 String flightId = item.path("flightId").asText();
@@ -239,9 +242,11 @@ public class AirService {
                             .codeShare(item.path("codeshare").asText())
                             .build();
 
-                    Plane savedPlane = planeRepository.save(dto.toPlane());
+                    Plane newPlane = dto.toPlane();
 
-                    valueOps.set(redisKey, savedPlane, 1, TimeUnit.HOURS);
+                    valueOps.set(redisKey, newPlane, 1, TimeUnit.HOURS);
+
+                    newPlanes.add(newPlane);
 
                 } else { // 데이터가 존재 하면 변경 사항 확인 후 업데이트
 
@@ -249,13 +254,22 @@ public class AirService {
 
                         existingPlane.updatePlane(remark, estimatedDatetime, gateNumber, terminalId);
 
+                        planesToUpdate.add(existingPlane);
+
                         updateDataCnt++;
 
-                        planeRepository.save(existingPlane);
                     }
 
                     valueOps.set(redisKey, existingPlane, 1, TimeUnit.HOURS);
                 }
+            }
+
+            if (!newPlanes.isEmpty()) {
+                planeRepository.saveAll(newPlanes);
+            }
+
+            if (!planesToUpdate.isEmpty()) {
+                planeRepository.saveAll(planesToUpdate);
             }
 
             log.info("업데이트 된 항공편 개수 : " + updateDataCnt);
@@ -317,7 +331,8 @@ public class AirService {
         String yesterday = LocalDateTime.now().minusDays(1).format(formatter);
 
         try {
-            planeRepository.deleteByScheduleDateStartsWith(yesterday);
+            long deleteCnt = planeRepository.deleteByScheduleDateStartsWith(yesterday);
+            log.info( "삭제된 어제 항공편 데이터 개수 : " + deleteCnt );
             log.info("어제 항공편 데이터 삭제 성공");
         } catch (ChatException e) {
             log.info("어제 항공편 데이터 삭제 실패");

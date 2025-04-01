@@ -1,12 +1,12 @@
 package com.example.chat.chat.chatRoom;
 
-import com.example.chat.chat.chat.QChat;
-import com.example.chat.member.QMember;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+
+import static com.example.chat.chat.chat.QChat.chat;
+import static com.example.chat.member.QMember.member;
 
 @RequiredArgsConstructor
 public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
@@ -17,7 +17,7 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
     public List<ChatRoom> getChatRooms() {
         return queryFactory
                 .selectFrom(QChatRoom.chatRoom)
-                .join(QChatRoom.chatRoom.member, QMember.member).fetchJoin()
+                .join(QChatRoom.chatRoom.member, member).fetchJoin()
                 .fetch();
     }
 
@@ -26,11 +26,10 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
         return queryFactory
                 .selectFrom(QChatRoom.chatRoom)
                 .leftJoin(QChatRoom.chatRoom.member).fetchJoin()
-                .leftJoin(QChatRoom.chatRoom.chats, QChat.chat).fetchJoin()
-                .leftJoin(QChat.chat.member, QMember.member).fetchJoin()
+                .leftJoin(QChatRoom.chatRoom.chats, chat).fetchJoin()
+                .leftJoin(chat.member, member).fetchJoin()
                 .where(QChatRoom.chatRoom.chatRoomId.eq(chatRoomId))
                 .distinct()
                 .fetchOne();
     }
-
 }
