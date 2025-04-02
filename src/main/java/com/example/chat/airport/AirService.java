@@ -1,13 +1,16 @@
 package com.example.chat.airport;
 
-import com.example.chat.airport.dto.DepartureDto;
-import com.example.chat.airport.dto.PlaneDto;
+import com.example.chat.airport.reqDto.DepartureDto;
+import com.example.chat.airport.reqDto.PlaneDto;
 import com.example.chat.airport.entity.Departure;
 import com.example.chat.airport.entity.Plane;
-import com.example.chat.airport.repo.DepartureRepository;
-import com.example.chat.airport.repo.PlaneRepository;
+import com.example.chat.airport.repository.DepartureRepository;
+import com.example.chat.airport.repository.PlaneRepository;
+import com.example.chat.airport.resDto.DepartureResDto;
+import com.example.chat.airport.resDto.PlaneResDto;
 import com.example.chat.exception.ChatException;
 import com.example.chat.exception.ErrorCode;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +53,7 @@ public class AirService {
         departureRepository.deleteAll();
 
         List<String> selectdates = new ArrayList<>();
-        selectdates.add("0"); // 오늘 , Api에서 정한 규칙임 0은 오늘 / 1은 내일 / 2는 이틀 뒤 ...
+        selectdates.add("0"); // 오늘 , Api에서 정한 규칙임 "0"은 오늘 / "1"은 내일 / "2"는 이틀 뒤 ...
         selectdates.add("1"); // 내일
 
         String endPoint = "http://apis.data.go.kr/B551177/PassengerNoticeKR/getfPassengerNoticeIKR";
@@ -213,7 +216,8 @@ public class AirService {
                 String redisKey = "plane:" + flightId + ":" + scheduleDatetime;
 
                 long redisStartTime = System.currentTimeMillis();
-                Plane redisPlane = (Plane) redisTemplate.opsForValue().get(redisKey);
+                String planeJson = (String) redisTemplate.opsForValue().get(redisKey);
+                Plane redisPlane = objectMapper.readValue(planeJson, Plane.class);
                 redisFetchTime += (System.currentTimeMillis() - redisStartTime);
 
                 Plane existingPlane = null;
@@ -244,7 +248,7 @@ public class AirService {
 
                     Plane newPlane = dto.toPlane();
 
-                    valueOps.set(redisKey, newPlane, 1, TimeUnit.HOURS);
+                    valueOps.set(redisKey, objectMapper.writeValueAsString(newPlane), 1, TimeUnit.HOURS);
 
                     newPlanes.add(newPlane);
 
@@ -260,7 +264,7 @@ public class AirService {
 
                     }
 
-                    valueOps.set(redisKey, existingPlane, 1, TimeUnit.HOURS);
+                    valueOps.set(redisKey, objectMapper.writeValueAsString(existingPlane), 1, TimeUnit.HOURS);
                 }
             }
 
@@ -289,12 +293,28 @@ public class AirService {
     }
 
     // 출국장 데이터 조회
-    public List<Departure> getDepartures() {
-        return departureRepository.findAll();
+    public List<DepartureResDto> getDepartures() {
+
+        List<Departure> departures = departureRepository.findAll();
+
+        return departures.stream()
+                .map(departure -> DepartureResDto.builder()
+                        .date(departure.getDate())
+                        .timeZone(departure.getTimeZone())
+                        .t1Depart12(departure.getT1Depart12())
+                        .t1Depart3(departure.getT1Depart3())
+                        .t1Depart4(departure.getT1Depart4())
+                        .t1Depart56(departure.getT1Depart56())
+                        .t1DepartSum(departure.getT1DepartSum())
+                        .t2Depart1(departure.getT2Depart1())
+                        .t2Depart2(departure.getT2Depart2())
+                        .t2DepartSum(departure.getT2DepartSum())
+                        .build())
+                .collect(Collectors.toList());
     }
 
     // 항공편 데이터 조회 , 레디스 조회 후 없으면 DB에서 조회
-    public List<Plane> getAllPlanes() {
+    public List<PlaneResDto> getAllPlanes() {
 
         // 우선 redis에서 항공편 데이터 조회
         Set<String> keys = redisTemplate.keys("plane:*");
@@ -302,9 +322,17 @@ public class AirService {
         if (!keys.isEmpty()) {
             List<Object> redisPlanes = redisTemplate.opsForValue().multiGet(keys);
 
-            List<Plane> planesFromRedis = redisPlanes.stream()
+            List<PlaneResDto> planesFromRedis = redisPlanes.stream()
                     .filter(Objects::nonNull)
-                    .map(obj -> (Plane) obj)
+                    .map(obj -> {
+                        try {
+                            return objectMapper.readValue((String) obj, PlaneResDto.class);
+                        } catch (JsonProcessingException e) {
+                            log.error("Redis에서 PlaneResDto 변환 중 오류 발생", e);
+                            return null;
+                        }
+                    })
+                    .filter(Objects::nonNull)
                     .collect(Collectors.toList());
 
             if (!planesFromRedis.isEmpty()) {
@@ -318,10 +346,26 @@ public class AirService {
 
         // 조회한 데이터를 Redis에 캐싱
         ValueOperations<String, Object> valueOps = redisTemplate.opsForValue();
+
         planes.forEach(plane -> valueOps.set("plane:" + plane.getFlightId() + ":" + plane.getScheduleDatetime(), plane, 1, TimeUnit.HOURS));
 
         log.info("DB에서 Plane 데이터 조회");
-        return planes;
+
+        return planes.stream()
+                .map(plane -> PlaneResDto.builder()
+                        .flightId(plane.getFlightId())
+                        .airLine(plane.getAirLine())
+                        .airport(plane.getAirport())
+                        .airportCode(plane.getAirportCode())
+                        .scheduleDatetime(plane.getScheduleDatetime())
+                        .estimatedDatetime(plane.getEstimatedDatetime())
+                        .gateNumber(plane.getGateNumber())
+                        .terminalId(plane.getTerminalId())
+                        .remark(plane.getRemark())
+                        .aircraftRegNo(plane.getAircraftRegNo())
+                        .codeShare(plane.getCodeShare())
+                        .build())
+                .collect(Collectors.toList());
     }
 
     @Transactional

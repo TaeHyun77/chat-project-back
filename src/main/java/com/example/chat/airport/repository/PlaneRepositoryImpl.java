@@ -1,4 +1,4 @@
-package com.example.chat.airport.repo;
+package com.example.chat.airport.repository;
 
 import com.example.chat.airport.entity.QPlane;
 import com.querydsl.jpa.impl.JPAQueryFactory;

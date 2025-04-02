@@ -1,8 +1,8 @@
 package com.example.chat.airport;
 
-import com.example.chat.airport.entity.Departure;
-import com.example.chat.airport.entity.Plane;
-import com.example.chat.airport.repo.PlaneRepository;
+import com.example.chat.airport.repository.PlaneRepository;
+import com.example.chat.airport.resDto.DepartureResDto;
+import com.example.chat.airport.resDto.PlaneResDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,13 +34,13 @@ public class AirController {
 
     // 출입국 데이터
     @GetMapping("/get/departures")
-    public List<Departure> getDepartures() {
+    public List<DepartureResDto> getDepartures() {
         return airService.getDepartures();
     }
 
     // 항공편 데이터
     @GetMapping("/get/planes")
-    public List<Plane> getRedisPlanes() {
+    public List<PlaneResDto> getRedisPlanes() {
         return airService.getAllPlanes();
     }
 
