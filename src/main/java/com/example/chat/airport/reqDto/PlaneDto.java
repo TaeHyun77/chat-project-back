@@ -1,4 +1,4 @@
-package com.example.chat.airport.dto;
+package com.example.chat.airport.reqDto;
 
 import com.example.chat.airport.entity.Plane;
 import lombok.Builder;
