@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChatService {
 
-    private final JwtUtil jwtUtil;
     private final MemberRepository memberRepository;
     private final ChatRepository chatRepository;
     private final ChatRoomRepository chatRoomRepository;

@@ -3,6 +3,7 @@ package com.example.chat.airport;
 import com.example.chat.airport.repository.PlaneRepository;
 import com.example.chat.airport.resDto.DepartureResDto;
 import com.example.chat.airport.resDto.PlaneResDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
