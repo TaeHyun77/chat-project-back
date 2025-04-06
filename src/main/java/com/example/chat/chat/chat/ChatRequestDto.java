@@ -15,6 +15,8 @@ public class ChatRequestDto {
 
     private String username;
 
+    private String nickName;
+
     private LocalDateTime createdAt;
 
     private String roomId;

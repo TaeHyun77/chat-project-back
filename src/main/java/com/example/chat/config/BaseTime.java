@@ -30,5 +30,4 @@ public abstract class BaseTime {
     @JsonFormat(pattern = "yyyy-MM-dd kk:mm:ss")
     @LastModifiedDate
     private LocalDateTime modifiedAt;
-
 }

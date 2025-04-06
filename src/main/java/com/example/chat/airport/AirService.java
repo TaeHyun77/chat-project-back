@@ -1,11 +1,11 @@
 package com.example.chat.airport;
 
-import com.example.chat.airport.reqDto.DepartureDto;
-import com.example.chat.airport.reqDto.PlaneDto;
 import com.example.chat.airport.entity.Departure;
 import com.example.chat.airport.entity.Plane;
 import com.example.chat.airport.repository.DepartureRepository;
 import com.example.chat.airport.repository.PlaneRepository;
+import com.example.chat.airport.reqDto.DepartureDto;
+import com.example.chat.airport.reqDto.PlaneDto;
 import com.example.chat.airport.resDto.DepartureResDto;
 import com.example.chat.airport.resDto.PlaneResDto;
 import com.example.chat.exception.ChatException;
@@ -23,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -193,6 +194,7 @@ public class AirService {
 
             int updateDataCnt = 0;
             long redisFetchTime = 0;
+            long dbFetchTime = 0;
 
             List<Plane> planesToUpdate = new ArrayList<>();  // 업데이트 할 데이터 리스트
             List<Plane> newPlanes = new ArrayList<>();  // 새롭게 추가할 데이터 리스트
@@ -215,16 +217,27 @@ public class AirService {
 
                 String redisKey = "plane:" + flightId + ":" + scheduleDatetime;
 
-                long redisStartTime = System.currentTimeMillis();
-                String planeJson = (String) redisTemplate.opsForValue().get(redisKey);
-                Plane redisPlane = objectMapper.readValue(planeJson, Plane.class);
-                redisFetchTime += (System.currentTimeMillis() - redisStartTime);
+                Plane redisPlane = null;
+
+                try {
+                    String planeJson = (String) redisTemplate.opsForValue().get(redisKey);
+
+                    if (planeJson != null) {
+                        long redisStartTime = System.currentTimeMillis();
+                        redisPlane = objectMapper.readValue(planeJson, Plane.class);
+                        redisFetchTime += (System.currentTimeMillis() - redisStartTime);
+                    }
+                } catch (JsonProcessingException e) {
+                    log.error("JSON 역직렬화 실패", e);
+                }
 
                 Plane existingPlane = null;
 
                 // Redis에 해당 데이터가 없다면
                 if (redisPlane == null) {
+                    long dbStartTime = System.currentTimeMillis();
                     existingPlane = planeRepository.findByFlightIdAndScheduleDatetime(flightId, scheduleDatetime);
+                    dbFetchTime += (System.currentTimeMillis() - dbStartTime);
                 } else { // Redis에 있다면
                     existingPlane = redisPlane;
                 }
@@ -277,7 +290,11 @@ public class AirService {
             }
 
             log.info("업데이트 된 항공편 개수 : " + updateDataCnt);
-            log.info("Redis에서 데이터 가져오는 총 시간: " + redisFetchTime + "ms");
+            if (redisFetchTime != 0) {
+                log.info("Redis에서 데이터 불러오는 총 시간: " + redisFetchTime + "ms");
+            } else {
+                log.info("DB에서 데이터 불러오는 총 시간: " + dbFetchTime + "ms");
+            }
 
         } catch (ChatException e) {
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_SAVE_PLANE_DATA);
