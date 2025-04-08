@@ -33,16 +33,16 @@ CI/CD : Docker, Aws
 
 ## 페이지 
 <p>메인 페이지 - 출국장 정보</p>
-<img src="https://github.com/user-attachments/assets/d09a03c8-ffb3-4e9e-9b24-3e22a7496a70" width=600 align="center"><br><br>
+<img src="https://github.com/user-attachments/assets/d09a03c8-ffb3-4e9e-9b24-3e22a7496a70" width=600 align="center"><br><br><br>
 
 <p>메인 페이지 - 항공편 정보</p> 
-<img src="https://github.com/user-attachments/assets/064eeb93-53fd-4704-a56c-1ecc8fa83905" width=600 align="center"><br>
+<img src="https://github.com/user-attachments/assets/064eeb93-53fd-4704-a56c-1ecc8fa83905" width=600 align="center"><br><br><br>
 
 <p>마이 페이지 - 정보 수정 및 생성한 채팅방 정보</p> 
-<img src="https://github.com/user-attachments/assets/dfb0ff8c-b9b8-4856-9436-c7cae7594c6f" width=600 align="center"><br>
+<img src="https://github.com/user-attachments/assets/dfb0ff8c-b9b8-4856-9436-c7cae7594c6f" width=600 align="center"><br><br><br>
 
 <p>채팅방 목록 페이지</p> 
-<img src="https://github.com/user-attachments/assets/462d2e24-2c32-4ef8-8bd1-95b436482fb0" width=600 align="center"><br>
+<img src="https://github.com/user-attachments/assets/462d2e24-2c32-4ef8-8bd1-95b436482fb0" width=600 align="center"><br><br><br>
 
 <p>채방방 페이지</p> 
-<img src="https://github.com/user-attachments/assets/0778a890-b2a5-4c64-946b-9879853aaabb" width=600 align="center"><br>
+<img src="https://github.com/user-attachments/assets/0778a890-b2a5-4c64-946b-9879853aaabb" width=600 align="center"><br><br><br>
