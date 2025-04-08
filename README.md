@@ -1,6 +1,6 @@
 ## chat-project
 인천 공항 정보 제공 및 채팅 프로젝트<br><br>
-<img src="https://github.com/user-attachments/assets/35ef2210-c94d-44d6-88cc-5c5c9a61ae1f" width=500 align="center"><br><br><br>
+<img src="https://github.com/user-attachments/assets/35ef2210-c94d-44d6-88cc-5c5c9a61ae1f" width=800 height=400 align="center"><br><br><br>
 
 <img src="https://github.com/user-attachments/assets/f1787b3b-1f4e-4752-b908-2ae6758e0ac7" width=700 align="center"><br><br><br>
 
