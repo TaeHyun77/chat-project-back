@@ -32,4 +32,4 @@ CI/CD : Docker, Aws
 
 ## 페이지 
 <p align="center">
-<img src="https://github.com/user-attachments/assets/d09a03c8-ffb3-4e9e-9b24-3e22a7496a70" width=800>
+<img src="https://github.com/user-attachments/assets/d09a03c8-ffb3-4e9e-9b24-3e22a7496a70" width=800 align="center">
