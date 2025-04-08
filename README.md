@@ -29,3 +29,6 @@ CI/CD : Docker, Aws
   ( 트랜잭션 처리 효율을 높이고 불필요한 DB 접근을 최소화 )<br>
 - Oauth 적용을 위해 도메인을 적용하고 Http 프로토콜을 Https 프로토콜로 변경 <br>
   ( Oauth는 퍼블릭 ip와 http를 지원하지 않기 때문입니다. )<br>
+
+## 페이지 
+![image](https://github.com/user-attachments/assets/d09a03c8-ffb3-4e9e-9b24-3e22a7496a70)
