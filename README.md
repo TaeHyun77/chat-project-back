@@ -31,17 +31,17 @@ CI/CD : Docker, Aws
   ( Oauth는 퍼블릭 ip와 http를 지원하지 않기 때문입니다. )<br>
 
 ## 페이지 
-[ 메인 페이지 - 출국장 정보 ]
+[ 메인 페이지 - 출국장 정보 ] <br>
 <img src="https://github.com/user-attachments/assets/d09a03c8-ffb3-4e9e-9b24-3e22a7496a70" width=800 align="center">
 
-[ 메인 페이지 - 항공편 정보 ]
+[ 메인 페이지 - 항공편 정보 ] <br>
 <img src="https://github.com/user-attachments/assets/064eeb93-53fd-4704-a56c-1ecc8fa83905" width=800 align="center">
 
-[ 마이 페이지 - 정보 수정 및 생성한 채팅방 정보 ]
+[ 마이 페이지 - 정보 수정 및 생성한 채팅방 정보 ] <br>
 <img src="https://github.com/user-attachments/assets/dfb0ff8c-b9b8-4856-9436-c7cae7594c6f" width=800 align="center">
 
-[ 채팅방 목록 페이지 ]
+[ 채팅방 목록 페이지 ] <br>
 <img src="https://github.com/user-attachments/assets/462d2e24-2c32-4ef8-8bd1-95b436482fb0" width=800 align="center">
 
-[ 채방방 페이지 ]
+[ 채방방 페이지 ] <br>
 <img src="https://github.com/user-attachments/assets/0778a890-b2a5-4c64-946b-9879853aaabb" width=800 align="center">
