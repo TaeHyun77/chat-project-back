@@ -31,7 +31,7 @@ CI/CD : Docker, Aws
   ( Oauth는 퍼블릭 ip와 http를 지원하지 않기 때문입니다. )<br>
 
 ## 페이지 
-[ 메인 페이지 - 출국장 정보 ] <br>
+메인 페이지 - 출국장 정보 
 <img src="https://github.com/user-attachments/assets/d09a03c8-ffb3-4e9e-9b24-3e22a7496a70" width=800 align="center">
 
 [ 메인 페이지 - 항공편 정보 ] <br>
