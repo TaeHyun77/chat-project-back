@@ -1,5 +1,6 @@
 package com.example.chat.member;
 
+import com.example.chat.chat.chatRoom.ChatRoomMemberDto;
 import com.example.chat.exception.ChatException;
 import com.example.chat.exception.ErrorCode;
 import com.example.chat.jwt.JwtUtil;
@@ -13,7 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -76,7 +79,6 @@ public class MemberService {
         return ResponseEntity.ok("로그 아웃 성공");
     }
 
-
     public boolean isNickName(String editNickName) {
 
         return memberRepository.existsByNickName(editNickName);
@@ -95,6 +97,24 @@ public class MemberService {
         }
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    public MemberResDto memberChatRooms(Long id) {
+
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.NOT_FOUND_MEMBER));
+
+        return MemberResDto.of(
+                member.getId(),
+                member.getUsername(),
+                member.getName(),
+                member.getEmail(),
+                member.getNickName(),
+                member.getRole(),
+                member.getChatRooms().stream()
+                        .map(ChatRoomMemberDto::from)
+                        .toList()
+        );
     }
 
     public void deleteAllMember() {

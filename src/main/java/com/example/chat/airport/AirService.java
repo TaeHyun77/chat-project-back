@@ -16,6 +16,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.HttpStatus;
@@ -23,7 +27,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
-
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -261,6 +264,10 @@ public class AirService {
 
                     Plane newPlane = dto.toPlane();
 
+                    boolean isDuplicate = newPlanes.stream()
+                            .anyMatch(p -> p.getFlightId().equals(flightId) && p.getScheduleDatetime().equals(scheduleDatetime));
+                    if (isDuplicate) continue;
+
                     valueOps.set(redisKey, objectMapper.writeValueAsString(newPlane), 1, TimeUnit.HOURS);
 
                     newPlanes.add(newPlane);
@@ -274,7 +281,6 @@ public class AirService {
                         planesToUpdate.add(existingPlane);
 
                         updateDataCnt++;
-
                     }
 
                     valueOps.set(redisKey, objectMapper.writeValueAsString(existingPlane), 1, TimeUnit.HOURS);
@@ -398,5 +404,13 @@ public class AirService {
         } catch (ChatException e) {
             log.info("어제 항공편 데이터 삭제 실패");
         }
+    }
+
+    public Page<DepartureResDto> testPage(int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+
+        return departureRepository.findAll(pageable).map(DepartureResDto::new);
+
     }
 }

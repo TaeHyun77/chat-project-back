@@ -14,6 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
+import java.util.List;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -46,7 +49,7 @@ public class ChatService {
     // 입장, 퇴장 메시지 처리
     private void handleEnterAndExitMessage(ChatRequestDto requestDto, Member member) {
 
-        ChatRoom chatRoom = chatRoomRepository.findChatRoomWithChatsAndMember(requestDto.getRoomId());
+        ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(requestDto.getRoomId());
 
         if (chatRoom == null) {
             throw new ChatException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_CHATROOM);
@@ -73,7 +76,7 @@ public class ChatService {
     // 일반 채팅 메시지 처리
     private void handleTalkMessage(ChatRequestDto requestDto, Member member) {
 
-        ChatRoom chatRoom = chatRoomRepository.findChatRoomWithChatsAndMember(requestDto.getRoomId());
+        ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(requestDto.getRoomId());
 
         if (chatRoom == null) {
             throw new ChatException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_CHATROOM);

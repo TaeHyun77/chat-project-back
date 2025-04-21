@@ -5,10 +5,10 @@ import com.example.chat.airport.resDto.DepartureResDto;
 import com.example.chat.airport.resDto.PlaneResDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,8 +18,6 @@ import java.util.List;
 public class AirController {
 
     private final AirService airService;
-
-    private final PlaneRepository planeRepository;
 
     // 인천 공항 출입국 현황
     @GetMapping("/arrivals")
@@ -47,6 +45,19 @@ public class AirController {
 
     @DeleteMapping("/delete/yesterday/planes")
     public void deleteYesterdayPlanes() {
+
         airService.PlaneDelAndIst();
+        
+    }
+
+    // 페이징 테스트
+    @GetMapping("/test/page")
+    public ResponseEntity<List<DepartureResDto>> testPage(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "0") int size) {
+
+        Page<DepartureResDto> departurePage = airService.testPage(page, size);
+
+        return new ResponseEntity<>(departurePage.getContent(), HttpStatus.OK);
     }
 }

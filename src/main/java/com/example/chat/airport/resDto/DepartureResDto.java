@@ -42,4 +42,18 @@ public class DepartureResDto {
         this.t2Depart2 = t2Depart2;
         this.t2DepartSum = t2DepartSum;
     }
+
+    // page 테스트
+    public DepartureResDto(Departure departure) {
+        this.date = departure.getDate();
+        this.timeZone = departure.getTimeZone();
+        this.t1Depart12 = departure.getT1Depart12();
+        this.t1Depart3 = departure.getT1Depart3();
+        this.t1Depart4 = departure.getT1Depart4();
+        this.t1Depart56 = departure.getT1Depart56();
+        this.t1DepartSum = departure.getT1DepartSum();
+        this.t2Depart1 = departure.getT2Depart1();
+        this.t2Depart2 = departure.getT2Depart2();
+        this.t2DepartSum = departure.getT2DepartSum();
+    }
 }
