@@ -22,6 +22,14 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
     }
 
     @Override
+    public ChatRoom findByChatRoomId(String chatRoomId) {
+        return queryFactory
+                .selectFrom(QChatRoom.chatRoom)
+                .where(QChatRoom.chatRoom.chatRoomId.eq(chatRoomId))
+                .fetchOne();
+    }
+
+    @Override
     public ChatRoom findChatRoomWithChatsAndMember(String chatRoomId) {
         return queryFactory
                 .selectFrom(QChatRoom.chatRoom)

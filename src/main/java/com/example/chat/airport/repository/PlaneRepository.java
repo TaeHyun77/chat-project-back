@@ -2,6 +2,9 @@ package com.example.chat.airport.repository;
 
 import com.example.chat.airport.entity.Plane;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 public interface PlaneRepository extends JpaRepository<Plane, Long>, PlaneRepositoryCustom{
 
@@ -12,5 +15,5 @@ public interface PlaneRepository extends JpaRepository<Plane, Long>, PlaneReposi
     */
 
     Plane findByFlightIdAndScheduleDatetime(String flightId, String scheduleDatetime);
-
 }
+

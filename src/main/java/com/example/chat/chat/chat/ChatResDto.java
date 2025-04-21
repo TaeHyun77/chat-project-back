@@ -4,6 +4,7 @@ import com.example.chat.member.MemberResDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
 
 import java.time.LocalDateTime;
 
