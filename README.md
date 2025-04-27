@@ -10,7 +10,7 @@
 
 ## 사용 기술
 BackEnd : SpringBoot, Spring Data Jpa<br>
-FrontEnd : React.js<br>
+FrontEnd : React.js, JavaScript<br>
 DataBase : MySQL , Redis<br>
 CI/CD : Docker, Aws
 <br>
