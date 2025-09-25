@@ -12,9 +12,9 @@
 출국자들 간 실시간 소통이 가능한 채팅 기능을 더해 사용자의 편의성과 정보 공유를 높이기 위함입니다.
 
 ## 사용 기술
-BackEnd : SpringBoot, Spring Data Jpa<br>
-FrontEnd : React.js, JavaScript<br>
-DataBase : MySQL , Redis<br>
+Backend : SpringBoot, Spring Data Jpa<br>
+Frontend : React.js, JavaScript<br>
+Database : MySQL , Redis<br>
 CI/CD : Docker, Aws
 <br>
 ## 기능
