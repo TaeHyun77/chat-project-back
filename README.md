@@ -15,7 +15,7 @@
 Backend : SpringBoot, Spring Data Jpa<br>
 Frontend : React.js, JavaScript<br>
 Database : MySQL , Redis<br>
-CI/CD : Docker, Aws
+CI/CD : Docker, Aws Ec2
 <br>
 ## 기능
 - Oauth를 통한 구글 로그인<br>
