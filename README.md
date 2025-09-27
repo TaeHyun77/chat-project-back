@@ -2,7 +2,7 @@
 인천 공항 정보 제공 및 채팅 프로젝트<br><br>
 
 <p align="center">
-<img width="700" height="600" alt="Image" src="https://github.com/user-attachments/assets/3d3c93c2-4c25-484e-88b0-7be149ba179d" />
+<img width="600" height="550" alt="Image" src="https://github.com/user-attachments/assets/3d3c93c2-4c25-484e-88b0-7be149ba179d" />
 
 ## 목적
 인천공항을 통한 출국 시 필요한 출국장 혼잡도와 항공편 정보를 한 번에 제공하고, <br>
