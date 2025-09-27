@@ -5,7 +5,8 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum ErrorCode {
+public enum
+ErrorCode {
 
     UNKNOWN("000_UNKNOWN", "알 수 없는 에러가 발생했습니다."),
 
@@ -35,7 +36,9 @@ public enum ErrorCode {
 
     ERROR_TO_DELETE_YESTERDAY_PLANE_DATA("ERROR_TO_DELETE_YESTERDAY_PLANE_DATA", "어제 항공편 삭제 에러"),
 
-    ERROR_TO_CHANGE_JSON_DATE("ERROR_TO_CHANGE_JSON_DATE", "json 데이터 변환 실패");
+    ERROR_TO_CHANGE_JSON_DATE("ERROR_TO_CHANGE_JSON_DATE", "json 데이터 변환 실패"),
+
+    ERROR_TO_SAVE_DEPARTURE_DATA("ERROR_TO_SAVE_DEPARTURE_DATA", "출국장 데이터 저장 실패");
 
     private final String errorCode;
 

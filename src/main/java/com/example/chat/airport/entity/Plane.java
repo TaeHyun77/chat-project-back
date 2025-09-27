@@ -47,8 +47,10 @@ public class Plane extends BaseTime {
 
     private String codeShare;
 
+    private String searchDate;
+
     @Builder
-    public Plane(String flightId, String airLine, String airport, String airportCode, String scheduleDatetime, String estimatedDatetime, String gateNumber, String terminalId, String remark, String aircraftRegNo, String codeShare) {
+    public Plane(String flightId, String airLine, String airport, String airportCode, String scheduleDatetime, String estimatedDatetime, String gateNumber, String terminalId, String remark, String aircraftRegNo, String codeShare, String searchDate) {
         this.flightId = flightId;
         this.airLine = airLine;
         this.airport = airport;
@@ -60,6 +62,7 @@ public class Plane extends BaseTime {
         this.remark = remark;
         this.aircraftRegNo = aircraftRegNo;
         this.codeShare = codeShare;
+        this.searchDate = searchDate;
     }
 
     public void updatePlane(String remark, String estimatedDatetime, String gateNumber, String terminalId) {
