@@ -49,6 +49,8 @@ public class QPlane extends EntityPathBase<Plane> {
 
     public final StringPath scheduleDatetime = createString("scheduleDatetime");
 
+    public final StringPath searchDate = createString("searchDate");
+
     public final StringPath terminalId = createString("terminalId");
 
     public QPlane(String variable) {

@@ -51,4 +51,17 @@ public class Departure extends BaseTime {
         this.t2Depart2 = t2Depart2;
         this.t2DepartSum = t2DepartSum;
     }
+
+    public void updateDeparture(Departure editDeparture) {
+        this.date = editDeparture.date;
+        this.timeZone = editDeparture.timeZone;
+        this.t1Depart12 = editDeparture.t1Depart12;
+        this.t1Depart3 = editDeparture.t1Depart3;
+        this.t1Depart4 = editDeparture.t1Depart4;
+        this.t1Depart56 = editDeparture.t1Depart56;
+        this.t1DepartSum = editDeparture.t1DepartSum;
+        this.t2Depart1 = editDeparture.t2Depart1;
+        this.t2Depart2 = editDeparture.t2Depart2;
+        this.t2DepartSum = editDeparture.t2DepartSum;
+    }
 }

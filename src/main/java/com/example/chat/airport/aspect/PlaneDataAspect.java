@@ -18,7 +18,7 @@ public class PlaneDataAspect {
         Object proceed = joinPoint.proceed();
         long executionTime = System.currentTimeMillis() - start;
 
-        log.info("항공편 Api 로딩 시간 : " + executionTime + "ms");
+        log.info("항공편 Api 로딩 시간 : {}ms", executionTime);
         return proceed;
     }
 }

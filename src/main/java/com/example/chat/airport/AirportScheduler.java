@@ -22,7 +22,7 @@ public class AirportScheduler {
     @Scheduled(fixedDelay = 600000) // 10분마다 진행
     public void runDepartureData() {
         try {
-            airService.getArrivalsData();
+            airService.getDepartureData();
             log.info("출국장 데이터 불러오기 완료");
         } catch (ChatException e) {
             log.info("출국장 데이터 불러오기 실패");
@@ -41,7 +41,7 @@ public class AirportScheduler {
         }
     }
 
-    // 매 자정에 어제 항공편 삭제 ( 상태 값이 "출발"인 것만 삭제, JPQL 사용 )
+    /*// 매 자정에 어제 항공편 삭제 ( 상태 값이 "출발"인 것만 삭제, JPQL 사용 )
     @Scheduled(cron = "0 0 0 * * *")
     public void DelAndIst() {
         try {
@@ -51,5 +51,5 @@ public class AirportScheduler {
             log.info("어제 항공편 삭제 실패");
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_DELETE_YESTERDAY_PLANE_DATA);
         }
-    }
+    }*/
 }

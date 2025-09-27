@@ -19,12 +19,6 @@ public class AirController {
 
     private final AirService airService;
 
-    // 인천 공항 출입국 현황
-    @GetMapping("/arrivals")
-    public void getArrivalsData() {
-        airService.getArrivalsData();
-    }
-
     // 인천 공항 항공기 운항 현황 ( 도착 , 출발 )
     @GetMapping("/planes")
     public void getPlane() {
@@ -43,14 +37,7 @@ public class AirController {
         return airService.getAllPlanes();
     }
 
-    @DeleteMapping("/delete/yesterday/planes")
-    public void deleteYesterdayPlanes() {
-
-        airService.PlaneDelAndIst();
-        
-    }
-
-    // 페이징 테스트
+    /*// 페이징 테스트
     @GetMapping("/test/page")
     public ResponseEntity<List<DepartureResDto>> testPage(
             @RequestParam(name = "page", defaultValue = "0") int page,
@@ -59,5 +46,5 @@ public class AirController {
         Page<DepartureResDto> departurePage = airService.testPage(page, size);
 
         return new ResponseEntity<>(departurePage.getContent(), HttpStatus.OK);
-    }
+    }*/
 }
