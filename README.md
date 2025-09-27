@@ -1,18 +1,18 @@
-## chat-project
-인천 공항 정보 제공 및 채팅 프로젝트<br><br>
+## 프로젝트 설명
+---
+인천공항을 통한 출국 시 필요한 출국장 혼잡도와 항공편 정보를 제공하고, 채팅 기능을 통해 사용자들끼리 편의성과 정보를 얻을 수 있도록 하는 프로젝트입니다.<br><br>
 
-<p align="center">
-<img width="600" height="550" alt="Image" src="https://github.com/user-attachments/assets/3d3c93c2-4c25-484e-88b0-7be149ba179d" />
-
-## 목적
-인천공항을 통한 출국 시 필요한 출국장 혼잡도와 항공편 정보를 한 번에 제공하고, <br>
-출국자들 간 실시간 소통이 가능한 채팅 기능을 더해 사용자의 편의성과 정보 공유를 높이기 위함입니다.<br><br>
-
-## 사용 기술
+## 기술 스택
 Backend : SpringBoot, Spring Data Jpa<br>
 Frontend : React.js, JavaScript<br>
 Database : MySQL , Redis<br>
 CI/CD : Docker, Aws Ec2<br><br>
+
+## 아키텍처
+---
+<p align="center">
+<img width="600" height="550" alt="Image" src="https://github.com/user-attachments/assets/3d3c93c2-4c25-484e-88b0-7be149ba179d" />
+<br><br>
 
 ## 기능
 - Oauth를 통한 구글 로그인<br>
