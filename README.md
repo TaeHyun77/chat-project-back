@@ -35,29 +35,29 @@ CI/CD : Docker, Aws Ec2<br><br><br>
 ## 페이지 
 
 **[ 전체 홈 페이지 ]**
-
+<br>
 <img src="https://github.com/user-attachments/assets/56d843b5-bd84-4541-9946-b91ec4cc5927" width=700 align="center"><br><br><br>
 
 **[ 메인 페이지 - 출국장 정보 ]**
-<br>
+<br><br>
 각 출국장의 혼잡도를 수치와 그래프를 통해 나타내였습니다. <br>
 
 <img src="https://github.com/user-attachments/assets/d09a03c8-ffb3-4e9e-9b24-3e22a7496a70" width=600 align="center"><br><br><br>
 
 **[ 메인 페이지 - 항공편 정보 ]**
 <br>
-3일 내의 출발 예정인 항공편만 나타내며, 지연되는 항공편은 따로 표시를 해두었습니다.<br>
+3일 내의 출발 예정인 항공편만 나타내며, 지연되는 항공편은 따로 표시를 해두었습니다.<br><br>
 
 <img src="https://github.com/user-attachments/assets/064eeb93-53fd-4704-a56c-1ecc8fa83905" width=600 align="center"><br><br><br>
 
 **[ 마이 페이지 - 정보 수정 및 생성한 채팅방 정보 ]**
-<br>
+<br><br>
 <img src="https://github.com/user-attachments/assets/dfb0ff8c-b9b8-4856-9436-c7cae7594c6f" width=600 align="center"><br><br><br>
 
 **[ 채팅방 목록 페이지 ]**
-<br>
+<br><br>
 <img src="https://github.com/user-attachments/assets/462d2e24-2c32-4ef8-8bd1-95b436482fb0" width=600 align="center"><br><br><br>
 
 **[ 채방방 페이지 ]**
-<br>
+<br><br>
 <img src="https://github.com/user-attachments/assets/0778a890-b2a5-4c64-946b-9879853aaabb" width=600 align="center"><br><br><br>
