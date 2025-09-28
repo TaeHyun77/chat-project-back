@@ -60,4 +60,6 @@ CI/CD : Docker, Aws Ec2<br><br><br>
 
 **[ 채방방 페이지 ]**
 <br><br>
+
+모든 사용자들이 접속할 수 있는 오픈 채팅방이며 채팅방 인원수와 접속, 퇴장 여부 기능을 제공합니다.
 <img src="https://github.com/user-attachments/assets/0778a890-b2a5-4c64-946b-9879853aaabb" width=600 align="center"><br><br><br>
