@@ -17,6 +17,7 @@ CI/CD : Docker, Aws Ec2<br><br><br>
 - 스케줄링을 통한 인천공항 API 저장 및 업데이트 <br><br>
   ( 출국장 데이터는 10분 간격으로 최근 2일, 항공편 데이터는 5분 간격으로 최근 3일 기준으로 제공 )<br><br>
 - websocket과 STOMP를 이용한 채팅 구현<br><br>
+- Docker와 AWS Ec2를 이용한 배포 진행
 - 도메인 적용과 Https 프로토콜 변경<br><br><br>
 
 ## 개선 사항
