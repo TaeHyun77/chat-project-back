@@ -35,6 +35,7 @@ CI/CD : Docker, Aws Ec2<br><br><br>
 ## 페이지 
 
 **[ 전체 홈 페이지 ]**
+
 <img src="https://github.com/user-attachments/assets/56d843b5-bd84-4541-9946-b91ec4cc5927" width=700 align="center"><br><br><br>
 
 **[ 메인 페이지 - 출국장 정보 ]**
