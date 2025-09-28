@@ -40,14 +40,14 @@ CI/CD : Docker, Aws Ec2<br><br><br>
 
 **[ 메인 페이지 - 출국장 정보 ]**
 <br><br>
-각 출국장의 혼잡도를 수치와 그래프를 통해 나타내였습니다. <br>
 
+각 출국장의 혼잡도를 수치와 그래프를 통해 나타내였습니다. <br>
 <img src="https://github.com/user-attachments/assets/d09a03c8-ffb3-4e9e-9b24-3e22a7496a70" width=600 align="center"><br><br><br>
 
 **[ 메인 페이지 - 항공편 정보 ]**
-<br>
-3일 내의 출발 예정인 항공편만 나타내며, 지연되는 항공편은 따로 표시를 해두었습니다.<br><br>
+<br><br>
 
+3일 내의 출발 예정인 항공편만 나타내며, 지연되는 항공편은 따로 표시를 해두었습니다.<br><br>
 <img src="https://github.com/user-attachments/assets/064eeb93-53fd-4704-a56c-1ecc8fa83905" width=600 align="center"><br><br><br>
 
 **[ 마이 페이지 - 정보 수정 및 생성한 채팅방 정보 ]**
