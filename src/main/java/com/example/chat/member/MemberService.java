@@ -1,9 +1,11 @@
 package com.example.chat.member;
 
-import com.example.chat.chat.chatRoom.ChatRoomMemberDto;
+import com.example.chat.chat.chatRoom.dto.ChatRoomResDto;
 import com.example.chat.exception.ChatException;
 import com.example.chat.exception.ErrorCode;
 import com.example.chat.jwt.JwtUtil;
+import com.example.chat.member.dto.MemberResDto;
+import com.example.chat.member.repository.MemberRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,9 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -101,8 +101,9 @@ public class MemberService {
 
     public MemberResDto memberChatRooms(Long id) {
 
-        Member member = memberRepository.findById(id)
-                .orElseThrow(() -> new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.NOT_FOUND_MEMBER));
+        Member member = memberRepository.findByMemberWithChatRooms(id);
+
+        if (member == null) throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.NOT_FOUND_MEMBER);
 
         return MemberResDto.of(
                 member.getId(),
@@ -112,9 +113,14 @@ public class MemberService {
                 member.getNickName(),
                 member.getRole(),
                 member.getChatRooms().stream()
-                        .map(ChatRoomMemberDto::from)
+                        .map(chatRoom -> ChatRoomResDto.builder()
+                                .chatRoomId(chatRoom.getChatRoomId()) // ID 필드를 사용한다고 가정
+                                .chatRoomName(chatRoom.getChatRoomName())
+                                .createdAt(chatRoom.getCreatedAt())
+                                .modifiedAt(chatRoom.getModifiedAt())
+                                .build())
                         .toList()
-        );
+                );
     }
 
     public void deleteAllMember() {

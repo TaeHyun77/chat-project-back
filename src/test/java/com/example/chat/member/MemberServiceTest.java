@@ -1,5 +1,7 @@
 package com.example.chat.member;
 
+import com.example.chat.member.dto.MemberReqDto;
+import com.example.chat.member.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,7 @@ class MemberServiceTest {
     @DisplayName("회원 등록 테스트")
     public void save_member_test() {
 
-        MemberDto dto = MemberDto.builder()
+        MemberReqDto dto = MemberReqDto.builder()
                 .username("asdfg")
                 .name("박태현")
                 .email("qwer")

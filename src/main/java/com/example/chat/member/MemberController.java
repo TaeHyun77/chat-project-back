@@ -2,6 +2,7 @@ package com.example.chat.member;
 
 import com.example.chat.exception.ChatException;
 import com.example.chat.exception.ErrorCode;
+import com.example.chat.member.dto.MemberResDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

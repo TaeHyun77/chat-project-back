@@ -1,4 +1,6 @@
-package com.example.chat.chat.chatRoom;
+package com.example.chat.chat.chatRoom.repository;
+
+import com.example.chat.chat.chatRoom.ChatRoom;
 
 import java.util.List;
 
@@ -8,6 +10,6 @@ public interface ChatRoomRepositoryCustom {
     
     ChatRoom findByChatRoomId(String chatRoomId);
 
-    ChatRoom findChatRoomWithChatsAndMember(String chatRoomId);
+    ChatRoom findChatRoomWithMember(String chatRoomId);
 
 }

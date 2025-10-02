@@ -1,6 +1,8 @@
-package com.example.chat.member;
+package com.example.chat.member.dto;
 
-import com.example.chat.chat.chatRoom.ChatRoomMemberDto;
+import com.example.chat.chat.chatRoom.dto.ChatRoomResDto;
+import com.example.chat.member.Member;
+import com.example.chat.member.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,7 +27,7 @@ public class MemberResDto {
 
     private Role role;
 
-    private List<ChatRoomMemberDto> chatRoomMemberDtos;
+    private List<ChatRoomResDto> chatRooms;
 
     @Builder
     public MemberResDto(Long id, String username, String name, String email, String nickName, Role role) {
@@ -37,8 +39,8 @@ public class MemberResDto {
         this.role = role;
     }
 
-    public static MemberResDto of(Long id, String username, String name, String email, String nickName, Role role, List<ChatRoomMemberDto> chatRoomMemberDtos) {
-        return new MemberResDto(id, username, name, email, nickName, role, chatRoomMemberDtos);
+    public static MemberResDto of(Long id, String username, String name, String email, String nickName, Role role, List<ChatRoomResDto> chatRooms) {
+        return new MemberResDto(id, username, name, email, nickName, role, chatRooms);
     }
 
     public static MemberResDto fromMemberEntity(Member member) {

@@ -1,21 +1,23 @@
 package com.example.chat.chat.chat;
 
+import com.example.chat.chat.chat.dto.ChatReqDto;
+import com.example.chat.chat.chat.dto.ChatResDto;
+import com.example.chat.chat.chat.repository.ChatRepository;
 import com.example.chat.chat.chatRoom.ChatRoom;
-import com.example.chat.chat.chatRoom.ChatRoomRepository;
+import com.example.chat.chat.chatRoom.repository.ChatRoomRepository;
 import com.example.chat.exception.ChatException;
 import com.example.chat.exception.ErrorCode;
-import com.example.chat.jwt.JwtUtil;
 import com.example.chat.member.Member;
-import com.example.chat.member.MemberRepository;
-import com.example.chat.member.MemberResDto;
+import com.example.chat.member.repository.MemberRepository;
+import com.example.chat.member.dto.MemberResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -27,7 +29,22 @@ public class ChatService {
     private final ChatRoomRepository chatRoomRepository;
     private final SimpMessageSendingOperations messagingTemplate;
 
-    public void pushMessage(ChatRequestDto requestDto) {
+    public List<ChatResDto> getAllChats(String chatRoomId) {
+
+        List<Chat> chats = chatRepository.getChats(chatRoomId);
+
+        return chats.stream()
+                .map(chat -> ChatResDto.builder()
+                        .chatType(chat.getChatType())
+                        .content(chat.getContent())
+                        .member(MemberResDto.fromMemberEntity(chat.getMember()))
+                        .createdAt(chat.getCreatedAt())
+                        .build())
+                .collect(Collectors.toList());
+
+    }
+
+    public void pushMessage(ChatReqDto requestDto) {
 
         Member member = memberRepository.findByUsername(requestDto.getUsername())
                 .orElseThrow(() -> new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.NOT_FOUND_MEMBER));
@@ -36,7 +53,7 @@ public class ChatService {
     }
 
     // 메시지 타입에 따른 처리 로직 분리
-    private void handleMessageByType(ChatRequestDto requestDto, Member member) {
+    private void handleMessageByType(ChatReqDto requestDto, Member member) {
         if (requestDto.getChatType() == ChatType.TALK) {
             handleTalkMessage(requestDto, member);
         } else if (requestDto.getChatType() == ChatType.ENTER || requestDto.getChatType() == ChatType.EXIT) {
@@ -47,7 +64,7 @@ public class ChatService {
     }
 
     // 입장, 퇴장 메시지 처리
-    private void handleEnterAndExitMessage(ChatRequestDto requestDto, Member member) {
+    private void handleEnterAndExitMessage(ChatReqDto requestDto, Member member) {
 
         ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(requestDto.getRoomId());
 
@@ -74,7 +91,7 @@ public class ChatService {
     }
 
     // 일반 채팅 메시지 처리
-    private void handleTalkMessage(ChatRequestDto requestDto, Member member) {
+    private void handleTalkMessage(ChatReqDto requestDto, Member member) {
 
         ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(requestDto.getRoomId());
 

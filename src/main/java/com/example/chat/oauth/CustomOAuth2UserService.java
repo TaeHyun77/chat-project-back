@@ -1,7 +1,7 @@
 package com.example.chat.oauth;
 
 import com.example.chat.member.Member;
-import com.example.chat.member.MemberRepository;
+import com.example.chat.member.repository.MemberRepository;
 import com.example.chat.member.Role;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
