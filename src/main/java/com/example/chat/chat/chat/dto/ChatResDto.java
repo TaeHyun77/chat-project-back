@@ -1,10 +1,11 @@
-package com.example.chat.chat.chat;
+package com.example.chat.chat.chat.dto;
 
-import com.example.chat.member.MemberResDto;
+import com.example.chat.chat.chat.Chat;
+import com.example.chat.chat.chat.ChatType;
+import com.example.chat.member.dto.MemberResDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Fetch;
 
 import java.time.LocalDateTime;
 

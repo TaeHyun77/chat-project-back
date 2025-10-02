@@ -1,5 +1,7 @@
 package com.example.chat.chat.chatRoom;
 
+import com.example.chat.chat.chatRoom.dto.ChatRoomReqDto;
+import com.example.chat.chat.chatRoom.dto.ChatRoomResDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -18,7 +20,7 @@ public class ChatRoomController {
 
     // 채팅방 생성
     @PostMapping("/api/chat/room")
-    public void createRoom(@RequestBody ChatRoomRequestDto dto) {
+    public void createRoom(@RequestBody ChatRoomReqDto dto) {
         chatRoomService.createChatRoom(dto);
     }
 

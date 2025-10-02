@@ -1,5 +1,6 @@
-package com.example.chat.chat.chat;
+package com.example.chat.chat.chat.dto;
 
+import com.example.chat.chat.chat.ChatType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Setter
 @Getter
-public class ChatRequestDto {
+public class ChatReqDto {
 
     private ChatType chatType;
 

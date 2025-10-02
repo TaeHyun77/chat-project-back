@@ -19,19 +19,19 @@ public class AirController {
 
     private final AirService airService;
 
-    // 인천 공항 항공기 운항 현황 ( 도착 , 출발 )
+    // 인천공항 항공편 현황
     @GetMapping("/planes")
     public void getPlane() {
         airService.getPlane();
     }
 
-    // 출입국 데이터
+    // 출국장 혼잠도 데이터 조회
     @GetMapping("/get/departures")
     public List<DepartureResDto> getDepartures() {
         return airService.getDepartures();
     }
 
-    // 항공편 데이터
+    // 항공편 데이터 조회
     @GetMapping("/get/planes")
     public List<PlaneResDto> getRedisPlanes() {
         return airService.getAllPlanes();

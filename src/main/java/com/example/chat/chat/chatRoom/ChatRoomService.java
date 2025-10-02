@@ -1,15 +1,18 @@
 package com.example.chat.chat.chatRoom;
 
-import com.example.chat.chat.chat.ChatResDto;
+import com.example.chat.chat.chatRoom.dto.ChatRoomReqDto;
+import com.example.chat.chat.chatRoom.dto.ChatRoomResDto;
+import com.example.chat.chat.chatRoom.repository.ChatRoomRepository;
 import com.example.chat.exception.ChatException;
 import com.example.chat.exception.ErrorCode;
 import com.example.chat.member.Member;
-import com.example.chat.member.MemberRepository;
-import com.example.chat.member.MemberResDto;
+import com.example.chat.member.repository.MemberRepository;
+import com.example.chat.member.dto.MemberResDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,7 +25,7 @@ public class ChatRoomService {
     private final MemberRepository memberRepository;
 
     // 채팅방 생성
-    public void createChatRoom(ChatRoomRequestDto dto) {
+    public void createChatRoom(ChatRoomReqDto dto) {
 
         Member member = memberRepository.findByUsername(dto.getCreator())
                 .orElseThrow(() -> new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.NOT_FOUND_MEMBER));
@@ -38,6 +41,7 @@ public class ChatRoomService {
 
     // 모든 채팅방 조회
     public List<ChatRoomResDto> selectAllChatRoom() {
+
         List<ChatRoom> chatRooms = chatRoomRepository.getChatRooms();
 
         return chatRooms.stream()
@@ -54,7 +58,7 @@ public class ChatRoomService {
     // 특정 채팅방 정보 조회
     public ChatRoomResDto chatRoomInfo(String roomId) {
 
-        ChatRoom chatRoom = chatRoomRepository.findChatRoomWithChatsAndMember(roomId);
+        ChatRoom chatRoom = chatRoomRepository.findChatRoomWithMember(roomId);
 
         if (chatRoom == null) {
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.NOT_FOUND_CHATROOM);
@@ -64,17 +68,15 @@ public class ChatRoomService {
                 .chatRoomId(roomId)
                 .chatRoomName(chatRoom.getChatRoomName())
                 .member(MemberResDto.fromMemberEntity(chatRoom.getMember()))
-                .chats(chatRoom.getChats().stream()
-                        .map(ChatResDto::fromChatEntity)
-                        .collect(Collectors.toList()))
                 .createdAt(chatRoom.getCreatedAt())
                 .modifiedAt(chatRoom.getModifiedAt())
                 .build();
     }
 
+    @Transactional
     public ResponseEntity<?> deleteRoom(String roomId) {
 
-        ChatRoom chatRoom = chatRoomRepository.findChatRoomWithChatsAndMember(roomId);
+        ChatRoom chatRoom = chatRoomRepository.findChatRoomWithMember(roomId);
 
         if (chatRoom == null) {
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.NOT_FOUND_CHATROOM);
