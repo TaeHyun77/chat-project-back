@@ -30,7 +30,7 @@ CI/CD : Docker, Aws Ec2<br><br><br>
 - 기존 데이터 조회 시 DB 대신 Redis를 사용하여 응답 속도 개선<br>
   ( Redis 캐싱을 통해 API 응답 속도롤 약 2배 개선 -> 110% 개선 )<br><br>
   
-- JPA Join Fetch를 이용하여 연관 관계 조회 최적화 <br>
+- JPA Join Fetch를 이용한 연관 관계 조회 최적화를 통해 약 63%의 속도 개선을 하였습니다. <br>
   ( 불필요한 쿼리를 줄이고 N+1 문제를 방지하기 위함입니다. )<br><br>
   
 - 조회 쿼리를 JPQL에서 Query DSL로 변경 <br>
