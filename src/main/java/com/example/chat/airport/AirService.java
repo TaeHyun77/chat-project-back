@@ -51,7 +51,7 @@ public class AirService {
     private final String departureDataEndPoint = "http://apis.data.go.kr/B551177/PassengerNoticeKR/getfPassengerNoticeIKR";
 
     // 항공편 현황 데이터 조회 API end_point
-    private final String planeDataEndPoint = "http://apis.data.go.kr/B551177/statusOfAllFltDeOdp/getFltDeparturesDeOdp";
+    private final String planeDataEndPoint = "https://odp.airport.kr/openapi/Temp/StatusOfPassengerFlightsDeOdpTemp/getPassengerDeparturesDeOdpTemp?TempKey=1uIUvp6wxzImej%2BMgTP%2B4K9WNjDo8UsKkLcm8wIzqBA%3D%2B%2B%2B43gddw3ghha%3D";
 
     /*
     * 공항 출국장 현황 데이터를 OpenAPI에서 조회
@@ -68,6 +68,7 @@ public class AirService {
 
                 URI uri = buildUri(departureDataEndPoint, searchDate);
 
+                // JSON 형태로 받아옴
                 String departureData = restTemplate.getForObject(uri, String.class);
 
                 upsertDepartureData(departureData, searchDate);
@@ -83,6 +84,7 @@ public class AirService {
     /*
     * 앞서 조회한 공항 출국장 현황 데이터를 DB에 저장 및 갱신, DB에는 존재하지만 조회되지 않는다면 삭제
     * */
+    @Transactional
     private void upsertDepartureData(String departureJsonData, String searchDate) {
         try {
 
@@ -197,7 +199,7 @@ public class AirService {
     }
 
     /*
-    * 앞서 조회한 공항 항공편 현황 데이터를 DB에 저장 및 갱신, 조회되지 않거나 이미 출발한 항공편은 삭제
+    * 앞서 조회한 공항 항공편 현황 데이터를 DB에 저장 및 갱신, DB에는 없으면서 조회되지 않거나 출발 상태의 항공편은 삭제
     * */
     @Transactional
     private void upsertPlaneData(String jsonPlaneData, String searchDate) {
@@ -270,16 +272,20 @@ public class AirService {
 
             // 삭제할 데이터
             // DB에는 존재하지만 API 조회 데이터에는 존재하지 않을 때 삭제
-            List<Plane> toDelete = existPlaneData.stream()
+            List<Plane> toDelete = new ArrayList<>();
+
+            existPlaneData.stream()
                     .filter(d -> !planeData.containsKey(d.getFlightId() + "_" + d.getScheduleDatetime()))
-                    .toList();
+                    .forEach(d -> {
+                        // Redis 키
+                        String redisKey = "plane:" + d.getFlightId() + "_" + d.getScheduleDatetime();
 
-            // Redis에서도 삭제
-            toDelete.forEach(d -> {
-                String redisKey = "plane:" + d.getFlightId() + "_" + d.getScheduleDatetime();
+                        // Redis에서 삭제
+                        redisTemplate.delete(redisKey);
 
-                redisTemplate.delete(redisKey);
-            });
+                        // DB에서 삭제
+                        toDelete.add(d);
+                    });
 
             planeRepository.saveAll(toSave);
             planeRepository.deleteAll(toDelete);
@@ -291,6 +297,7 @@ public class AirService {
         }
     }
 
+    // 항공편 데이터 변경 여부
     private boolean planeDataChangeCheck(Plane existingPlane, String remark , String estimatedDatetime, String gateNumber, String terminalId) {
 
         return !existingPlane.getRemark().equals(remark) || !existingPlane.getEstimatedDatetime().equals(estimatedDatetime) ||
@@ -398,7 +405,7 @@ public class AirService {
         return new URI(url);
     }
 
-    /*@Transactional
+    @Transactional
     public void deleteAndInsertPlane() {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
@@ -406,12 +413,13 @@ public class AirService {
 
         try {
             long deleteCnt = planeRepository.deleteByScheduleDateStartsWith(yesterday);
+
             log.info("삭제된 어제 항공편 데이터 개수 : {}", deleteCnt);
             log.info("어제 항공편 데이터 삭제 성공");
         } catch (ChatException e) {
             log.info("어제 항공편 데이터 삭제 실패");
         }
-    }*/
+    }
 
     /*public Page<DepartureResDto> testPage(int page, int size) {
 
