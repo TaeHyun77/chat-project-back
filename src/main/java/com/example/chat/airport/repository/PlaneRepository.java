@@ -14,8 +14,6 @@ public interface PlaneRepository extends JpaRepository<Plane, Long>, PlaneReposi
     void deleteByScheduleDateStartsWith(@Param("today") String today);
     */
 
-    Plane findByFlightIdAndScheduleDatetime(String flightId, String scheduleDatetime);
-
     List<Plane> findBySearchDate(String searchDate);
 }
 
