@@ -1,8 +1,6 @@
-package com.example.chat.airport.repository;
+package com.example.chat.airport.plane;
 
-import com.example.chat.airport.entity.Plane;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 

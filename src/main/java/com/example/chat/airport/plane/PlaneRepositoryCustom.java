@@ -1,4 +1,4 @@
-package com.example.chat.airport.repository;
+package com.example.chat.airport.plane;
 
 public interface PlaneRepositoryCustom {
 

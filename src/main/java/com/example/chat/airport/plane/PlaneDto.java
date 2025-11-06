@@ -1,6 +1,5 @@
-package com.example.chat.airport.reqDto;
+package com.example.chat.airport.plane;
 
-import com.example.chat.airport.entity.Plane;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

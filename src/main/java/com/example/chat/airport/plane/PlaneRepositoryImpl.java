@@ -1,6 +1,5 @@
-package com.example.chat.airport.repository;
+package com.example.chat.airport.plane;
 
-import com.example.chat.airport.entity.QPlane;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 

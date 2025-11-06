@@ -1,4 +1,4 @@
-package com.example.chat.airport.resDto;
+package com.example.chat.airport.plane;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
