@@ -13,6 +13,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import org.springframework.web.socket.messaging.SubProtocolWebSocketHandler;
 
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -23,9 +24,7 @@ public class SessionEventListener implements ApplicationListener<ApplicationEven
 
     private final ConcurrentMap<String, String> sessionRoomMap = new ConcurrentHashMap<>();
     private final ConcurrentMap<String, Integer> roomUserCountMap = new ConcurrentHashMap<>();
-
     private final SubProtocolWebSocketHandler subProtocolWebSocketHandler;
-
     private final SimpMessageSendingOperations messagingTemplate;
 
     private String chatRoomId = null;
@@ -53,13 +52,12 @@ public class SessionEventListener implements ApplicationListener<ApplicationEven
     }
 
     // 사용자가 특정 채팅방을 구독할 때 실행
-    // 특정 채팅방의 접속자 수 반환 => 증가 했을 때
     private void handleSubscription(SessionSubscribeEvent event) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
         String sessionId = accessor.getSessionId();
         String destination = accessor.getDestination(); // 사용자의 구독 경로
 
-        String roomId = destination.replace("/topic/chatroom/userCnt/", "");
+        String roomId = Objects.requireNonNull(destination).replace("/topic/chatroom/userCnt/", "");
 
         if (destination.startsWith("/topic/chatroom/userCnt/")) {
 
@@ -69,15 +67,14 @@ public class SessionEventListener implements ApplicationListener<ApplicationEven
             chatRoomId = roomId;
             chatRoomUserCnt = roomUserCountMap.get(roomId);
 
-            log.info("[DEBUG] 채팅방 " + roomId + " 유저 수: " + roomUserCountMap.get(roomId));
+            log.info("[DEBUG] 채팅방 {} 유저 수: {}", roomId, roomUserCountMap.get(roomId));
 
             messagingTemplate.convertAndSend("/topic/chatroom/userCnt/" + roomId, chatRoomUserCnt);
 
         }
     }
 
-    // 사용자가 연결 해제할 때 실행
-    // 특정 채팅방의 접속자 수 반환 => 감소 했을 때
+    // 사용자가 특정 채팅방을 구독 해제할 때 실행
     private void handleDisconnect(SessionDisconnectEvent event) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
         String sessionId = accessor.getSessionId();
@@ -89,7 +86,7 @@ public class SessionEventListener implements ApplicationListener<ApplicationEven
 
             chatRoomUserCnt = roomUserCountMap.getOrDefault(roomId, 0);
 
-            log.info("[DEBUG] 채팅방 " + roomId + " 유저 수: " + roomUserCountMap.getOrDefault(roomId, 0));
+            log.info("[DEBUG] 채팅방 {} 유저 수: {}", roomId, roomUserCountMap.getOrDefault(roomId, 0));
 
             messagingTemplate.convertAndSend("/topic/chatroom/userCnt/" + roomId, chatRoomUserCnt);
         }

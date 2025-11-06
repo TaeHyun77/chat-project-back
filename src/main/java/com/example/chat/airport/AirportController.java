@@ -21,13 +21,13 @@ public class AirportController {
     }
 
     // 출국장 혼잡도 데이터 조회
-    @GetMapping("/get/departures")
+    @GetMapping("/departures")
     public List<DepartureResDto> getDepartures() {
         return airportService.getDepartures();
     }
 
     // 항공편 데이터 조회
-    @GetMapping("/get/planes")
+    @GetMapping("/planes")
     public List<PlaneResDto> getRedisPlanes() {
         return airportService.getAllPlanes();
     }
