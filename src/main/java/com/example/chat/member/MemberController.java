@@ -21,6 +21,8 @@ public class MemberController {
 
     private final MemberService memberService;
 
+
+
     // 로그인 사용자 정보
     @GetMapping("/info")
     public MemberResDto memberInfo(HttpServletRequest request) {

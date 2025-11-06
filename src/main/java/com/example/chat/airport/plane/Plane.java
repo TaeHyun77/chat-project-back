@@ -1,4 +1,4 @@
-package com.example.chat.airport.entity;
+package com.example.chat.airport.plane;
 
 import com.example.chat.config.BaseTime;
 import jakarta.persistence.Entity;

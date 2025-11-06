@@ -38,7 +38,9 @@ ErrorCode {
 
     ERROR_TO_CHANGE_JSON_DATE("ERROR_TO_CHANGE_JSON_DATE", "json 데이터 변환 실패"),
 
-    ERROR_TO_SAVE_DEPARTURE_DATA("ERROR_TO_SAVE_DEPARTURE_DATA", "출국장 데이터 저장 실패");
+    ERROR_TO_SAVE_DEPARTURE_DATA("ERROR_TO_SAVE_DEPARTURE_DATA", "출국장 데이터 저장 실패"),
+
+    ERROR_TO_PARSE_JSON("ERROR_TO_PARSE_JSON", "JSON 형식으로 파싱 싪패");
 
     private final String errorCode;
 

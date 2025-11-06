@@ -1,6 +1,5 @@
-package com.example.chat.airport.resDto;
+package com.example.chat.airport.Departure;
 
-import com.example.chat.airport.entity.Departure;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

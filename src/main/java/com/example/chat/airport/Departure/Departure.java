@@ -1,4 +1,4 @@
-package com.example.chat.airport.entity;
+package com.example.chat.airport.Departure;
 
 import com.example.chat.config.BaseTime;
 import jakarta.persistence.Entity;
@@ -53,8 +53,6 @@ public class Departure extends BaseTime {
     }
 
     public void updateDeparture(Departure editDeparture) {
-        this.date = editDeparture.date;
-        this.timeZone = editDeparture.timeZone;
         this.t1Depart12 = editDeparture.t1Depart12;
         this.t1Depart3 = editDeparture.t1Depart3;
         this.t1Depart4 = editDeparture.t1Depart4;
