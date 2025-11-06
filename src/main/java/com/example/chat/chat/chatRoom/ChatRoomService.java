@@ -25,15 +25,13 @@ public class ChatRoomService {
     private final MemberRepository memberRepository;
 
     // 채팅방 생성
-    public void createChatRoom(ChatRoomReqDto dto) {
+    @Transactional
+    public void createChatRoom(ChatRoomReqDto chatRoomReqDto) {
 
-        Member member = memberRepository.findByUsername(dto.getCreator())
+        Member member = memberRepository.findByUsername(chatRoomReqDto.getCreator())
                 .orElseThrow(() -> new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.NOT_FOUND_MEMBER));
 
-        ChatRoom chatRoom = ChatRoom.builder()
-                .chatRoomName(dto.getChatRoomName())
-                .build();
-
+        ChatRoom chatRoom = chatRoomReqDto.toChatRoom();
         chatRoom.setMember(member);
 
         chatRoomRepository.save(chatRoom);
@@ -58,11 +56,8 @@ public class ChatRoomService {
     // 특정 채팅방 정보 조회
     public ChatRoomResDto chatRoomInfo(String roomId) {
 
-        ChatRoom chatRoom = chatRoomRepository.findChatRoomWithMember(roomId);
-
-        if (chatRoom == null) {
-            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.NOT_FOUND_CHATROOM);
-        }
+        ChatRoom chatRoom = chatRoomRepository.findChatRoomWithMember(roomId)
+                .orElseThrow(() -> new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.NOT_FOUND_CHATROOM));
 
         return ChatRoomResDto.builder()
                 .chatRoomId(roomId)
@@ -74,20 +69,10 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public ResponseEntity<?> deleteRoom(String roomId) {
+    public void deleteRoom(String roomId) {
+        ChatRoom chatRoom = chatRoomRepository.findChatRoomWithMember(roomId)
+                .orElseThrow(() -> new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.NOT_FOUND_CHATROOM));
 
-        ChatRoom chatRoom = chatRoomRepository.findChatRoomWithMember(roomId);
-
-        if (chatRoom == null) {
-            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.NOT_FOUND_CHATROOM);
-        }
-
-        try {
-            chatRoomRepository.delete(chatRoom);
-
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
-        }
+        chatRoomRepository.delete(chatRoom);
     }
 }

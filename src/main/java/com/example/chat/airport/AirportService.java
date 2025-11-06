@@ -65,7 +65,7 @@ public class AirportService {
             for (String searchDate : searchDates) {
 
                 // 출국장 현황 데이터 조회 API end_point
-                String departureDataEndPoint = "http://apis.data.go.kr/B551177/PassengerNoticeKR/getfPassengerNoticeIKR";
+                String departureDataEndPoint = "https://apis.data.go.kr/B551177/PassengerNoticeKR";
 
                 URI uri = buildUri(departureDataEndPoint, searchDate);
 
@@ -146,7 +146,7 @@ public class AirportService {
             for (String searchDate : searchDates) {
 
                 // 항공편 현황 데이터 조회 API end_point
-                String planeDataEndPoint = "https://odp.airport.kr/openapi/Temp/StatusOfPassengerFlightsDeOdpTemp/getPassengerDeparturesDeOdpTemp?TempKey=1uIUvp6wxzImej%2BMgTP%2B4K9WNjDo8UsKkLcm8wIzqBA%3D%2B%2B%2B43gddw3ghha%3D";
+                String planeDataEndPoint = "https://odp.airport.kr/openapi/Temp/StatusOfPassengerFlightsDeOdpTemp";
                 URI uri = buildUri(planeDataEndPoint, searchDate);
 
                 String jsonPlaneData = restTemplate.getForObject(uri, String.class);
@@ -167,6 +167,7 @@ public class AirportService {
     @Transactional
     private void upsertPlaneData(String jsonPlaneData, String searchDate) {
         try {
+            log.info("json: "+ jsonPlaneData);
             JsonNode items = parsePlaneJson(jsonPlaneData);
 
             List<Plane> existPlaneData = planeRepository.findBySearchDate(searchDate);

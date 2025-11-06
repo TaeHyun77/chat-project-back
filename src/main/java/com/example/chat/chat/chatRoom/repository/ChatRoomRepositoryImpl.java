@@ -5,6 +5,8 @@ import com.example.chat.chat.chatRoom.QChatRoom;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
+import java.util.Optional;
+
 import static com.example.chat.member.QMember.member;
 
 @RequiredArgsConstructor
@@ -21,20 +23,20 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
     }
 
     @Override
-    public ChatRoom findByChatRoomId(String chatRoomId) {
-        return queryFactory
+    public Optional<ChatRoom> findByChatRoomId(String chatRoomId) {
+        return Optional.ofNullable(queryFactory
                 .selectFrom(QChatRoom.chatRoom)
                 .where(QChatRoom.chatRoom.chatRoomId.eq(chatRoomId))
-                .fetchOne();
+                .fetchOne());
     }
 
     // 특정 채팅방의 정보 반환 ( member fetch join )
     @Override
-    public ChatRoom findChatRoomWithMember(String chatRoomId) {
-        return queryFactory
+    public Optional<ChatRoom> findChatRoomWithMember(String chatRoomId) {
+        return Optional.ofNullable(queryFactory
                 .selectFrom(QChatRoom.chatRoom)
                 .leftJoin(QChatRoom.chatRoom.member).fetchJoin()
                 .where(QChatRoom.chatRoom.chatRoomId.eq(chatRoomId))
-                .fetchOne();
+                .fetchOne());
     }
 }

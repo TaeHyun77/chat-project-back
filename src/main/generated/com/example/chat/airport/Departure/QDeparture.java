@@ -1,8 +1,7 @@
-package com.example.chat.Departure;
+package com.example.chat.airport.Departure;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.example.chat.airport.Departure.Departure;
 import com.querydsl.core.types.dsl.*;
 
 import com.querydsl.core.types.PathMetadata;
@@ -16,7 +15,7 @@ import com.querydsl.core.types.Path;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QDeparture extends EntityPathBase<Departure> {
 
-    private static final long serialVersionUID = 167326581L;
+    private static final long serialVersionUID = -104507694L;
 
     public static final QDeparture departure = new QDeparture("departure");
 
