@@ -36,9 +36,6 @@ CI/CD : Docker, Aws Ec2<br><br><br>
 - 조회 쿼리를 JPQL에서 Query DSL로 변경 <br>
   ( 타입 안정성과 가독성을 향상시키고 유지보수성을 높히기 위함입니다. )<br><br>
   
-- 여러 데이터를 반복문을 통해 save()하는 것에서 saveAll() 방식으로 변경 <br>
-  ( 트랜잭션 처리 효율을 높이고 불필요한 DB 접근을 최소화 )<br><br>
-  
 - Oauth 적용을 위해 도메인을 적용하고 Http 프로토콜을 Https 프로토콜로 변경 <br>
   ( Oauth는 퍼블릭 ip와 http를 지원하지 않기 때문 )<br><br>
 
