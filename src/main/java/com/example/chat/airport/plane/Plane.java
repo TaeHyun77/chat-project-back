@@ -18,6 +18,8 @@ public class Plane extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String searchDate;
+
     private String flightId;
 
     private String airLine;
@@ -29,46 +31,43 @@ public class Plane extends BaseTime {
     private String airportCode;
 
     // 출발 시각
-    private String scheduleDatetime;
+    private String scheduleDateTime;
 
     // 실제 출발/도착 시간이 아닌 예상된 시간
-    private String estimatedDatetime;
+    private String estimatedDateTime;
 
-    private String gateNumber;
+    private String gatenumber;
 
     // 몇 터미널 인지
-    private String terminalId;
+    private String terminalid;
 
     // 상태
     private String remark;
 
-    // 항공기 식별 번호
-    private String aircraftRegNo;
-
     private String codeShare;
 
-    private String searchDate;
+    private String chkinrange;
 
     @Builder
-    public Plane(String flightId, String airLine, String airport, String airportCode, String scheduleDatetime, String estimatedDatetime, String gateNumber, String terminalId, String remark, String aircraftRegNo, String codeShare, String searchDate) {
+    public Plane(String searchDate, String flightId, String airLine, String airport, String airportCode, String scheduleDateTime, String estimatedDateTime, String gatenumber, String terminalid, String remark, String codeShare, String chkinrange) {
+        this.searchDate = searchDate;
         this.flightId = flightId;
         this.airLine = airLine;
         this.airport = airport;
         this.airportCode = airportCode;
-        this.scheduleDatetime = scheduleDatetime;
-        this.estimatedDatetime = estimatedDatetime;
-        this.gateNumber = gateNumber;
-        this.terminalId = terminalId;
+        this.scheduleDateTime = scheduleDateTime;
+        this.estimatedDateTime = estimatedDateTime;
+        this.gatenumber = gatenumber;
+        this.terminalid = terminalid;
         this.remark = remark;
-        this.aircraftRegNo = aircraftRegNo;
         this.codeShare = codeShare;
-        this.searchDate = searchDate;
+        this.chkinrange = chkinrange;
     }
 
-    public void updatePlane(String remark, String estimatedDatetime, String gateNumber, String terminalId) {
+    public void updatePlane(String remark, String estimatedDateTime, String gatenumber, String terminalid) {
         this.remark = remark;
-        this.estimatedDatetime = estimatedDatetime;
-        this.gateNumber = gateNumber;
-        this.terminalId = terminalId;
+        this.estimatedDateTime = estimatedDateTime;
+        this.gatenumber = gatenumber;
+        this.terminalid = terminalid;
     }
 }

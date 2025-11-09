@@ -21,24 +21,24 @@ public class QPlane extends EntityPathBase<Plane> {
 
     public final com.example.chat.config.QBaseTime _super = new com.example.chat.config.QBaseTime(this);
 
-    public final StringPath aircraftRegNo = createString("aircraftRegNo");
-
     public final StringPath airLine = createString("airLine");
 
     public final StringPath airport = createString("airport");
 
     public final StringPath airportCode = createString("airportCode");
 
+    public final StringPath chkinrange = createString("chkinrange");
+
     public final StringPath codeShare = createString("codeShare");
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
-    public final StringPath estimatedDatetime = createString("estimatedDatetime");
+    public final StringPath estimatedDateTime = createString("estimatedDateTime");
 
     public final StringPath flightId = createString("flightId");
 
-    public final StringPath gateNumber = createString("gateNumber");
+    public final StringPath gatenumber = createString("gatenumber");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
@@ -47,11 +47,11 @@ public class QPlane extends EntityPathBase<Plane> {
 
     public final StringPath remark = createString("remark");
 
-    public final StringPath scheduleDatetime = createString("scheduleDatetime");
+    public final StringPath scheduleDateTime = createString("scheduleDateTime");
 
     public final StringPath searchDate = createString("searchDate");
 
-    public final StringPath terminalId = createString("terminalId");
+    public final StringPath terminalid = createString("terminalid");
 
     public QPlane(String variable) {
         super(Plane.class, forVariable(variable));

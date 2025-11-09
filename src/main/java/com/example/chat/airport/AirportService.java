@@ -65,9 +65,9 @@ public class AirportService {
             for (String searchDate : searchDates) {
 
                 // 출국장 현황 데이터 조회 API end_point
-                String departureDataEndPoint = "https://apis.data.go.kr/B551177/PassengerNoticeKR";
+                String departureDataEndPoint = "https://apis.data.go.kr/B551177/passgrAnncmt/getPassgrAnncmt";
 
-                URI uri = buildUri(departureDataEndPoint, searchDate);
+                URI uri = departureBuildUri(departureDataEndPoint, searchDate);
 
                 // JSON 형태로 받아옴
                 String departureData = restTemplate.getForObject(uri, String.class);
@@ -86,7 +86,7 @@ public class AirportService {
     * 공항 출국장 현황 데이터를 DB에 갱신
     * */
     @Transactional
-    private void upsertDepartureData(String departureJsonData, String searchDate) throws JsonProcessingException {
+    private void upsertDepartureData(String departureJsonData, String searchDate) {
         try {
 
             JsonNode items = parsePlaneJson(departureJsonData);
@@ -103,20 +103,27 @@ public class AirportService {
                 DepartureDto dto = DepartureDto.builder()
                         .date(item.path("adate").asText())
                         .timeZone(item.path("atime").asText())
-                        .t1Depart12(item.path("t1sum5").asLong())
-                        .t1Depart3(item.path("t1sum6").asLong())
-                        .t1Depart4(item.path("t1sum7").asLong())
-                        .t1Depart56(item.path("t1sum8").asLong())
-                        .t1DepartSum(item.path("t1sumset2").asLong())
-                        .t2Depart1(item.path("t2sum3").asLong())
-                        .t2Depart2(item.path("t2sum4").asLong())
-                        .t2DepartSum(item.path("t2sumset2").asLong())
+                        .t1Depart1(item.path("t1dg1").asLong())
+                        .t1Depart2(item.path("t1dg2").asLong())
+                        .t1Depart3(item.path("t1dg3").asLong())
+                        .t1Depart4(item.path("t1dg4").asLong())
+                        .t1Depart5(item.path("t1dg5").asLong())
+                        .t1Depart6(item.path("t1dg6").asLong())
+                        .t1DepartSum(item.path("t1dgsum1").asLong())
+                        .t2Depart1(item.path("t2dg1").asLong())
+                        .t2Depart2(item.path("t2dg2").asLong())
+                        .t2DepartSum(item.path("t2dgsum2").asLong())
                         .build();
 
-                Departure existsDepartureData = departureRepository.findByDateAndTimeZone(date, timeZone);
-                existsDepartureData.updateDeparture(dto.toDepart());
+                departureRepository.findByDateAndTimeZone(date, timeZone)
+                        .ifPresentOrElse(
+                                exists -> {
+                                    exists.updateDeparture(dto.toDepart());
 
-                departureRepository.save(existsDepartureData);
+                                    departureRepository.save(exists);
+                                },
+                                () -> departureRepository.save(dto.toDepart())
+                        );
             }
         } catch (Exception e) {
             log.error("출국장 데이터 저장 중 예외 발생: {}", e.getMessage());
@@ -146,8 +153,8 @@ public class AirportService {
             for (String searchDate : searchDates) {
 
                 // 항공편 현황 데이터 조회 API end_point
-                String planeDataEndPoint = "https://odp.airport.kr/openapi/Temp/StatusOfPassengerFlightsDeOdpTemp";
-                URI uri = buildUri(planeDataEndPoint, searchDate);
+                String planeDataEndPoint = "https://apis.data.go.kr/B551177/StatusOfPassengerFlightsDeOdp/getPassengerDeparturesDeOdp";
+                URI uri = planeBuildUri(planeDataEndPoint, searchDate);
 
                 String jsonPlaneData = restTemplate.getForObject(uri, String.class);
 
@@ -167,21 +174,23 @@ public class AirportService {
     @Transactional
     private void upsertPlaneData(String jsonPlaneData, String searchDate) {
         try {
-            log.info("json: "+ jsonPlaneData);
             JsonNode items = parsePlaneJson(jsonPlaneData);
 
+            // 기존에 존재하는 항공편 데이터
             List<Plane> existPlaneData = planeRepository.findBySearchDate(searchDate);
             Map<String, Plane> existPlaneMap = existPlaneData.stream()
-                    .collect(Collectors.toMap(p -> p.getFlightId() + "_" + p.getScheduleDatetime(), d -> d));
+                    .collect(Collectors.toMap(p -> p.getFlightId() + "_" + p.getScheduleDateTime(), d -> d));
+
 
             Map<String, Plane> allPlanesCache = new HashMap<>();
 
-            List<Plane> toSave = extractAndComparePlanes(items, existPlaneMap, allPlanesCache);
+            // 저장할 항공편 데이터를 담는 리스트
+            List<Plane> toSave = extractAndComparePlanes(items, existPlaneMap, allPlanesCache, searchDate);
 
             // 삭제할 데이터 조회
             List<Plane> toDelete = existPlaneMap.values().stream()
-                    .filter(p -> !allPlanesCache.containsKey(p.getFlightId() + "_" + p.getScheduleDatetime()))
-                    .peek(p -> redisTemplate.delete("plane:" + p.getFlightId() + "_" + p.getScheduleDatetime()))
+                    .filter(p -> !allPlanesCache.containsKey(p.getFlightId() + "_" + p.getScheduleDateTime()))
+                    .peek(p -> redisTemplate.delete("plane:" + p.getFlightId() + "_" + p.getScheduleDateTime()))
                     .collect(Collectors.toList());
 
             planeRepository.saveAll(toSave);
@@ -193,37 +202,38 @@ public class AirportService {
         }
     }
 
-    private List<Plane> extractAndComparePlanes(JsonNode items, Map<String, Plane> existMap, Map<String, Plane> allPlanesCache) throws JsonProcessingException {
+    private List<Plane> extractAndComparePlanes(JsonNode items, Map<String, Plane> existMap, Map<String, Plane> allPlanesCache, String searchDate) {
         List<Plane> toSave = new ArrayList<>();
 
         for (JsonNode item : items) {
             if (!"Master".equals(item.path("codeshare").asText())) continue;
 
             PlaneDto dto = PlaneDto.builder()
+                    .searchDate(searchDate)
                     .flightId(item.path("flightId").asText())
                     .airLine(item.path("airline").asText())
                     .airport(item.path("airport").asText())
                     .airportCode(item.path("airportCode").asText())
-                    .scheduleDatetime(item.path("scheduleDatetime").asText())
-                    .estimatedDatetime(item.path("estimatedDatetime").asText())
-                    .gateNumber(item.path("gateNumber").asText())
-                    .terminalId(item.path("terminalId").asText())
+                    .scheduleDateTime(item.path("scheduleDateTime").asText())
+                    .estimatedDateTime(item.path("estimatedDateTime").asText())
+                    .gatenumber(item.path("gatenumber").asText())
+                    .terminalid(item.path("terminalid").asText())
                     .remark(item.path("remark").asText())
-                    .aircraftRegNo(item.path("aircraftRegNo").asText())
                     .codeShare(item.path("codeshare").asText())
+                    .chkinrange(item.path("chkinrange").asText())
                     .build();
 
-            String key = dto.getFlightId() + "_" + dto.getScheduleDatetime();
+            String key = dto.getFlightId() + "_" + dto.getScheduleDateTime();
             Plane newPlane = dto.toPlane();
             allPlanesCache.put(key, newPlane);
 
             if (!existMap.containsKey(key)) {
                 toSave.add(newPlane);
             } else if (planeDataChangeCheck(existMap.get(key),
-                    dto.getRemark(), dto.getEstimatedDatetime(),
-                    dto.getGateNumber(), dto.getTerminalId())) {
+                    dto.getRemark(), dto.getEstimatedDateTime(),
+                    dto.getGatenumber(), dto.getTerminalid())) {
 
-                existMap.get(key).updatePlane(dto.getRemark(), dto.getEstimatedDatetime(), dto.getGateNumber(), dto.getTerminalId());
+                existMap.get(key).updatePlane(dto.getRemark(), dto.getEstimatedDateTime(), dto.getGatenumber(), dto.getTerminalid());
                 toSave.add(newPlane);
             }
 
@@ -245,8 +255,8 @@ public class AirportService {
     // 항공편 데이터 변경 여부
     private boolean planeDataChangeCheck(Plane existingPlane, String remark , String estimatedDatetime, String gateNumber, String terminalId) {
 
-        return !existingPlane.getRemark().equals(remark) || !existingPlane.getEstimatedDatetime().equals(estimatedDatetime) ||
-                !existingPlane.getGateNumber().equals(gateNumber) || !existingPlane.getTerminalId().equals(terminalId);
+        return !existingPlane.getRemark().equals(remark) || !existingPlane.getEstimatedDateTime().equals(estimatedDatetime) ||
+                !existingPlane.getGatenumber().equals(gateNumber) || !existingPlane.getTerminalid().equals(terminalId);
     }
 
     // 모든 출국장 데이터 조회
@@ -258,10 +268,12 @@ public class AirportService {
                 .map(d -> DepartureResDto.builder()
                         .date(d.getDate())
                         .timeZone(d.getTimeZone())
-                        .t1Depart12(d.getT1Depart12())
+                        .t1Depart1(d.getT1Depart1())
+                        .t1Depart2(d.getT1Depart2())
                         .t1Depart3(d.getT1Depart3())
                         .t1Depart4(d.getT1Depart4())
-                        .t1Depart56(d.getT1Depart56())
+                        .t1Depart5(d.getT1Depart5())
+                        .t1Depart6(d.getT1Depart6())
                         .t1DepartSum(d.getT1DepartSum())
                         .t2Depart1(d.getT2Depart1())
                         .t2Depart2(d.getT2Depart2())
@@ -333,7 +345,7 @@ public class AirportService {
 
         dbPlanes.forEach(plane -> {
             try {
-                String key = "plane:" + plane.getFlightId() + "_" + plane.getScheduleDatetime();
+                String key = "plane:" + plane.getFlightId() + "_" + plane.getScheduleDateTime();
 
                 redis.set(key, objectMapper.writeValueAsString(plane), 1, TimeUnit.HOURS);
             } catch (JsonProcessingException e) {
@@ -352,12 +364,11 @@ public class AirportService {
                 .airLine(plane.getAirLine())
                 .airport(plane.getAirport())
                 .airportCode(plane.getAirportCode())
-                .scheduleDatetime(plane.getScheduleDatetime())
-                .estimatedDatetime(plane.getEstimatedDatetime())
-                .gateNumber(plane.getGateNumber())
-                .terminalId(plane.getTerminalId())
+                .scheduleDateTime(plane.getScheduleDateTime())
+                .estimatedDateTime(plane.getEstimatedDateTime())
+                .gatenumber(plane.getGatenumber())
+                .terminalid(plane.getTerminalid())
                 .remark(plane.getRemark())
-                .aircraftRegNo(plane.getAircraftRegNo())
                 .codeShare(plane.getCodeShare())
                 .build();
     }
@@ -365,12 +376,29 @@ public class AirportService {
     /*
     * OpenAPI 호출에 필요한 요청 URI를 반환
     * */
-    private URI buildUri(String endPoint, String searchDate) throws URISyntaxException {
+    private URI planeBuildUri(String endPoint, String searchDate) throws URISyntaxException {
 
         // OpenAPI 요청 시 쿼리 파라미터를 URL 인코딩해야함
         String url = endPoint + "?"
-                + "serviceKey=" + API_KEY
+                + "serviceKey=" + URLEncoder.encode(API_KEY, StandardCharsets.UTF_8)
+                + "&searchday=" + URLEncoder.encode(searchDate, StandardCharsets.UTF_8)
+                + "&pageNo=" + URLEncoder.encode("1", StandardCharsets.UTF_8)
+                + "&numOfRows=" + URLEncoder.encode("9999", StandardCharsets.UTF_8)
+                + "&type=" + URLEncoder.encode("json", StandardCharsets.UTF_8);
+
+        return new URI(url);
+    }
+
+    /*
+     * OpenAPI 호출에 필요한 요청 URI를 반환
+     * */
+    private URI departureBuildUri(String endPoint, String searchDate) throws URISyntaxException {
+
+        // OpenAPI 요청 시 쿼리 파라미터를 URL 인코딩해야함
+        String url = endPoint + "?"
+                + "serviceKey=" + URLEncoder.encode(API_KEY, StandardCharsets.UTF_8)
                 + "&selectdate=" + URLEncoder.encode(searchDate, StandardCharsets.UTF_8)
+                + "&pageNo=" + URLEncoder.encode("1", StandardCharsets.UTF_8)
                 + "&numOfRows=" + URLEncoder.encode("9999", StandardCharsets.UTF_8)
                 + "&type=" + URLEncoder.encode("json", StandardCharsets.UTF_8);
 
