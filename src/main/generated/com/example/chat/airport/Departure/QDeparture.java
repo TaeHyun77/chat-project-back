@@ -31,13 +31,17 @@ public class QDeparture extends EntityPathBase<Departure> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
 
-    public final NumberPath<Long> t1Depart12 = createNumber("t1Depart12", Long.class);
+    public final NumberPath<Long> t1Depart1 = createNumber("t1Depart1", Long.class);
+
+    public final NumberPath<Long> t1Depart2 = createNumber("t1Depart2", Long.class);
 
     public final NumberPath<Long> t1Depart3 = createNumber("t1Depart3", Long.class);
 
     public final NumberPath<Long> t1Depart4 = createNumber("t1Depart4", Long.class);
 
-    public final NumberPath<Long> t1Depart56 = createNumber("t1Depart56", Long.class);
+    public final NumberPath<Long> t1Depart5 = createNumber("t1Depart5", Long.class);
+
+    public final NumberPath<Long> t1Depart6 = createNumber("t1Depart6", Long.class);
 
     public final NumberPath<Long> t1DepartSum = createNumber("t1DepartSum", Long.class);
 

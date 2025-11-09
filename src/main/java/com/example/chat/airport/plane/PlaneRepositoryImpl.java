@@ -13,7 +13,7 @@ public class PlaneRepositoryImpl implements PlaneRepositoryCustom{
 
         return queryFactory
                 .delete(QPlane.plane)
-                .where(QPlane.plane.scheduleDatetime.startsWith(today)
+                .where(QPlane.plane.scheduleDateTime.startsWith(today)
                         .and(QPlane.plane.remark.eq("출발")))
                 .execute();
     }

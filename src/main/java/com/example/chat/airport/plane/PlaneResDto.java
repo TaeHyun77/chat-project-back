@@ -18,33 +18,33 @@ public class PlaneResDto {
 
     private String airportCode;
 
-    private String scheduleDatetime;
+    private String scheduleDateTime;
 
-    private String estimatedDatetime;
+    private String estimatedDateTime;
 
-    private String gateNumber;
+    private String gatenumber;
 
-    private String terminalId;
+    private String terminalid;
 
     private String remark;
 
-    private String aircraftRegNo;
-
     private String codeShare;
 
+    private String chkinrange;
+
     @Builder
-    public PlaneResDto(String flightId, String airLine, String airport, String airportCode, String scheduleDatetime, String estimatedDatetime, String gateNumber, String terminalId, String remark, String aircraftRegNo, String codeShare) {
+    public PlaneResDto(String flightId, String airLine, String airport, String airportCode, String scheduleDateTime, String estimatedDateTime, String gatenumber, String terminalid, String remark, String codeShare, String chkinrange) {
         this.flightId = flightId;
         this.airLine = airLine;
         this.airport = airport;
         this.airportCode = airportCode;
-        this.scheduleDatetime = scheduleDatetime;
-        this.estimatedDatetime = estimatedDatetime;
-        this.gateNumber = gateNumber;
-        this.terminalId = terminalId;
+        this.scheduleDateTime = scheduleDateTime;
+        this.estimatedDateTime = estimatedDateTime;
+        this.gatenumber = gatenumber;
+        this.terminalid = terminalid;
         this.remark = remark;
-        this.aircraftRegNo = aircraftRegNo;
         this.codeShare = codeShare;
+        this.chkinrange = chkinrange;
     }
 }
 
