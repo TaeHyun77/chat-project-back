@@ -31,4 +31,9 @@ public class AirportController {
     public List<PlaneResDto> getRedisPlanes() {
         return airportService.getAllPlanes();
     }
+
+    @GetMapping("/redisTest")
+    public void redisTest() {
+        airportService.redisTest();
+    }
 }
