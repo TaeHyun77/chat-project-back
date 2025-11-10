@@ -30,6 +30,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -50,14 +51,7 @@ public class AirportService {
 
     private final DepartureRepository departureRepository;
     private final PlaneRepository planeRepository;
-
-    public void redisTest() {
-
-        Plane plane = planeRepository.findByFlightIdAndScheduleDateTime("KE2005", "202511101345");
-
-        redisTemplate.opsForValue().set("test:", plane, 1, TimeUnit.HOURS);
-
-    }
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 
     /*
     * 공항 출국장 현황 데이터 조회 및 갱신
@@ -411,5 +405,29 @@ public class AirportService {
         } catch (JsonProcessingException e) {
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_PARSE_JSON);
         }
+    }
+
+    @Transactional
+    public void cleanUpPlaneData() {
+
+        String today = LocalDate.now().format(formatter);
+        String tomorrow = LocalDate.now().plusDays(1).format(formatter);
+        String dayAfterTomorrow = LocalDate.now().plusDays(2).format(formatter);
+
+        List<Plane> planes = planeRepository.findAll();
+
+        planes.stream()
+                .filter(p -> "출발".equals(p.getRemark()))
+                .filter(p -> {
+                    String searchDate = p.getSearchDate();
+
+                    return !searchDate.equals(today) && !searchDate.equals(tomorrow) && !searchDate.equals(dayAfterTomorrow);
+                })
+                .forEach(p -> {
+                    String redisKey = "plane:" + p.getFlightId() + "_" + p.getScheduleDateTime();
+                    redisTemplate.delete(redisKey);
+
+                    planeRepository.delete(p);
+                });
     }
 }

@@ -42,17 +42,17 @@ public class AirportScheduler {
         }
     }
 
-    /*// 매 자정에 어제 항공편 삭제 ( 상태 값이 "출발"인 것만 삭제, JPQL 사용 )
+    // 매 자정에 유효하지 않은 항공편 삭제 ( searchDate 값이 오늘, 내일, 모레이지 않고 remark 값이 "출발"인 데이터 삭제 )
     @Scheduled(cron = "0 0 0 * * *")
-    public void DelAndIst() {
+    public void deletePlaneData() {
         try {
-            airService.PlaneDelAndIst();
+            airportService.cleanUpPlaneData();
 
-            log.info("어제 항공편 삭제 완료");
+            log.info("유효하지 않은 항공편 삭제 완료");
         } catch (ChatException e) {
-            log.info("어제 항공편 삭제 실패");
+            log.info("유효하지 않은 항공편 삭제 실패");
 
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_DELETE_YESTERDAY_PLANE_DATA);
         }
-    }*/
+    }
 }
