@@ -13,5 +13,7 @@ public interface PlaneRepository extends JpaRepository<Plane, Long>, PlaneReposi
     */
 
     List<Plane> findBySearchDate(String searchDate);
+
+    Plane findByFlightIdAndScheduleDateTime(String flightId, String scheduleDateTime);
 }
 

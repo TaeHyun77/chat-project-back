@@ -29,7 +29,7 @@ public class AirportScheduler {
         }
     }
 
-    @Scheduled(fixedDelay = 180000) // 3분마다 진행
+    @Scheduled(fixedDelay = 60000) // 1분마다 진행
     public void runPlaneData() {
         try {
             airportService.getPlane();
