@@ -32,8 +32,8 @@ public class AirportController {
         return airportService.getAllPlanes();
     }
 
-    @GetMapping("/redisTest")
-    public void redisTest() {
-        airportService.redisTest();
+    @DeleteMapping("/delete/cleanUpPlaneData")
+    public void cleanUpPlaneData() {
+        airportService.cleanUpPlaneData();
     }
 }
