@@ -39,6 +39,8 @@ CI/CD : Docker, Aws Ec2<br><br>
   
 - 조회 쿼리를 JPQL에서 Query DSL로 변경<br>
   ( 타입 안정성과 가독성을 향상시키고 유지보수성을 높히기 위함입니다. )
+
+- React 개발 서버 실행 시 발생하던 메모리 부족 문제를 해결하기 위해, Nginx를 통해 빌드된 정적 파일을 서빙하는 방식으로 변경
   
 - Oauth 적용을 위해 도메인을 적용하고 Http 프로토콜을 Https 프로토콜로 변경<br>
   ( Oauth는 퍼블릭 ip와 http를 지원하지 않기 때문 )<br><br>
