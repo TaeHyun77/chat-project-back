@@ -1,11 +1,16 @@
 ## 프로젝트 설명
-인천공항을 통한 출국 시 필요한 출국장 혼잡도와 항공편 정보를 제공하고, 채팅 기능을 통해 사용자들끼리 편의성과 정보를 얻을 수 있도록 하는 프로젝트입니다.<br><br>
+인천공항을 통한 출국 시 필요한 출국장 혼잡도와 항공편 정보를 제공하고, 채팅 기능을 제공하여 사용자들끼리 정보를 얻을 수 있도록 하는 프로젝트입니다.<br><br>
 
 ## 기술 스택
-Backend : SpringBoot, Spring Data Jpa<br><br>
-Frontend : React.js, JavaScript<br><br>
-Database : MySQL , Redis<br><br>
-CI/CD : Docker, Aws Ec2<br><br><br>
+Backend : SpringBoot, Spring Data Jpa
+
+Frontend : React.js, JavaScript
+
+Database : MySQL , Redis
+
+ETC : Websocket, STOMP
+
+CI/CD : Docker, Aws Ec2
 
 ## 아키텍처
 <p align="center">
