@@ -24,16 +24,12 @@ public class DepartureResDto {
 
     private Long t1Depart6;
 
-    private Long t1DepartSum;
-
     private Long t2Depart1;
 
     private Long t2Depart2;
 
-    private Long t2DepartSum;
-
     @Builder
-    public DepartureResDto(String date, String timeZone, Long t1Depart1, Long t1Depart2, Long t1Depart3, Long t1Depart4, Long t1Depart5, Long t1Depart6,  Long t1DepartSum, Long t2Depart1, Long t2Depart2, Long t2DepartSum) {
+    public DepartureResDto(String date, String timeZone, Long t1Depart1, Long t1Depart2, Long t1Depart3, Long t1Depart4, Long t1Depart5, Long t1Depart6, Long t2Depart1, Long t2Depart2) {
         this.date = date;
         this.timeZone = timeZone;
         this.t1Depart1 = t1Depart1;
@@ -42,10 +38,8 @@ public class DepartureResDto {
         this.t1Depart4 = t1Depart4;
         this.t1Depart5 = t1Depart5;
         this.t1Depart6 = t1Depart6;
-        this.t1DepartSum = t1DepartSum;
         this.t2Depart1 = t2Depart1;
         this.t2Depart2 = t2Depart2;
-        this.t2DepartSum = t2DepartSum;
     }
 
     // page 테스트
@@ -58,9 +52,7 @@ public class DepartureResDto {
         this.t1Depart4 = departure.getT1Depart4();
         this.t1Depart5 = departure.getT1Depart5();
         this.t1Depart6 = departure.getT1Depart6();
-        this.t1DepartSum = departure.getT1DepartSum();
         this.t2Depart1 = departure.getT2Depart1();
         this.t2Depart2 = departure.getT2Depart2();
-        this.t2DepartSum = departure.getT2DepartSum();
     }
 }

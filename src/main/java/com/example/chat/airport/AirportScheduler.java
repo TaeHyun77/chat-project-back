@@ -1,5 +1,7 @@
 package com.example.chat.airport;
 
+import com.example.chat.airport.Departure.DepartureService;
+import com.example.chat.airport.plane.PlaneService;
 import com.example.chat.exception.ChatException;
 import com.example.chat.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -13,13 +15,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class AirportScheduler {
 
-    private final AirportService airportService;
+    private final PlaneService planeService;
+    private final DepartureService departureService;
 
 
     @Scheduled(fixedDelay = 300000) // 5분마다 진행
     public void runDepartureData() {
         try {
-            airportService.getDepartureData();
+            departureService.getDepartureData();
 
             log.info("출국장 데이터 불러오기 완료");
         } catch (ChatException e) {
@@ -32,7 +35,7 @@ public class AirportScheduler {
     @Scheduled(fixedDelay = 60000) // 1분마다 진행
     public void runPlaneData() {
         try {
-            airportService.getPlane();
+            planeService.getPlaneData();
 
             log.info("항공편 데이터 불러오기 완료");
         } catch (ChatException e) {
@@ -42,17 +45,31 @@ public class AirportScheduler {
         }
     }
 
+    // 매 자정에 어제자 출국장 현황 데이터 삭제
+    @Scheduled(cron = "0 0 0 * * *")
+    public void deleteDepartureData() {
+        try {
+            departureService.cleanUpDepartureData();
+
+            log.info("유효하지 않은 출국장 현황 데이터 삭제 완료");
+        } catch (ChatException e) {
+            log.info("유효하지 않은 출국장 현황 데이터 삭제 실패");
+
+            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_DELETE_DEPARTURE_DATA);
+        }
+    }
+
     // 매 자정에 유효하지 않은 항공편 삭제 ( searchDate 값이 오늘, 내일, 모레이지 않고 remark 값이 "출발"인 데이터 삭제 )
     @Scheduled(cron = "0 0 0 * * *")
     public void deletePlaneData() {
         try {
-            airportService.cleanUpPlaneData();
+            planeService.cleanUpPlaneData();
 
             log.info("유효하지 않은 항공편 삭제 완료");
         } catch (ChatException e) {
             log.info("유효하지 않은 항공편 삭제 실패");
 
-            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_DELETE_YESTERDAY_PLANE_DATA);
+            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_DELETE_PLANE_DATA);
         }
     }
 }
