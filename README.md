@@ -28,7 +28,7 @@ CI/CD : Docker, Aws Ec2<br><br>
 
 - Docker와 AWS Ec2를 이용한 배포 진행
 
-- 도메인 적용과 Https 프로토콜 변경<br><br>
+- 도메인과 Https 프로토콜 적용<br><br>
 
 ## 개선 사항
 - 기존 데이터 조회 시 DB 대신 Redis를 사용하여 응답 속도 개선<br>
