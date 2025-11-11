@@ -10,7 +10,7 @@ Database : MySQL , Redis
 
 ETC : Websocket, STOMP
 
-CI/CD : Docker, Aws Ec2
+CI/CD : Docker, Aws Ec2<br><br>
 
 ## 아키텍처
 <p align="center">
