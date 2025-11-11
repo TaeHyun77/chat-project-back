@@ -43,13 +43,9 @@ public class QDeparture extends EntityPathBase<Departure> {
 
     public final NumberPath<Long> t1Depart6 = createNumber("t1Depart6", Long.class);
 
-    public final NumberPath<Long> t1DepartSum = createNumber("t1DepartSum", Long.class);
-
     public final NumberPath<Long> t2Depart1 = createNumber("t2Depart1", Long.class);
 
     public final NumberPath<Long> t2Depart2 = createNumber("t2Depart2", Long.class);
-
-    public final NumberPath<Long> t2DepartSum = createNumber("t2DepartSum", Long.class);
 
     public final StringPath timeZone = createString("timeZone");
 

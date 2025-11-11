@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 public class PlaneDataAspect {
 
-    @Around("execution(* com.example.chat.airport.AirportService.getPlane(..))")
+    @Around("execution(* com.example.chat.airport.plane.PlaneService.getPlaneData(..))")
     public Object loadingPlaneApi(ProceedingJoinPoint joinPoint) throws Throwable{
 
         long start = System.currentTimeMillis();
@@ -23,7 +23,7 @@ public class PlaneDataAspect {
         return proceed;
     }
 
-    @Around("execution(* com.example.chat.airport.AirportService.getAllPlanes(..))")
+    @Around("execution(* com.example.chat.airport.plane.PlaneService.getPlanes(..))")
     public Object searchingPlanes(ProceedingJoinPoint joinPoint) throws Throwable{
 
         long start = System.currentTimeMillis();
