@@ -34,6 +34,7 @@ public class QueryTest {
             ChatRoom chatRoom = ChatRoom.builder()
                     .chatRoomName("room " + i)
                     .build();
+
             chatRoom.setMember(newMember);
             chatRoomRepository.save(chatRoom);
         }

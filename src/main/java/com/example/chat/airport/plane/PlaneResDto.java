@@ -1,14 +1,19 @@
 package com.example.chat.airport.plane;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class PlaneResDto {
+
+    private String searchDate;
 
     private String flightId;
 
@@ -32,19 +37,21 @@ public class PlaneResDto {
 
     private String chkinrange;
 
-    @Builder
-    public PlaneResDto(String flightId, String airLine, String airport, String airportCode, String scheduleDateTime, String estimatedDateTime, String gatenumber, String terminalid, String remark, String codeShare, String chkinrange) {
-        this.flightId = flightId;
-        this.airLine = airLine;
-        this.airport = airport;
-        this.airportCode = airportCode;
-        this.scheduleDateTime = scheduleDateTime;
-        this.estimatedDateTime = estimatedDateTime;
-        this.gatenumber = gatenumber;
-        this.terminalid = terminalid;
-        this.remark = remark;
-        this.codeShare = codeShare;
-        this.chkinrange = chkinrange;
+    public Plane toPlane() {
+        return Plane.builder()
+                .searchDate(this.searchDate)
+                .flightId(this.flightId)
+                .airLine(this.airLine)
+                .airport(this.airport)
+                .airportCode(this.airportCode)
+                .scheduleDateTime(this.scheduleDateTime)
+                .estimatedDateTime(this.estimatedDateTime)
+                .gatenumber(this.gatenumber)
+                .terminalid(this.terminalid)
+                .remark(this.remark)
+                .codeShare(this.codeShare)
+                .chkinrange(this.chkinrange)
+                .build();
     }
 }
 

@@ -46,7 +46,7 @@ public class RedisConfig {
     }
 
     // redis 설정 코드
-    // 이를 통해 ObjectMapper로 변환해여 redis에 저장하지 않아도 되고, redisTemplate을 사용하여 객체를 바로 저장해도 변환이 이루어짐
+    // 이를 통해 ObjectMapper로 변환하여 redis에 저장하지 않아도 되고, redisTemplate을 사용하여 객체를 바로 저장해도 변환이 이루어짐
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisFactory, ObjectMapper objectMapper) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
@@ -57,8 +57,14 @@ public class RedisConfig {
         // GenericJackson2JsonRedisSerializer : redis에서 직렬화/역직렬화를 할 때 사용하는 도구
         // Jackson(ObjectMapper 기반)으로 Redis 데이터를 JSON 형태로 저장하고 읽을 수 있도록 도와주는 직렬화 도구
         GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
+
         template.setKeySerializer(new StringRedisSerializer()); // 키 직렬화
         template.setValueSerializer(serializer); // 값 직렬화
+
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setHashValueSerializer(serializer);
+
+        template.afterPropertiesSet();
 
         return template;
     }

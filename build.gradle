@@ -57,8 +57,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
 
 	// Redis의 LocalDateTime 직렬화를 위한 의존성
-//	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
-//	implementation 'com.fasterxml.jackson.core:jackson-databind'
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
 
 	// query dsl 버전 명시해야 jakarta 사용 (javax X)
 	implementation 'com.querydsl:querydsl-apt:5.0.0'

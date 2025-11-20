@@ -21,7 +21,7 @@ public class PlaneController {
     // 항공편 데이터 조회
     @GetMapping("/planes")
     public List<PlaneResDto> getRedisPlanes() {
-        return planeService.getPlanes();
+        return planeService.getPlanes(null, PlaneResDto.class);
     }
 
     // 항공편 데이터 정리
