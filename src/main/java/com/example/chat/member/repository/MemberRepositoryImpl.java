@@ -19,6 +19,5 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom{
                 .where(QMember.member.id.eq(id))
                 .distinct()
                 .fetchOne();
-
     }
 }
