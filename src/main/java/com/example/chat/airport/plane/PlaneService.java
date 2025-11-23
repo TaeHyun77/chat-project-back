@@ -330,6 +330,7 @@ public class PlaneService {
         String key = plane.getFlightId() + "_" + plane.getScheduleDateTime();
 
         redisTemplate.opsForHash().put(REDIS_PLANE_HASH_KEY, key, plane);
+        redisTemplate.expire(REDIS_PLANE_HASH_KEY, 1, TimeUnit.HOURS);
     }
 
     /*
