@@ -10,13 +10,9 @@ ErrorCode {
 
     UNKNOWN("000_UNKNOWN", "알 수 없는 에러가 발생했습니다."),
 
-    FAIL_TO_REGISTER_MEMBER("FAIL_TO_REGISTER_MEMBER", "사용자 등록 실패"),
-
     NOT_FOUND_MEMBER("NOT_FOUND_MEMBER", "사용자를 찾을 수 없습니다."),
 
     ERROR_TO_RESPONSE_MEMBER("ERROR_TO_RESPONSE_MEMBER", "member 반화 중 에러 발생"),
-
-    ERROR_TO_GET_USERNAME("ERROR_TO_GET_USERNAME", "사용자 username을 불러오는데 실패했습니다."),
 
     ACCESSTOKEN_IS_EXPIRED("ACCESSTOKEN_IS_EXPIRED", "access 토큰 만료"),
 
@@ -25,8 +21,6 @@ ErrorCode {
     INVALID_TOKEN("INVALID_TOKEN", "유효하지 않은 토큰입니다."),
 
     IS_NOT_REFRESHTOKEN("IS_NOT_REFRESHTOKEN", "refresh 토큰이 아닙니다."),
-
-    INVALID_MESSAGE_TYPE("INVALID_MESSAGE_TYPE", "지원하지 않는 메세지 타입입니다."),
 
     NOT_FOUND_CHATROOM("NOT_FOUND_CHATROOM", "채팅방을 찾을 수 없습니다."),
 
