@@ -9,7 +9,7 @@ Backend : SpringBoot, Spring Data Jpa
 
 Frontend : React.js, JavaScript
 
-Database : MySQL , Redis
+Database : MySQL
 
 ETC : Websocket, STOMP
 
@@ -34,14 +34,13 @@ CI/CD : Docker, Aws Ec2<br><br>
 - 도메인과 Https 프로토콜 적용<br><br>
 
 ## 개선 사항
-- 기존 데이터 조회 시 DB 대신 Redis를 사용하여 응답 속도 개선<br>
-  ( Redis 캐싱을 통해 API 응답 속도롤 약 110% 개선 )
-
 - JPA Join Fetch를 이용한 연관 관계 조회 최적화를 통해 조회 시간이 713ms에서 263ms로 약 63%의 속도 개선을 하였습니다.<br>
   ( 불필요한 쿼리를 유발하는 N+1 문제를 해결 )
+
+- JPA 페이징을 적용하여 항공편 데이터 조회 시, 불필요한 데이터 조회를 방지하였습니다.
   
 - 조회 쿼리를 JPQL에서 Query DSL로 변경<br>
-  ( 타입 안정성과 가독성을 향상시키고 유지보수성을 높히기 위함입니다. )
+  ( 타입 안정성과 가독성을 향상시키고 유지보수성을 높히기 위함 )
 
 - React 개발 서버 실행 시 발생하던 메모리 부족 문제를 해결하기 위해, Nginx를 통해 빌드된 정적 파일을 서빙하는 방식으로 변경
   
