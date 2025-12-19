@@ -5,12 +5,13 @@ import com.example.chat.exception.ErrorCode;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.connection.RedisConnection;
-import org.springframework.data.redis.core.*;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +24,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -34,15 +34,9 @@ public class PlaneService {
     @Value("${data.api.key}") // 공공 데이터 API 키
     private String API_KEY;
 
-    @Value("${redis.plane.hash.key}")
-    private String REDIS_PLANE_HASH_KEY;
-
     private final ObjectMapper objectMapper;
     private final RestTemplate restTemplate = new RestTemplate();
-
-    private final RedisTemplate<String, Object> redisTemplate;
     private final PlaneRepository planeRepository;
-
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 
     /*
@@ -76,7 +70,6 @@ public class PlaneService {
 
         } catch (Exception e) {
             log.error("항공편 데이터 저장 중 예외 발생: {}", e.getMessage());
-
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_SAVE_PLANE_DATA);
         }
     }
@@ -89,10 +82,10 @@ public class PlaneService {
         try {
             JsonNode items = checkValidationJson(jsonPlaneData);
 
-            // 기존에 존재하는 항공편 데이터 DB에 존재하면 DB에서, Redis에 존재하면 Redis에서 해당 searchDate의 데이터를 가져옴
-            List<Plane> existPlaneDb = getPlanes(searchDate, Plane.class);
+            List<Plane> existPlaneDb = getPlanesBySearchDate(searchDate);
 
             // 기존에 존재하는 항공편 데이터를 Map에 key-value 형태로 저장
+            // key : FlightId + scheduleDateTime
             Map<String, Plane> existPlaneDbMap = existPlaneDb.stream()
                     .collect(Collectors.toMap(p -> p.getFlightId() + "_" + p.getScheduleDateTime(), p -> p));
 
@@ -103,7 +96,6 @@ public class PlaneService {
 
         } catch (Exception e) {
             log.error("항공편 데이터 저장 예외 발생: {}", e.getMessage());
-
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_SAVE_PLANE_DATA);
         }
     }
@@ -147,32 +139,31 @@ public class PlaneService {
             String key = dto.getFlightId() + "_" + dto.getScheduleDateTime();
 
             // 중복되는 데이터는 거름
-            if (checkDuplication.contains(key)) continue;
-            checkDuplication.add(key);
+            if (checkDuplication.contains(key)) {
+                continue;
+            } else {
+                checkDuplication.add(key);
+            }
 
+            // DB에 존재하는지 여부
             Plane existingPlane = existPlaneDbMap.get(key);
 
-            // DB에 이미 해당 데이터가 존재한다면, 정보가 갱신된 경우에만 수정하여 다시 저장
-            // 이때 따로 save 해주지 않아도 되기에 toSave에는 add 하지 않았음
+            // DB에 이미 존재한다면, 데이터가 수정된 경우에만 다시 저장
+            // 이때, 따로 save 해주지 않아도 되기에 toSave에는 add 하지 않았음
             if (existingPlane != null) {
                 if (planeDataChangeCheck(existingPlane, dto.getRemark(), dto.getEstimatedDateTime(), dto.getGatenumber(), dto.getTerminalid(), dto.getChkinrange())) {
 
                     // 더티 체킹
                     existingPlane.updatePlane(dto.getRemark(), dto.getEstimatedDateTime(), dto.getGatenumber(), dto.getTerminalid(), dto.getChkinrange());
-
-                    // redis에도 변경사항 갱신
-                    redisTemplate.opsForHash().put(REDIS_PLANE_HASH_KEY, key, existingPlane);
                 }
-            // DB에 해당 데이터가 존재하지 않는 경우 저장
+
+            // DB에 존재하지 않는 경우
             } else {
 
                 if (searchDate.equals(yesterday)) continue;
 
                 Plane newPlane = dto.toPlane();
                 toSave.add(newPlane);
-
-                // redis에 추가
-                redisTemplate.opsForHash().put(REDIS_PLANE_HASH_KEY, key, newPlane);
             }
         }
 
@@ -189,148 +180,18 @@ public class PlaneService {
                 || !Objects.equals(existingPlane.getChkinrange(), checkinrange);
     }
 
-    /*
-    * 전체 항공편 데이터 목록 조회
-    *
-    * 1. redis에 존재하면 redis에서 조회
-    * 2. redis에서 조회할 수 없다면 DB에서 조회 후 redis에 캐싱
-    *
-    * searchDate가 null이면 전체 데이터 조회, 값이 있다면 특정 searchDate의 데이터 조회
-    * */
-    public <T> List<T> getPlanes(String searchDate, Class<T> clazz) {
-        List<T> redisPlanes = scanRedis(searchDate, clazz);
+    public List<Plane> getPlanesBySearchDate(String searchDate) {
 
-        if (!redisPlanes.isEmpty()) {
-            log.info("redis에서 plane 데이터 조회");
-
-            return redisPlanes;
-        }
-
-        // DB 조회
-
-        // searchDate가 null 이면 전체 조회
-        if (searchDate == null) {
-            return getAllPlanes(clazz);
-        }
-
-        // 특정 searchDate의 데이터만 조회
-        return getPlanesBySearchDate(clazz, searchDate);
+        return planeRepository.findBySearchDate(searchDate);
     }
 
-    /*
-    * searchDate가 null이면 전체 데이터 조회, 값이 있다면 특정 searchDate의 데이터 조회
-    *
-    * 저장 및 갱신 시 : searchDate를 지정하여 해당 날짜의 데이터만 조회
-    * 전체 목록 조회 시 : searchDate에 null을 전달하여 Redis의 모든 Plane 데이터를 조회
-    * */
-    public <T> List<T> scanRedis(String searchDate, Class<T> clazz) {
+    public Slice<PlaneResDto> getSlicePlanesBySearchDate(String date, int page, int size) {
 
-        // Redis plane-Hash 전체 조회
-        Map<Object, Object> entries = redisTemplate.opsForHash().entries(REDIS_PLANE_HASH_KEY);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("scheduleDateTime").ascending());
 
-        if (entries == null || entries.isEmpty()) {
-            return List.of();
-        }
+        Slice<Plane> slicePlane = planeRepository.findBySearchDate(date, pageable);
 
-        // redis 조회 시 반환할 리스트
-        List<T> results = new ArrayList<>();
-
-        for (Object value : entries.values()) {
-
-            if (value == null) continue;
-
-            T data;
-
-            // 저장된 값이 객체인지, HashMap(Json)인지 체크
-            if (clazz.isInstance(value)) {
-                data = clazz.cast(value);
-            } else if (value instanceof Map) {
-                data = objectMapper.convertValue(value, clazz);
-            } else continue;
-
-            // 날짜 필터링, null이라면 전체 조회, 값이 있다면 특정 searchDate의 데이터만 조회
-            if (searchDate == null) {
-                results.add(data);
-
-                continue;
-            }
-
-            String schedule = null;
-
-            if (clazz == Plane.class) {
-                schedule = ((Plane) data).getScheduleDateTime();
-            } else if (clazz == PlaneResDto.class) {
-                schedule = ((PlaneResDto) data).getScheduleDateTime();
-            }
-
-            if (schedule != null && schedule.startsWith(searchDate)) {
-                results.add(data);
-            }
-        }
-
-        return results;
-    }
-
-    /*
-    * 모든 plane 데이터 조회
-    * */
-    private <T> List<T> getAllPlanes(Class<T> clazz) {
-
-        List<Plane> planes = planeRepository.findAll();
-        planes.forEach(this::saveToRedis);
-
-        return planes.stream()
-                .map(p -> convert(p, clazz))
-                .toList();
-    }
-
-    /*
-    * 특정 날짜의 plane 데이터 조회
-    * */
-    private <T> List<T> getPlanesBySearchDate(Class<T> clazz, String searchDate) {
-
-        List<Plane> planes = planeRepository.findBySearchDate(searchDate);
-        planes.forEach(this::saveToRedis);
-
-        return planes.stream()
-                .map(p -> convert(p, clazz))
-                .toList();
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T> T convert(Plane plane, Class<T> clazz) {
-
-        if (clazz == Plane.class) {
-            return (T) plane;
-        }
-
-        if (clazz == PlaneResDto.class) {
-            return (T) convertToPlaneResDto(plane);
-        }
-
-        throw new IllegalArgumentException("지원하지 않는 타입: " + clazz);
-    }
-
-    private PlaneResDto convertToPlaneResDto(Plane plane) {
-        return PlaneResDto.builder()
-                .flightId(plane.getFlightId())
-                .airLine(plane.getAirLine())
-                .airport(plane.getAirport())
-                .airportCode(plane.getAirportCode())
-                .scheduleDateTime(plane.getScheduleDateTime())
-                .estimatedDateTime(plane.getEstimatedDateTime())
-                .gatenumber(plane.getGatenumber())
-                .terminalid(plane.getTerminalid())
-                .remark(plane.getRemark())
-                .codeShare(plane.getCodeShare())
-                .build();
-    }
-
-    private void saveToRedis(Plane plane) {
-        String key = plane.getFlightId() + "_" + plane.getScheduleDateTime();
-
-        redisTemplate.opsForHash().put(REDIS_PLANE_HASH_KEY, key, plane);
-        redisTemplate.expire(REDIS_PLANE_HASH_KEY, 1, TimeUnit.HOURS);
+        return slicePlane.map(PlaneResDto::from);
     }
 
     /*
@@ -388,12 +249,6 @@ public class PlaneService {
 
                     return !searchDate.equals(todayStr) && !searchDate.equals(tomorrowStr) && !searchDate.equals(dayAfterTomorrowStr);
                 })
-                .forEach(p -> {
-                    String redisKey = "plane:" + p.getFlightId() + "_" + p.getScheduleDateTime();
-
-                    redisTemplate.opsForHash().delete(REDIS_PLANE_HASH_KEY, redisKey);
-
-                    planeRepository.delete(p);
-                });
+                .forEach(planeRepository::delete);
     }
 }

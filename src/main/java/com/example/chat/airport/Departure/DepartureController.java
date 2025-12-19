@@ -2,9 +2,11 @@ package com.example.chat.airport.Departure;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
+@RequestMapping("/airport")
 @RequiredArgsConstructor
 @RestController
 public class DepartureController {

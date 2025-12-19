@@ -1,12 +1,10 @@
 package com.example.chat.airport.plane;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Builder
 @AllArgsConstructor
@@ -37,20 +35,18 @@ public class PlaneResDto {
 
     private String chkinrange;
 
-    public Plane toPlane() {
-        return Plane.builder()
-                .searchDate(this.searchDate)
-                .flightId(this.flightId)
-                .airLine(this.airLine)
-                .airport(this.airport)
-                .airportCode(this.airportCode)
-                .scheduleDateTime(this.scheduleDateTime)
-                .estimatedDateTime(this.estimatedDateTime)
-                .gatenumber(this.gatenumber)
-                .terminalid(this.terminalid)
-                .remark(this.remark)
-                .codeShare(this.codeShare)
-                .chkinrange(this.chkinrange)
+    public static PlaneResDto from(Plane plane){
+        return PlaneResDto.builder()
+                .flightId(plane.getFlightId())
+                .airLine(plane.getAirLine())
+                .airport(plane.getAirport())
+                .airportCode(plane.getAirportCode())
+                .scheduleDateTime(plane.getScheduleDateTime())
+                .estimatedDateTime(plane.getEstimatedDateTime())
+                .gatenumber(plane.getGatenumber())
+                .terminalid(plane.getTerminalid())
+                .remark(plane.getRemark())
+                .chkinrange(plane.getChkinrange())
                 .build();
     }
 }
