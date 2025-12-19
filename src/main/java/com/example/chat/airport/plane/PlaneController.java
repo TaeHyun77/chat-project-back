@@ -1,6 +1,7 @@
 package com.example.chat.airport.plane;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,10 +19,14 @@ public class PlaneController {
         planeService.getPlaneData();
     }
 
-    // 항공편 데이터 조회
-    @GetMapping("/planes")
-    public List<PlaneResDto> getRedisPlanes() {
-        return planeService.getPlanes(null, PlaneResDto.class);
+    @GetMapping("/slice/planes")
+    public Slice<PlaneResDto> getPlanes(
+            @RequestParam String date,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "7") int size
+    ) {
+        return planeService.getSlicePlanesBySearchDate(date, page, size);
+
     }
 
     // 항공편 데이터 정리
