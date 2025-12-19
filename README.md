@@ -17,7 +17,7 @@ CI/CD : Docker, Aws Ec2<br><br>
 
 ## 아키텍처
 <p align="center">
-<img width="594" height="260" alt="Image" src="https://github.com/user-attachments/assets/f6b73474-5c23-4902-a15a-3fd24f9d7f04" />
+<img width="408" height="141" alt="Image" src="https://github.com/user-attachments/assets/143873f2-831a-46d2-b4df-1fab927e6c15" />
 <br><br>
 
 ## 기능
