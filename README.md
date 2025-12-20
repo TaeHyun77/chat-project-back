@@ -72,10 +72,12 @@ CI/CD : Docker, Aws Ec2<br><br>
 
 **[ 채팅방 목록 페이지 ]**
 <br><br>
-<img src="https://github.com/user-attachments/assets/462d2e24-2c32-4ef8-8bd1-95b436482fb0" width=600 align="center"><br><br><br>
+<img width="1000" height="750" alt="Image" src="https://github.com/user-attachments/assets/f941fe00-7a61-4081-93ed-b0fb50b53ea4" /><br><br><br>
 
 **[ 채방방 페이지 ]**
 <br><br>
 
 로그인한 모든 사용자가 참여할 수 있는 오픈 채팅방으로, 실시간 채팅과 접속자 수, 입·퇴장 상태를 제공합니다.<br><br>
-<img width="901" height="753" alt="Image" src="https://github.com/user-attachments/assets/1950b072-ff45-428f-9181-38f10e9eb922" /><br><br><br>
+<img width="1000" height="750" alt="Image" src="https://github.com/user-attachments/assets/1950b072-ff45-428f-9181-38f10e9eb922" />
+<img width="1000" height="750" alt="Image" src="https://github.com/user-attachments/assets/813ea2a4-9891-4594-a8cc-8b99163a38bf" />
+<br><br><br>
