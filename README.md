@@ -64,7 +64,7 @@ CI/CD : Docker, Aws Ec2<br><br>
 **[ 메인 페이지 - 화면의 너비가 줄었을 때의 항공편 정보 ]**
 <br><br>
 
-<img width="1000" height="600" alt="Image" src="https://github.com/user-attachments/assets/61992ab7-67a7-4aa3-a117-5dc993c83233" />br><br><br>
+<img width="1000" height="600" alt="Image" src="https://github.com/user-attachments/assets/61992ab7-67a7-4aa3-a117-5dc993c83233" /><br><br><br>
 
 **[ 마이 페이지 - 정보 수정 및 생성한 채팅방 정보 ]**
 <br><br>
