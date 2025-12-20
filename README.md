@@ -47,24 +47,24 @@ CI/CD : Docker, Aws Ec2<br><br>
 
 **[ 전체 홈 페이지 ]**
 <br><br>
-<img width="1342" height="861" alt="Image" src="https://github.com/user-attachments/assets/7e829420-53d3-4626-ad4c-308436d2ab9f" /><br><br><br>
+<img width="1000" height="800" alt="Image" src="https://github.com/user-attachments/assets/7e829420-53d3-4626-ad4c-308436d2ab9f" /><br><br><br>
 
 **[ 메인 페이지 - 출국장 정보 ]**
 <br><br>
 
 각 출국장의 혼잡도를 수치와 그래프를 통해 나타내였습니다. <br>
-<img width="1060" height="535" alt="Image" src="https://github.com/user-attachments/assets/e15285c2-2614-46e3-b62d-436de9997c71" /><br><br><br>
+<img width="1000" height="500" alt="Image" src="https://github.com/user-attachments/assets/e15285c2-2614-46e3-b62d-436de9997c71" /><br><br><br>
 
 **[ 메인 페이지 - 항공편 정보 ]**
 <br><br>
 
 3일 내의 출발 예정인 항공편만 나타내며, 지연되는 항공편은 따로 표시를 해두었습니다.<br><br>
-<img width="1064" height="518" alt="Image" src="https://github.com/user-attachments/assets/684b9d74-8985-4208-9211-12508cc4f296" /><br><br><br>
+<img width="1000" height="500" alt="Image" src="https://github.com/user-attachments/assets/684b9d74-8985-4208-9211-12508cc4f296" /><br><br><br>
 
 **[ 메인 페이지 - 화면의 너비가 줄었을 때의 항공편 정보 ]**
 <br><br>
 
-<img width="959" height="517" alt="Image" src="https://github.com/user-attachments/assets/61992ab7-67a7-4aa3-a117-5dc993c83233" />br><br><br>
+<img width="1000" height="600" alt="Image" src="https://github.com/user-attachments/assets/61992ab7-67a7-4aa3-a117-5dc993c83233" />br><br><br>
 
 **[ 마이 페이지 - 정보 수정 및 생성한 채팅방 정보 ]**
 <br><br>
