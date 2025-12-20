@@ -1,6 +1,7 @@
 package com.example.chat.chat.chatRoom.dto;
 
 import com.example.chat.chat.chatRoom.ChatRoom;
+import com.example.chat.member.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +14,10 @@ public class ChatRoomReqDto {
 
     private String creator;
 
-    public ChatRoom toChatRoom() {
+    public ChatRoom toEntity(Member member) {
         return ChatRoom.builder()
-                .chatRoomName(this.chatRoomName)
+                .chatRoomName(chatRoomName)
+                .member(member)
                 .build();
     }
 }

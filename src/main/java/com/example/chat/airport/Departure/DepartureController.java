@@ -1,5 +1,6 @@
 package com.example.chat.airport.Departure;
 
+import com.example.chat.airport.Departure.dto.DepartureResDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -20,26 +20,26 @@ public class ChatRoomController {
 
     // 채팅방 생성
     @PostMapping("/api/chat/room")
-    public void createRoom(@RequestBody ChatRoomReqDto dto) {
+    public void createChatroom(@RequestBody ChatRoomReqDto dto) {
         chatRoomService.createChatRoom(dto);
     }
 
-    // 채팅방 목록 조회
+    // 채팅방 삭제
+    @DeleteMapping("/api/delete/{chatroomId}")
+    public void deleteChatroom(@PathVariable("chatroomId") String chatroomId) {
+        chatRoomService.deleteChatroom(chatroomId);
+    }
+
+    // 모든 채팅방 조회
     @GetMapping("/api/chat/rooms")
-    public List<ChatRoomResDto> getAllRooms() {
-        return chatRoomService.selectAllChatRoom();
+    public List<ChatRoomResDto> getAllChatroom() {
+        return chatRoomService.getAllChatroom();
     }
 
     // 특정 채팅방 조회
-    @GetMapping("/api/chatRoomInfo/{roomId}")
-    public ChatRoomResDto chatRoomInfo(@PathVariable("roomId") String roomId) {
-        return chatRoomService.chatRoomInfo(roomId);
-    }
-
-    // 채팅방 삭제
-    @DeleteMapping("/api/delete/{roomId}")
-    public void deleteRoom(@PathVariable("roomId") String roomId) {
-        chatRoomService.deleteRoom(roomId);
+    @GetMapping("/api/chatRoomInfo/{chatroomId}")
+    public ChatRoomResDto getChatroomInfo(@PathVariable("chatroomId") String chatroomId) {
+        return chatRoomService.getChatroomInfo(chatroomId);
     }
 
     // 현재 웹 소켓에 접속한 유저의 수 파악 ( 채팅방들에 존재하는 유저들의 총 합 )

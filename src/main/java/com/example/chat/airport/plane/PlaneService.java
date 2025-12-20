@@ -1,5 +1,7 @@
 package com.example.chat.airport.plane;
 
+import com.example.chat.airport.plane.dto.PlaneReqDto;
+import com.example.chat.airport.plane.dto.PlaneResDto;
 import com.example.chat.exception.ChatException;
 import com.example.chat.exception.ErrorCode;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -90,7 +92,7 @@ public class PlaneService {
                     .collect(Collectors.toMap(p -> p.getFlightId() + "_" + p.getScheduleDateTime(), p -> p));
 
             // DB에 저장할 항공편 데이터를 담는 리스트
-            List<Plane> toSave = toSavePlane(items, existPlaneDbMap, searchDate);
+            List<Plane> toSave = savePlane(items, existPlaneDbMap, searchDate);
 
             planeRepository.saveAll(toSave);
 
@@ -105,12 +107,12 @@ public class PlaneService {
     *
     * 어제 항공편 데이터를 포함하는 이유는 지연이나 결항 등의 사유로 일정이 다음 날로 변경될 수 있기 때문이며, 이 경우 새로운 데이터로 저장하지 않고 기존 정보의 갱신 여부만 확인
      * */
-    private List<Plane> toSavePlane(JsonNode items, Map<String, Plane> existPlaneDbMap, String searchDate) {
+    private List<Plane> savePlane(JsonNode items, Map<String, Plane> existPlaneDbMap, String searchDate) {
 
         String yesterday = LocalDate.now().minusDays(1).format(formatter);
 
         // DB에 저장할 항공편 데이터를 담는 리스트
-        List<Plane> toSave = new ArrayList<>();
+        List<Plane> planesToSave = new ArrayList<>();
 
         // JSON 데이터에서 같은 데이터가 여러 개 들어오는 경우가 있기에 중복을 제거하기 위함
         Set<String> checkDuplication = new HashSet<>();
@@ -121,7 +123,7 @@ public class PlaneService {
 
             if (!codeshare.equals("Master")) continue;
 
-            PlaneDto dto = PlaneDto.builder()
+            Plane plane = Plane.builder()
                     .searchDate(searchDate)
                     .flightId(item.path("flightId").asText())
                     .airLine(item.path("airline").asText())
@@ -136,7 +138,7 @@ public class PlaneService {
                     .chkinrange(item.path("chkinrange").asText())
                     .build();
 
-            String key = dto.getFlightId() + "_" + dto.getScheduleDateTime();
+            String key = plane.getFlightId() + "_" + plane.getScheduleDateTime();
 
             // 중복되는 데이터는 거름
             if (checkDuplication.contains(key)) {
@@ -151,33 +153,17 @@ public class PlaneService {
             // DB에 이미 존재한다면, 데이터가 수정된 경우에만 다시 저장
             // 이때, 따로 save 해주지 않아도 되기에 toSave에는 add 하지 않았음
             if (existingPlane != null) {
-                if (planeDataChangeCheck(existingPlane, dto.getRemark(), dto.getEstimatedDateTime(), dto.getGatenumber(), dto.getTerminalid(), dto.getChkinrange())) {
+                // JPA 더티 체킹
+                existingPlane.updatePlane(plane.getRemark(), plane.getEstimatedDateTime(), plane.getGatenumber(), plane.getTerminalid(), plane.getChkinrange());
 
-                    // 더티 체킹
-                    existingPlane.updatePlane(dto.getRemark(), dto.getEstimatedDateTime(), dto.getGatenumber(), dto.getTerminalid(), dto.getChkinrange());
-                }
-
-            // DB에 존재하지 않는 경우
-            } else {
-
+            } else { // DB에 존재하지 않는 경우
                 if (searchDate.equals(yesterday)) continue;
 
-                Plane newPlane = dto.toPlane();
-                toSave.add(newPlane);
+                planesToSave.add(plane);
             }
         }
 
-        return toSave;
-    }
-
-    // 항공편 데이터 변경 여부 - 하나라도 변경되면 true 반환
-    private boolean planeDataChangeCheck(Plane existingPlane, String remark , String estimatedDatetime, String gateNumber, String terminalId, String checkinrange) {
-
-        return !Objects.equals(existingPlane.getRemark(), remark)
-                || !Objects.equals(existingPlane.getEstimatedDateTime(), estimatedDatetime)
-                || !Objects.equals(existingPlane.getGatenumber(), gateNumber)
-                || !Objects.equals(existingPlane.getTerminalid(), terminalId)
-                || !Objects.equals(existingPlane.getChkinrange(), checkinrange);
+        return planesToSave;
     }
 
     public List<Plane> getPlanesBySearchDate(String searchDate) {

@@ -1,10 +1,9 @@
 package com.example.chat.airport.plane;
 
+import com.example.chat.airport.plane.dto.PlaneResDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/airport")

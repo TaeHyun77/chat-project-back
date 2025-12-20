@@ -1,11 +1,11 @@
 package com.example.chat.member;
 
 import com.example.chat.chat.chatRoom.dto.ChatRoomResDto;
+import com.example.chat.chat.chatRoom.repository.ChatRoomRepository;
 import com.example.chat.exception.ChatException;
 import com.example.chat.exception.ErrorCode;
 import com.example.chat.jwt.JwtUtil;
 import com.example.chat.member.dto.MemberResDto;
-import com.example.chat.member.repository.MemberRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,46 +27,42 @@ public class MemberService {
 
     private final JwtUtil jwtUtil;
     private final MemberRepository memberRepository;
+    private final ChatRoomRepository chatRoomRepository;
 
-    public MemberResDto Info(String token) {
+    public MemberResDto info(String token) {
 
         try {
-            try {
-                jwtUtil.isExpired(token);
-            } catch (ChatException e) {
-                throw new ChatException(HttpStatus.UNAUTHORIZED, ErrorCode.ACCESSTOKEN_IS_EXPIRED);
-            }
+            jwtUtil.isExpired(token);
 
-            String username = null;
-
-            try {
-                username = jwtUtil.getUsername(token);
-            } catch (ChatException e) {
-                throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ACCESSTOKEN_IS_EXPIRED);
-            }
-
+            String username = jwtUtil.getUsername(token);
             String role = jwtUtil.getRole(token);
 
             Member member = memberRepository.findByUsername(username)
-                    .orElseThrow(() -> new ChatException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_MEMBER));
+                    .orElseThrow(() ->
+                            new ChatException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_MEMBER)
+                    );
 
             return MemberResDto.builder()
                     .id(member.getId())
                     .username(member.getUsername())
                     .name(member.getName())
                     .email(member.getEmail())
-                    .role(Role.valueOf(role))
                     .nickName(member.getNickName())
+                    .role(Role.valueOf(role))
                     .build();
 
+        } catch (ChatException e) {
+            throw e;
         } catch (Exception e) {
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_RESPONSE_MEMBER);
         }
     }
 
+
     public ResponseEntity<String> googleLogout(HttpServletRequest request, HttpServletResponse response) {
 
         HttpSession session = request.getSession(false);
+
         if (session != null) {
             session.invalidate();
         }
@@ -86,12 +83,14 @@ public class MemberService {
 
     }
 
+    @Transactional
     public ResponseEntity<?> editNickName(Long id, String editNickName) {
 
         Optional<Member> member = memberRepository.findById(id);
 
         if (member.isPresent()) {
             member.get().setNickName(editNickName);
+
             memberRepository.save(member.get());
         } else {
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.NOT_FOUND_MEMBER);
@@ -100,32 +99,12 @@ public class MemberService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public MemberResDto memberChatRooms(Long id) {
+    public List<ChatRoomResDto> memberChatRooms(Long memberId) {
 
-        Member member = memberRepository.findByMemberWithChatRooms(id);
+        if (!memberRepository.existsById(memberId)) {
+            throw new ChatException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_MEMBER);
+        }
 
-        if (member == null) throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.NOT_FOUND_MEMBER);
-
-        return MemberResDto.of(
-                member.getId(),
-                member.getUsername(),
-                member.getName(),
-                member.getEmail(),
-                member.getNickName(),
-                member.getRole(),
-                member.getChatRooms().stream()
-                        .map(chatRoom -> ChatRoomResDto.builder()
-                                .chatRoomId(chatRoom.getChatRoomId()) // ID 필드를 사용한다고 가정
-                                .chatRoomName(chatRoom.getChatRoomName())
-                                .createdAt(chatRoom.getCreatedAt())
-                                .modifiedAt(chatRoom.getModifiedAt())
-                                .build())
-                        .toList()
-                );
+        return chatRoomRepository.findChatroomsByMemberId(memberId);
     }
-
-    public void deleteAllMember() {
-        memberRepository.deleteAll();
-    }
-
 }

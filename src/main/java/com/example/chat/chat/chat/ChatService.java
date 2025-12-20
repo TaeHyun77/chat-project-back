@@ -8,7 +8,7 @@ import com.example.chat.chat.chatRoom.repository.ChatRoomRepository;
 import com.example.chat.exception.ChatException;
 import com.example.chat.exception.ErrorCode;
 import com.example.chat.member.Member;
-import com.example.chat.member.repository.MemberRepository;
+import com.example.chat.member.MemberRepository;
 import com.example.chat.member.dto.MemberResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -37,39 +36,39 @@ public class ChatService {
     * 채팅을 DB에 저장하고, 해당 채팅방으로 전송
     * */
     @Transactional
-    public void pushMessage(ChatReqDto requestDto) {
+    public void pushChat(ChatReqDto dto) {
 
-        Member member = memberRepository.findByUsername(requestDto.getUsername())
+        Member member = memberRepository.findByUsername(dto.getUsername())
                 .orElseThrow(() -> new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.NOT_FOUND_MEMBER));
 
-        handleMessageByType(requestDto, member);
+        saveChat(dto, member);
     }
 
     // 메시지 타입에 따른 처리 분리
-    private void handleMessageByType(ChatReqDto requestDto, Member member) {
+    private void saveChat(ChatReqDto dto, Member member) {
 
-        ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(requestDto.getRoomId())
+        ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(dto.getChatroomId())
                 .orElseThrow(() -> new ChatException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_CHATROOM));
 
-        // 입퇴장 메세지는 따로 처리
-        if (requestDto.getChatType() == ChatType.ENTER) {
-            requestDto.setContent(member.getName() + ":enter");
-        } else if (requestDto.getChatType() == ChatType.EXIT) {
-            requestDto.setContent(member.getName() + ":exit");
+        // 입/퇴장 메세지는 따로 처리
+        if (dto.getChatType() == ChatType.ENTER) {
+            dto.setContent(member.getName() + ":enter");
+        } else if (dto.getChatType() == ChatType.EXIT) {
+            dto.setContent(member.getName() + ":exit");
         }
 
-        Chat chat = requestDto.toChat(chatRoom, member);
+        Chat chat = dto.toEntity(chatRoom, member);
         chatRepository.save(chat);
 
-        // 클라이언트에서 발송된 메세지를 해당 채팅방에 전송
-        ChatResDto sendMessage = ChatResDto.builder()
-                .chatType(requestDto.getChatType())
-                .content(requestDto.getContent())
-                .member(MemberResDto.fromMemberEntity(member))
-                .createdAt(requestDto.getCreatedAt())
-                .build();
+        sendChat(dto.getChatroomId(), chat);
+    }
 
-        messagingTemplate.convertAndSend("/topic/chat/" + requestDto.getRoomId(), sendMessage);
+    // 클라이언트에서 특정 채팅방에 발송된 메세지를 해당 채팅방에 전송
+    private void sendChat(String chatroomId, Chat chat) {
+
+        ChatResDto chatMessage = ChatResDto.from(chat);
+
+        messagingTemplate.convertAndSend("/topic/chat/" + chatroomId, chatMessage);
     }
 
     /*
@@ -77,15 +76,10 @@ public class ChatService {
     * */
     public List<ChatResDto> getChatListByChatroom(String chatRoomId) {
 
-        List<Chat> chats = chatRepository.getChats(chatRoomId);
+        List<Chat> chats = chatRepository.getChatsByChatRoomId(chatRoomId);
 
         return chats.stream()
-                .map(chat -> ChatResDto.builder()
-                        .chatType(chat.getChatType())
-                        .content(chat.getContent())
-                        .member(MemberResDto.fromMemberEntity(chat.getMember()))
-                        .createdAt(chat.getCreatedAt())
-                        .build())
-                .collect(Collectors.toList());
+                .map(ChatResDto::from)
+                .toList();
     }
 }

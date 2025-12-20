@@ -1,5 +1,6 @@
 package com.example.chat.member;
 
+import com.example.chat.chat.chatRoom.dto.ChatRoomResDto;
 import com.example.chat.exception.ChatException;
 import com.example.chat.exception.ErrorCode;
 import com.example.chat.member.dto.MemberResDto;
@@ -34,14 +35,14 @@ public class MemberController {
 
         String token = authorizationHeader.substring(7);
 
-        return memberService.Info(token);
+        return memberService.info(token);
     }
 
     // 닉네임 중복 여부 파악
     @GetMapping("/isNickName/{editNickName}")
     public boolean isNickName(@PathVariable("editNickName") String editNickName) {
 
-        log.info("editNickName : " + editNickName);
+        log.info("editNickName : {}", editNickName);
 
         return memberService.isNickName(editNickName);
 
@@ -51,14 +52,14 @@ public class MemberController {
     @PostMapping("/edit/{id}/{editNickName}")
     public ResponseEntity<?> editUsername(@PathVariable("id") Long id, @PathVariable("editNickName") String editNickName) {
 
-        log.info("id : " + id + " , " + "editNickName : " + editNickName);
+        log.info("id : {} , editNickName : {}", id, editNickName);
         return memberService.editNickName(id, editNickName);
 
     }
 
     @GetMapping("/member/{id}/chatRooms")
-    public MemberResDto memberChatRooms(@PathVariable("id") Long id) {
-        return memberService.memberChatRooms(id);
+    public List<ChatRoomResDto> memberChatRooms(@PathVariable("id") Long memberId) {
+        return memberService.memberChatRooms(memberId);
     }
 
     @GetMapping("/googleLogin")
@@ -76,10 +77,5 @@ public class MemberController {
 
         return memberService.googleLogout(request, response);
 
-    }
-
-    @DeleteMapping("/deleteAll")
-    public void deleteAllMember() {
-        memberService.deleteAllMember();
     }
 }
