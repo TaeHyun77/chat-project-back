@@ -1,5 +1,6 @@
-package com.example.chat.airport.plane;
+package com.example.chat.airport.plane.dto;
 
+import com.example.chat.airport.plane.Plane;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

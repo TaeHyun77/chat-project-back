@@ -9,7 +9,7 @@ public class PlaneRepositoryImpl implements PlaneRepositoryCustom{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public long deleteByScheduleDateStartsWith(String today) {
+    public Long deleteByScheduleDate(String today) {
 
         return queryFactory
                 .delete(QPlane.plane)

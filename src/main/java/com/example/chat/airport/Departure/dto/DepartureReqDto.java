@@ -1,15 +1,12 @@
-package com.example.chat.airport.Departure;
+package com.example.chat.airport.Departure.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.example.chat.airport.Departure.Departure;
+import lombok.*;
 
-@Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class DepartureResDto {
+@Setter
+@Getter
+public class DepartureReqDto {
 
     private String date;
 

@@ -1,7 +1,6 @@
 package com.example.chat.member;
 
 import com.example.chat.member.dto.MemberReqDto;
-import com.example.chat.member.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

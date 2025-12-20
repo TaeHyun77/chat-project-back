@@ -1,6 +1,5 @@
 package com.example.chat.jwt;
 
-
 import com.example.chat.exception.ChatException;
 import com.example.chat.exception.ErrorCode;
 import com.example.chat.member.Member;

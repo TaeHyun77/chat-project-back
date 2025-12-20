@@ -3,14 +3,12 @@ package com.example.chat.member.dto;
 import com.example.chat.chat.chatRoom.dto.ChatRoomResDto;
 import com.example.chat.member.Member;
 import com.example.chat.member.Role;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 public class MemberResDto {
@@ -39,11 +37,11 @@ public class MemberResDto {
         this.role = role;
     }
 
-    public static MemberResDto of(Long id, String username, String name, String email, String nickName, Role role, List<ChatRoomResDto> chatRooms) {
-        return new MemberResDto(id, username, name, email, nickName, role, chatRooms);
+    public MemberResDto(String nickName) {
+        this.nickName = nickName;
     }
 
-    public static MemberResDto fromMemberEntity(Member member) {
+    public static MemberResDto from(Member member) {
         return MemberResDto.builder()
                 .id(member.getId())
                 .username(member.getUsername())

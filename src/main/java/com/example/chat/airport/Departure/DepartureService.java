@@ -1,5 +1,7 @@
 package com.example.chat.airport.Departure;
 
+import com.example.chat.airport.Departure.dto.DepartureReqDto;
+import com.example.chat.airport.Departure.dto.DepartureResDto;
 import com.example.chat.exception.ChatException;
 import com.example.chat.exception.ErrorCode;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -37,7 +39,6 @@ public class DepartureService {
 
     /*
      * 공항 출국장 현황 데이터 조회 및 갱신
-     *
      * Api 규칙 : searchDate = 0 (오늘), 1(내일), 2(모레) ...
      * */
     @Transactional
@@ -61,7 +62,6 @@ public class DepartureService {
 
         } catch (Exception e) {
             log.error("출국장 데이터 api 조회 예외 발생: {}", e.getMessage());
-
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_SAVE_DEPARTURE_DATA);
         }
     }
@@ -69,7 +69,6 @@ public class DepartureService {
     /*
      * 공항 출국장 현황 데이터를 DB에 갱신
      * */
-    @Transactional
     private void upsertDepartureData(String departureJsonData) {
         try {
 
@@ -82,7 +81,7 @@ public class DepartureService {
 
                 if (date.equals("합계")) continue;
 
-                DepartureDto dto = DepartureDto.builder()
+                Departure departure = Departure.builder()
                         .date(item.path("adate").asText())
                         .timeZone(item.path("atime").asText())
                         .t1Depart1(item.path("t1dg1").asLong())
@@ -97,17 +96,12 @@ public class DepartureService {
 
                 departureRepository.findByDateAndTimeZone(date, timeZone)
                         .ifPresentOrElse(
-                                exists -> {
-                                    exists.updateDeparture(dto.toDepart());
-
-                                    departureRepository.save(exists);
-                                },
-                                () -> departureRepository.save(dto.toDepart())
+                                exists -> exists.updateDeparture(departure), // 더티 체킹
+                                () -> departureRepository.save(departure) // 신규 저장
                         );
             }
         } catch (Exception e) {
             log.error("출국장 데이터 저장 중 예외 발생: {}", e.getMessage());
-
             throw e;
         }
     }
@@ -168,7 +162,4 @@ public class DepartureService {
 
         return new URI(url);
     }
-
-
-
 }

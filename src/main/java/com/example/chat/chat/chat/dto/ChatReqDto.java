@@ -21,15 +21,15 @@ public class ChatReqDto {
 
     private String nickName;
 
+    private String chatroomId;
+
     private LocalDateTime createdAt;
 
-    private String roomId;
-
-    public Chat toChat(ChatRoom chatRoom, Member member) {
+    public Chat toEntity(ChatRoom chatRoom, Member member) {
         return Chat.builder()
-                .content(this.getContent())
+                .content(content)
                 .chatRoom(chatRoom)
-                .chatType(this.getChatType())
+                .chatType(chatType)
                 .member(member)
                 .build();
     }

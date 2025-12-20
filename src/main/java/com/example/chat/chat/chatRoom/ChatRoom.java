@@ -42,9 +42,10 @@ public class ChatRoom extends BaseTime {
     private List<Chat> chats = new ArrayList<>();
 
     @Builder
-    public ChatRoom(String chatRoomName) {
+    public ChatRoom(String chatRoomName, Member member) {
         this.chatRoomId = UUID.randomUUID().toString();
         this.chatRoomName = chatRoomName;
+        this.member = member;
     }
 }
 

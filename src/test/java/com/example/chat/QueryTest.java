@@ -3,7 +3,7 @@ package com.example.chat;
 import com.example.chat.chat.chatRoom.ChatRoom;
 import com.example.chat.chat.chatRoom.repository.ChatRoomRepository;
 import com.example.chat.member.Member;
-import com.example.chat.member.repository.MemberRepository;
+import com.example.chat.member.MemberRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

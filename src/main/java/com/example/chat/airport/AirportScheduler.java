@@ -19,7 +19,7 @@ public class AirportScheduler {
     private final DepartureService departureService;
 
 
-    @Scheduled(fixedDelay = 300000) // 5분마다 진행
+    @Scheduled(fixedDelay = 180000) // 3분마다 진행
     public void runDepartureData() {
         try {
             departureService.getDepartureData();
@@ -37,7 +37,6 @@ public class AirportScheduler {
         try {
             planeService.getPlaneData();
 
-            log.info("항공편 데이터 불러오기 완료");
         } catch (ChatException e) {
             log.info("항공편 데이터 불러오기 실패");
 
