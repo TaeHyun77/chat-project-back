@@ -68,7 +68,7 @@ CI/CD : Docker, Aws Ec2<br><br>
 
 **[ 마이 페이지 - 정보 수정 및 생성한 채팅방 정보 ]**
 <br><br>
-<img width="1000" height="800" alt="Image" src="https://github.com/user-attachments/assets/d7dff9a1-0918-46c8-a911-e0a4db2922fb" /><br><br><br>
+<img width="1000" height="800" alt="Image" src="https://github.com/user-attachments/assets/8903f08d-1964-4b2f-9fcd-9f0010ff00cf" /><br><br><br>
 
 **[ 채팅방 목록 페이지 ]**
 <br><br>
