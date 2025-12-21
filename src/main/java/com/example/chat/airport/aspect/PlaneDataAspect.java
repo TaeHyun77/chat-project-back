@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 public class PlaneDataAspect {
 
-    @Around("execution(* com.example.chat.airport.plane.PlaneService.getPlaneData(..))")
+    @Around("execution(* com.example.chat.airport.ApiService.getApiPlane(..))")
     public Object loadingPlaneApi(ProceedingJoinPoint joinPoint) throws Throwable{
 
         long start = System.currentTimeMillis();
@@ -20,17 +20,6 @@ public class PlaneDataAspect {
 
         log.info("항공편 데이터 불러오기 완료 - API 로딩 시간 : {}ms", executionTime);
 
-        return proceed;
-    }
-
-    @Around("execution(* com.example.chat.airport.plane.PlaneService.getPlanes(..))")
-    public Object searchingPlanes(ProceedingJoinPoint joinPoint) throws Throwable{
-
-        long start = System.currentTimeMillis();
-        Object proceed = joinPoint.proceed();
-        long executionTime = System.currentTimeMillis() - start;
-
-        log.info("항공편 데이터 조회 시간 : {}ms", executionTime);
         return proceed;
     }
 }

@@ -15,14 +15,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class AirportScheduler {
 
-    private final PlaneService planeService;
     private final DepartureService departureService;
-
+    private final PlaneService planeService;
+    private final ApiService apiService;
 
     @Scheduled(fixedDelay = 180000) // 3분마다 진행
     public void runDepartureData() {
         try {
-            departureService.getDepartureData();
+            apiService.getApiDeparture();
 
             log.info("출국장 데이터 불러오기 완료");
         } catch (ChatException e) {
@@ -35,7 +35,7 @@ public class AirportScheduler {
     @Scheduled(fixedDelay = 60000) // 1분마다 진행
     public void runPlaneData() {
         try {
-            planeService.getPlaneData();
+            apiService.getApiPlane();
 
         } catch (ChatException e) {
             log.info("항공편 데이터 불러오기 실패");

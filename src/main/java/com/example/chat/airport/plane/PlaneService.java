@@ -33,57 +33,15 @@ import java.util.stream.Collectors;
 @Service
 public class PlaneService {
 
-    @Value("${data.api.key}") // 공공 데이터 API 키
-    private String API_KEY;
-
-    private final ObjectMapper objectMapper;
-    private final RestTemplate restTemplate = new RestTemplate();
     private final PlaneRepository planeRepository;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-
-    /*
-    * 공항 항공편 현황 데이터를 갱신 및 저장
-    *
-    * 바뀔 수 있는 값 : estimatedDatetime, flightId, gateNumber, ** remark, terminalId
-    * */
-    @Transactional
-    public void getPlaneData() {
-
-        LocalDateTime today = LocalDateTime.now();
-
-        List<String> searchDates = List.of(
-                today.minusDays(1).format(formatter), // 어제
-                today.format(formatter),              // 오늘
-                today.plusDays(1).format(formatter),  // 내일
-                today.plusDays(2).format(formatter)   // 모레
-        );
-        
-        try {
-            for (String searchDate : searchDates) {
-
-                // 항공편 현황 데이터 조회 API end_point
-                String planeDataEndPoint = "https://apis.data.go.kr/B551177/StatusOfPassengerFlightsDeOdp/getPassengerDeparturesDeOdp";
-                URI uri = planeBuildUri(planeDataEndPoint, searchDate);
-
-                String jsonPlaneData = restTemplate.getForObject(uri, String.class);
-
-                upsertPlaneData(jsonPlaneData, searchDate);
-            }
-
-        } catch (Exception e) {
-            log.error("항공편 데이터 저장 중 예외 발생: {}", e.getMessage());
-            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_SAVE_PLANE_DATA);
-        }
-    }
 
     /*
     * API를 통해 조회한 공항 항공편 현황 데이터를 DB에 저장 및 갱신
     * */
     @Transactional
-    private void upsertPlaneData(String jsonPlaneData, String searchDate) {
+    public void upsertPlaneData(JsonNode jsonPlaneData, String searchDate) {
         try {
-            JsonNode items = checkValidationJson(jsonPlaneData);
-
             List<Plane> existPlaneDb = getPlanesBySearchDate(searchDate);
 
             // 기존에 존재하는 항공편 데이터를 Map에 key-value 형태로 저장
@@ -92,7 +50,7 @@ public class PlaneService {
                     .collect(Collectors.toMap(p -> p.getFlightId() + "_" + p.getScheduleDateTime(), p -> p));
 
             // DB에 저장할 항공편 데이터를 담는 리스트
-            List<Plane> toSave = savePlane(items, existPlaneDbMap, searchDate);
+            List<Plane> toSave = savePlane(jsonPlaneData, existPlaneDbMap, searchDate);
 
             planeRepository.saveAll(toSave);
 
@@ -178,37 +136,6 @@ public class PlaneService {
         Slice<Plane> slicePlane = planeRepository.findBySearchDate(date, pageable);
 
         return slicePlane.map(PlaneResDto::from);
-    }
-
-    /*
-    * OpenAPI 호출에 필요한 요청 URI를 반환
-    * */
-    private URI planeBuildUri(String endPoint, String searchDate) throws URISyntaxException {
-
-        // OpenAPI 요청 시 쿼리 파라미터를 URL 인코딩해야함
-        String url = endPoint + "?"
-                + "serviceKey=" + URLEncoder.encode(API_KEY, StandardCharsets.UTF_8)
-                + "&searchday=" + URLEncoder.encode(searchDate, StandardCharsets.UTF_8)
-                + "&pageNo=" + URLEncoder.encode("1", StandardCharsets.UTF_8)
-                + "&numOfRows=" + URLEncoder.encode("9999", StandardCharsets.UTF_8)
-                + "&type=" + URLEncoder.encode("json", StandardCharsets.UTF_8);
-
-        return new URI(url);
-    }
-
-    /*
-    * OpenAPI에서 가져온 JSON 데이터의 유효성 판단
-    * */
-    public JsonNode checkValidationJson(String jsonData) {
-        if (jsonData == null || jsonData.isEmpty() || jsonData.startsWith("<")) {
-            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_CHANGE_JSON_DATE);
-        }
-
-        try {
-            return objectMapper.readTree(jsonData).path("response").path("body").path("items");
-        } catch (JsonProcessingException e) {
-            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_PARSE_JSON);
-        }
     }
 
     /*

@@ -19,10 +19,12 @@ public class ReissueController {
 
     // access 토큰 재발급 로직
     @PostMapping("/api/reToken")
-    public ResponseEntity<?> reissueController(@RequestHeader("refreshAuthorization") String refreshAuthorization, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> reissueController(
+            @RequestHeader("refreshAuthorization") String refreshAuthorization,
+            HttpServletResponse response
+    ) {
 
-        log.info("access token 재발급 시도 중 ..");
-        return reissueService.reissue(refreshAuthorization, request, response);
+        log.info("access token 재발급 시도 요청");
+        return reissueService.reissue(refreshAuthorization, response);
     }
-
 }
