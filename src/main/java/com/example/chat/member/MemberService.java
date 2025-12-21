@@ -35,21 +35,11 @@ public class MemberService {
             jwtUtil.isExpired(token);
 
             String username = jwtUtil.getUsername(token);
-            String role = jwtUtil.getRole(token);
 
             Member member = memberRepository.findByUsername(username)
-                    .orElseThrow(() ->
-                            new ChatException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_MEMBER)
-                    );
+                    .orElseThrow(() -> new ChatException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_MEMBER));
 
-            return MemberResDto.builder()
-                    .id(member.getId())
-                    .username(member.getUsername())
-                    .name(member.getName())
-                    .email(member.getEmail())
-                    .nickName(member.getNickName())
-                    .role(Role.valueOf(role))
-                    .build();
+            return MemberResDto.from(member);
 
         } catch (ChatException e) {
             throw e;
@@ -57,7 +47,6 @@ public class MemberService {
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_RESPONSE_MEMBER);
         }
     }
-
 
     public ResponseEntity<String> googleLogout(HttpServletRequest request, HttpServletResponse response) {
 
@@ -80,24 +69,19 @@ public class MemberService {
     public boolean isNickName(String editNickName) {
 
         return memberRepository.existsByNickName(editNickName);
-
     }
 
     @Transactional
-    public ResponseEntity<?> editNickName(Long id, String editNickName) {
+    public void editNickName(Long id, String editNickName) {
 
-        Optional<Member> member = memberRepository.findById(id);
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() ->
+                        new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.NOT_FOUND_MEMBER)
+                );
 
-        if (member.isPresent()) {
-            member.get().setNickName(editNickName);
-
-            memberRepository.save(member.get());
-        } else {
-            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.NOT_FOUND_MEMBER);
-        }
-
-        return new ResponseEntity<>(HttpStatus.OK);
+        member.setNickName(editNickName);
     }
+
 
     public List<ChatRoomResDto> memberChatRooms(Long memberId) {
 

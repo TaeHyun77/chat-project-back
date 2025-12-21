@@ -50,9 +50,6 @@ dependencies {
 	// Websocket
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
-	// Redis
-	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-
 	// Spring AOP
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
 

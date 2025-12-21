@@ -50,10 +50,10 @@ public class MemberController {
 
     // 닉네임 수정
     @PostMapping("/edit/{id}/{editNickName}")
-    public ResponseEntity<?> editUsername(@PathVariable("id") Long id, @PathVariable("editNickName") String editNickName) {
+    public void editUsername(@PathVariable("id") Long id, @PathVariable("editNickName") String editNickName) {
 
         log.info("id : {} , editNickName : {}", id, editNickName);
-        return memberService.editNickName(id, editNickName);
+        memberService.editNickName(id, editNickName);
 
     }
 

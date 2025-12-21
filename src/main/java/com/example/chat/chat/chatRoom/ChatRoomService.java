@@ -49,16 +49,7 @@ public class ChatRoomService {
         List<ChatRoom> chatRooms = chatRoomRepository.getChatRooms();
 
         return chatRooms.stream()
-                .map(chatRoom -> ChatRoomResDto.builder()
-                        .chatRoomId(chatRoom.getChatRoomId())
-                        .chatRoomName(chatRoom.getChatRoomName())
-                        .memberResDto(
-                                MemberResDto.from(chatRoom.getMember())
-                        )
-                        .createdAt(chatRoom.getCreatedAt())
-                        .modifiedAt(chatRoom.getModifiedAt())
-                        .build()
-                )
+                .map(ChatRoomResDto::from)
                 .collect(Collectors.toList());
     }
 

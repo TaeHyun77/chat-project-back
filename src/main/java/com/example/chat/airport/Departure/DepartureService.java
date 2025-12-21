@@ -1,7 +1,7 @@
 package com.example.chat.airport.Departure;
 
-import com.example.chat.airport.Departure.dto.DepartureReqDto;
 import com.example.chat.airport.Departure.dto.DepartureResDto;
+import com.example.chat.airport.Departure.repository.DepartureRepository;
 import com.example.chat.exception.ChatException;
 import com.example.chat.exception.ErrorCode;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -82,7 +82,7 @@ public class DepartureService {
                 if (date.equals("합계")) continue;
 
                 Departure departure = Departure.builder()
-                        .date(item.path("adate").asText())
+                        .date(date)
                         .timeZone(item.path("atime").asText())
                         .t1Depart1(item.path("t1dg1").asLong())
                         .t1Depart2(item.path("t1dg2").asLong())
@@ -109,47 +109,22 @@ public class DepartureService {
     // 모든 출국장 데이터 조회
     public List<DepartureResDto> getDepartures() {
 
-        List<Departure> departures = departureRepository.findAll();
+        List<Departure> departures = departureRepository.findAllCustom();
 
         return departures.stream()
-                .map(d -> DepartureResDto.builder()
-                        .date(d.getDate())
-                        .timeZone(d.getTimeZone())
-                        .t1Depart1(d.getT1Depart1())
-                        .t1Depart2(d.getT1Depart2())
-                        .t1Depart3(d.getT1Depart3())
-                        .t1Depart4(d.getT1Depart4())
-                        .t1Depart5(d.getT1Depart5())
-                        .t1Depart6(d.getT1Depart6())
-                        .t2Depart1(d.getT2Depart1())
-                        .t2Depart2(d.getT2Depart2())
-                        .build())
+                .map(DepartureResDto::from)
                 .collect(Collectors.toList());
     }
 
+    // 어제 출국장 데이터 삭제
     @Transactional
     public void cleanUpDepartureData() {
         String yesterday = LocalDate.now().minusDays(1).format(formatter);
 
         departureRepository.deleteByDate(yesterday);
-
     }
 
-    public JsonNode checkValidationJson(String jsonData) {
-        if (jsonData == null || jsonData.isEmpty() || jsonData.startsWith("<")) {
-            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_CHANGE_JSON_DATE);
-        }
-
-        try {
-            return objectMapper.readTree(jsonData).path("response").path("body").path("items");
-        } catch (JsonProcessingException e) {
-            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_PARSE_JSON);
-        }
-    }
-
-    /*
-     * OpenAPI 호출에 필요한 요청 URI를 반환
-     * */
+    // OpenAPI 호출에 필요한 요청 URI를 반환
     private URI departureBuildUri(String endPoint, String searchDate) throws URISyntaxException {
 
         // OpenAPI 요청 시 쿼리 파라미터를 URL 인코딩해야함
@@ -161,5 +136,18 @@ public class DepartureService {
                 + "&type=" + URLEncoder.encode("json", StandardCharsets.UTF_8);
 
         return new URI(url);
+    }
+
+    // API의 JSON 데이터 유효성 체크
+    public JsonNode checkValidationJson(String jsonData) {
+        if (jsonData == null || jsonData.isEmpty() || jsonData.startsWith("<")) {
+            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_CHANGE_JSON_DATE);
+        }
+
+        try {
+            return objectMapper.readTree(jsonData).path("response").path("body").path("items");
+        } catch (JsonProcessingException e) {
+            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_PARSE_JSON);
+        }
     }
 }
