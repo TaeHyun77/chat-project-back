@@ -1,5 +1,6 @@
 package com.example.chat.airport.plane;
 
+import com.example.chat.airport.ApiService;
 import com.example.chat.airport.plane.dto.PlaneResDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
@@ -11,11 +12,12 @@ import org.springframework.web.bind.annotation.*;
 public class PlaneController {
 
     private final PlaneService planeService;
+    private final ApiService apiService;
 
     // 인천공항 항공편 api 로딩
     @GetMapping("/api/planes")
     public void getPlane() {
-        planeService.getPlaneData();
+        apiService.getApiPlane();
     }
 
     @GetMapping("/slice/planes")

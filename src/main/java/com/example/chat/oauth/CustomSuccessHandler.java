@@ -2,24 +2,21 @@ package com.example.chat.oauth;
 
 import com.example.chat.config.CookieUtil;
 import com.example.chat.jwt.JwtUtil;
-import jakarta.servlet.ServletException;
+import com.example.chat.refresh_retoken.ReissueService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -27,10 +24,10 @@ import java.util.concurrent.TimeUnit;
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtUtil jwtUtil;
-    private final StringRedisTemplate redisTemplate;
+    private final ReissueService reissueService;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
 
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
 
@@ -45,12 +42,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String access_token = jwtUtil.createJwt("access", username, role, 1800000L); // 30분
         String refresh_token = jwtUtil.createJwt("refresh", username, role, 259200000L); // 3일
 
-        redisTemplate.opsForValue().set(
-                "refresh_token:" + username,
-                refresh_token,
-                259200000L,
-                TimeUnit.MILLISECONDS
-        );
+        reissueService.saveRefreshToken(username, refresh_token);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 

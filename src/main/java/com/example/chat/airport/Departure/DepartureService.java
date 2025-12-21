@@ -28,53 +28,17 @@ import java.util.stream.Collectors;
 @Service
 public class DepartureService {
 
-    @Value("${data.api.key}") // 공공 데이터 API 키
-    private String API_KEY;
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
-    private final RestTemplate restTemplate = new RestTemplate();
     private final DepartureRepository departureRepository;
-
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-
-    /*
-     * 공항 출국장 현황 데이터 조회 및 갱신
-     * Api 규칙 : searchDate = 0 (오늘), 1(내일), 2(모레) ...
-     * */
-    @Transactional
-    public void getDepartureData() {
-
-        List<String> searchDates = List.of("0", "1"); // 오늘, 내일
-
-        try {
-            for (String searchDate : searchDates) {
-
-                // 출국장 현황 데이터 조회 API end_point
-                String departureDataEndPoint = "https://apis.data.go.kr/B551177/passgrAnncmt/getPassgrAnncmt";
-
-                URI uri = departureBuildUri(departureDataEndPoint, searchDate);
-
-                // JSON 형태로 받아옴
-                String departureData = restTemplate.getForObject(uri, String.class);
-
-                upsertDepartureData(departureData);
-            }
-
-        } catch (Exception e) {
-            log.error("출국장 데이터 api 조회 예외 발생: {}", e.getMessage());
-            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_SAVE_DEPARTURE_DATA);
-        }
-    }
 
     /*
      * 공항 출국장 현황 데이터를 DB에 갱신
      * */
-    private void upsertDepartureData(String departureJsonData) {
+    @Transactional
+    public void upsertDepartureData(JsonNode departureJsonData) {
         try {
 
-            JsonNode items = checkValidationJson(departureJsonData);
-
-            for (JsonNode item : items) {
+            for (JsonNode item : departureJsonData) {
 
                 String date = item.path("adate").asText();
                 String timeZone = item.path("atime").asText();
@@ -122,32 +86,5 @@ public class DepartureService {
         String yesterday = LocalDate.now().minusDays(1).format(formatter);
 
         departureRepository.deleteByDate(yesterday);
-    }
-
-    // OpenAPI 호출에 필요한 요청 URI를 반환
-    private URI departureBuildUri(String endPoint, String searchDate) throws URISyntaxException {
-
-        // OpenAPI 요청 시 쿼리 파라미터를 URL 인코딩해야함
-        String url = endPoint + "?"
-                + "serviceKey=" + URLEncoder.encode(API_KEY, StandardCharsets.UTF_8)
-                + "&selectdate=" + URLEncoder.encode(searchDate, StandardCharsets.UTF_8)
-                + "&pageNo=" + URLEncoder.encode("1", StandardCharsets.UTF_8)
-                + "&numOfRows=" + URLEncoder.encode("9999", StandardCharsets.UTF_8)
-                + "&type=" + URLEncoder.encode("json", StandardCharsets.UTF_8);
-
-        return new URI(url);
-    }
-
-    // API의 JSON 데이터 유효성 체크
-    public JsonNode checkValidationJson(String jsonData) {
-        if (jsonData == null || jsonData.isEmpty() || jsonData.startsWith("<")) {
-            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_CHANGE_JSON_DATE);
-        }
-
-        try {
-            return objectMapper.readTree(jsonData).path("response").path("body").path("items");
-        } catch (JsonProcessingException e) {
-            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_PARSE_JSON);
-        }
     }
 }

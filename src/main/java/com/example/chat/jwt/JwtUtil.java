@@ -51,7 +51,7 @@ public class JwtUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("category", String.class);
     }
 
-    public void isExpired(String token) {
+    public Boolean isExpired(String token) {
         try {
             Date expiration = Jwts.parser()
                     .verifyWith(secretKey)
@@ -60,9 +60,7 @@ public class JwtUtil {
                     .getPayload()
                     .getExpiration();
 
-            if (expiration.before(new Date())) {
-                throw new ChatException(HttpStatus.UNAUTHORIZED, ErrorCode.ACCESSTOKEN_IS_EXPIRED);
-            }
+            return !expiration.before(new Date());
         } catch (ExpiredJwtException e) {
             log.warn("JWT가 만료됨: " + e.getMessage());
             throw new ChatException(HttpStatus.UNAUTHORIZED, ErrorCode.ACCESSTOKEN_IS_EXPIRED);
