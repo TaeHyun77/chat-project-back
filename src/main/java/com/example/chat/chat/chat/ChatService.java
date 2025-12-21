@@ -34,6 +34,8 @@ public class ChatService {
     * 발행된 채팅을 처리하는 메서드
     * 일반 채팅 메세지와, 입퇴장 메세지를 따로 처리
     * 채팅을 DB에 저장하고, 해당 채팅방으로 전송
+    *
+    * ❌ 트랜잭션 범위 안에서 API 호출하는 문제가 있긴함, 다른 빈으로 빼고 사용해야함❌
     * */
     @Transactional
     public void pushChat(ChatReqDto dto) {
@@ -42,6 +44,7 @@ public class ChatService {
                 .orElseThrow(() -> new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.NOT_FOUND_MEMBER));
 
         saveChat(dto, member);
+
     }
 
     // 메시지 타입에 따른 처리 분리

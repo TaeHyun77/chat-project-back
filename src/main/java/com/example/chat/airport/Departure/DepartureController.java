@@ -19,4 +19,6 @@ public class DepartureController {
     public List<DepartureResDto> getDepartures() {
         return departureService.getDepartures();
     }
+
+
 }

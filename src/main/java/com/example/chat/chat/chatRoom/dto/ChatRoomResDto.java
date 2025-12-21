@@ -37,6 +37,8 @@ public class ChatRoomResDto {
                 .build();
     }
 
+
+    // Query Dsl Constructor 사용을 위한 생성자
     public ChatRoomResDto(String chatRoomId, String chatRoomName, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.chatRoomId = chatRoomId;
         this.chatRoomName = chatRoomName;
