@@ -1,6 +1,6 @@
 package com.example.chat.airport.Departure.repository;
 
-import com.example.chat.ReadOnlyTransaction;
+import com.example.chat.annotation.ReadOnlyTransaction;
 import com.example.chat.airport.Departure.Departure;
 import com.example.chat.airport.Departure.QDeparture;
 import com.querydsl.jpa.impl.JPAQueryFactory;

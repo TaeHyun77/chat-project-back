@@ -64,6 +64,9 @@ public class ApiService {
     // 공항 항공편 현황 데이터를 인천공항 API를 통해 받아옴
     public void getApiPlane() {
 
+        // 항공편 현황 데이터 조회 API end_point
+        String planeDataEndPoint = "https://apis.data.go.kr/B551177/StatusOfPassengerFlightsDeOdp/getPassengerDeparturesDeOdp";
+
         LocalDateTime today = LocalDateTime.now();
 
         List<String> searchDates = List.of(
@@ -75,9 +78,6 @@ public class ApiService {
 
         try {
             for (String searchDate : searchDates) {
-
-                // 항공편 현황 데이터 조회 API end_point
-                String planeDataEndPoint = "https://apis.data.go.kr/B551177/StatusOfPassengerFlightsDeOdp/getPassengerDeparturesDeOdp";
                 URI uri = buildUri("plane", planeDataEndPoint, searchDate);
 
                 String apiPlaneData = restTemplate.getForObject(uri, String.class);

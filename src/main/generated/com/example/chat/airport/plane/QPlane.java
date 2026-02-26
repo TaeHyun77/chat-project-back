@@ -19,7 +19,7 @@ public class QPlane extends EntityPathBase<Plane> {
 
     public static final QPlane plane = new QPlane("plane");
 
-    public final com.example.chat.config.QBaseTime _super = new com.example.chat.config.QBaseTime(this);
+    public final com.example.chat.QBaseBatch _super = new com.example.chat.QBaseBatch(this);
 
     public final StringPath airLine = createString("airLine");
 
@@ -40,7 +40,8 @@ public class QPlane extends EntityPathBase<Plane> {
 
     public final StringPath gatenumber = createString("gatenumber");
 
-    public final NumberPath<Long> id = createNumber("id", Long.class);
+    //inherited
+    public final NumberPath<Long> id = _super.id;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
