@@ -1,4 +1,4 @@
-package com.example.chat;
+package com.example.chat.annotation;
 
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
