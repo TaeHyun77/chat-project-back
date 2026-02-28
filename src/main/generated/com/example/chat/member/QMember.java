@@ -2,6 +2,8 @@ package com.example.chat.member;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
+import com.example.chat.messaging.member.Member;
+import com.example.chat.messaging.member.Role;
 import com.querydsl.core.types.dsl.*;
 
 import com.querydsl.core.types.PathMetadata;
@@ -20,11 +22,11 @@ public class QMember extends EntityPathBase<Member> {
 
     public static final QMember member = new QMember("member1");
 
-    public final com.example.chat.config.QBaseTime _super = new com.example.chat.config.QBaseTime(this);
+    public final com.example.chat.common.QBaseTime _super = new com.example.chat.common.QBaseTime(this);
 
-    public final ListPath<com.example.chat.chat.chatRoom.ChatRoom, com.example.chat.chat.chatRoom.QChatRoom> chatRooms = this.<com.example.chat.chat.chatRoom.ChatRoom, com.example.chat.chat.chatRoom.QChatRoom>createList("chatRooms", com.example.chat.chat.chatRoom.ChatRoom.class, com.example.chat.chat.chatRoom.QChatRoom.class, PathInits.DIRECT2);
+    public final ListPath<com.example.chat.messaging.chatRoom.ChatRoom, com.example.chat.messaging.chatRoom.QChatRoom> chatRooms = this.<com.example.chat.messaging.chatRoom.ChatRoom, com.example.chat.messaging.chatRoom.QChatRoom>createList("chatRooms", com.example.chat.messaging.chatRoom.ChatRoom.class, com.example.chat.messaging.chatRoom.QChatRoom.class, PathInits.DIRECT2);
 
-    public final ListPath<com.example.chat.chat.chat.Chat, com.example.chat.chat.chat.QChat> chats = this.<com.example.chat.chat.chat.Chat, com.example.chat.chat.chat.QChat>createList("chats", com.example.chat.chat.chat.Chat.class, com.example.chat.chat.chat.QChat.class, PathInits.DIRECT2);
+    public final ListPath<com.example.chat.messaging.chat.Chat, com.example.chat.messaging.chat.QChat> chats = this.<com.example.chat.messaging.chat.Chat, com.example.chat.messaging.chat.QChat>createList("chats", com.example.chat.messaging.chat.Chat.class, com.example.chat.messaging.chat.QChat.class, PathInits.DIRECT2);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;

@@ -1,6 +1,6 @@
 package com.example.chat.airport;
 
-import com.example.chat.airport.Departure.DepartureService;
+import com.example.chat.airport.departure.DepartureService;
 import com.example.chat.airport.plane.PlaneService;
 import com.example.chat.exception.ChatException;
 import com.example.chat.exception.ErrorCode;
@@ -20,6 +20,9 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,35 +32,30 @@ public class ApiService {
     @Value("${data.api.key}") // 공공 데이터 API 키
     private String API_KEY;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final ObjectMapper objectMapper;
+    private final RestTemplate restTemplate;
 
     private final DepartureService departureService;
     private final PlaneService planeService;
+
+    private final ExecutorService executor = Executors.newFixedThreadPool(4);
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
     private final List<String> departureSearchDates = List.of("0", "1");
 
     // 공항 출국장 혼잡도 데이터를 인천공항 API를 통해 받아옴
-    public void getApiDeparture() {
-        try {
-            for (String searchDate : departureSearchDates) {
+    public void getApiDeparture() throws URISyntaxException {
+        // 출국장 현황 데이터 조회 API end_point
+        String departureDataEndPoint = "https://apis.data.go.kr/B551177/passgrAnncmt/getPassgrAnncmt";
 
-                // 출국장 현황 데이터 조회 API end_point
-                String departureDataEndPoint = "https://apis.data.go.kr/B551177/passgrAnncmt/getPassgrAnncmt";
+        for (String searchDate : departureSearchDates) {
+            URI uri = buildUri("departure", departureDataEndPoint, searchDate);
 
-                URI uri = buildUri("departure", departureDataEndPoint, searchDate);
+            // JSON 형태로 받아옴
+            String apiDepartureData = restTemplate.getForObject(uri, String.class);
+            JsonNode jsonDepartureData = parseAndValidateJson(apiDepartureData);
 
-                // JSON 형태로 받아옴
-                String apiDepartureData = restTemplate.getForObject(uri, String.class);
-                JsonNode jsonDepartureData = parseAndValidateJson(apiDepartureData);
-
-                departureService.upsertDepartureData(jsonDepartureData);
-            }
-
-        } catch (Exception e) {
-            log.error("출국장 데이터 api 조회 예외 발생: {}", e.getMessage());
-            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_SAVE_DEPARTURE_DATA);
+            departureService.upsertDepartureData(jsonDepartureData);
         }
     }
 
@@ -68,7 +66,6 @@ public class ApiService {
         String planeDataEndPoint = "https://apis.data.go.kr/B551177/StatusOfPassengerFlightsDeOdp/getPassengerDeparturesDeOdp";
 
         LocalDateTime today = LocalDateTime.now();
-
         List<String> searchDates = List.of(
                 today.minusDays(1).format(formatter), // 어제
                 today.format(formatter),              // 오늘
@@ -76,20 +73,22 @@ public class ApiService {
                 today.plusDays(2).format(formatter)   // 모레
         );
 
-        try {
-            for (String searchDate : searchDates) {
-                URI uri = buildUri("plane", planeDataEndPoint, searchDate);
+        List<CompletableFuture<Void>> futures = searchDates.stream()
+                .map(searchDate -> CompletableFuture.runAsync(() -> {
+                    try {
+                        URI uri = buildUri("plane", planeDataEndPoint, searchDate);
+                        String apiPlaneData = restTemplate.getForObject(uri, String.class);
+                        JsonNode jsonPlaneData = parseAndValidateJson(apiPlaneData);
 
-                String apiPlaneData = restTemplate.getForObject(uri, String.class);
-                JsonNode jsonPlaneData = parseAndValidateJson(apiPlaneData);
+                        planeService.upsertPlaneData(jsonPlaneData, searchDate);
+                    } catch (URISyntaxException e) {
+                        throw new RuntimeException(e);
+                    }
+                }, executor))
+                .toList();
 
-                planeService.upsertPlaneData(jsonPlaneData, searchDate);
-            }
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
 
-        } catch (Exception e) {
-            log.error("항공편 데이터 저장 중 예외 발생: {}", e.getMessage());
-            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_SAVE_PLANE_DATA);
-        }
     }
 
     // OpenAPI 호출에 필요한 요청 URI를 반환
@@ -108,9 +107,7 @@ public class ApiService {
         return new URI(url);
     }
 
-    /*
-     * OpenAPI에서 가져온 JSON 데이터의 유효성 판단
-     * */
+    // OpenAPI에서 가져온 JSON 데이터의 유효성 판단
     public JsonNode parseAndValidateJson(String jsonData) {
         if (jsonData == null || jsonData.isEmpty() || jsonData.startsWith("<")) {
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.ERROR_TO_CHANGE_JSON_DATE);

@@ -1,9 +1,9 @@
 package com.example.chat.config;
 
-import com.example.chat.jwt.JwtFilter;
-import com.example.chat.jwt.JwtUtil;
-import com.example.chat.oauth.CustomOAuth2UserService;
-import com.example.chat.oauth.CustomSuccessHandler;
+import com.example.chat.auth.jwt.JwtFilter;
+import com.example.chat.auth.jwt.JwtUtil;
+import com.example.chat.auth.oauth.CustomOAuth2UserService;
+import com.example.chat.auth.oauth.CustomSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

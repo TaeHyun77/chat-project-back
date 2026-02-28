@@ -19,7 +19,7 @@ public class QPlane extends EntityPathBase<Plane> {
 
     public static final QPlane plane = new QPlane("plane");
 
-    public final com.example.chat.QBaseBatch _super = new com.example.chat.QBaseBatch(this);
+    public final com.example.chat.common.QBaseBatch _super = new com.example.chat.common.QBaseBatch(this);
 
     public final StringPath airLine = createString("airLine");
 
