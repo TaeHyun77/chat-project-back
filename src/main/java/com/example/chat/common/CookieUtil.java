@@ -1,0 +1,21 @@
+package com.example.chat.common;
+
+import jakarta.servlet.http.Cookie;
+
+public class CookieUtil {
+
+    private CookieUtil() {
+    }
+
+    public static Cookie createCookie(String key, String value, int maxAge) {
+        Cookie cookie = new Cookie(key, value);
+        cookie.setMaxAge(maxAge);
+        cookie.setHttpOnly(false);
+        cookie.setPath("/");
+        return cookie;
+    }
+
+    public static Cookie createDefaultCookie(String key, String value) {
+        return createCookie(key, value, 60 * 60 * 2); // 2시간
+    }
+}

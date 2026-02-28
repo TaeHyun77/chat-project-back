@@ -1,6 +1,6 @@
 package com.example.chat.airport.plane;
 
-import com.example.chat.airport.batch.BaseBatch;
+import com.example.chat.common.BaseBatch;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
