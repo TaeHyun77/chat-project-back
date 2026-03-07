@@ -17,8 +17,7 @@ CI/CD : Docker, Aws Ec2<br><br>
 
 ## 아키텍처
 <p align="center">
-<img width="600" height="300" alt="Image" src="https://github.com/user-attachments/assets/143873f2-831a-46d2-b4df-1fab927e6c15" />
-<br><br>
+<img width="657" height="520" alt="스크린샷 2026-03-07 오후 8 26 11" src="https://github.com/user-attachments/assets/7cea47f3-d3bf-4571-a666-476c9163b7e7" /><br><br>
 
 ## 기능
 - Oauth + JWT를 사용한 구글 로그인
