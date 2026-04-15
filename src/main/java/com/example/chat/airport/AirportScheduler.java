@@ -18,6 +18,17 @@ public class AirportScheduler {
     private final PlaneService planeService;
     private final ApiService apiService;
 
+    // 주차장 데이터 동기화 (5분마다)
+    @Scheduled(fixedDelay = 300000)
+    public void syncParkingData() {
+        try {
+            apiService.getApiParking();
+            log.info("주차장 데이터 API 호출 완료");
+        } catch (Exception e) {
+            log.error("주차장 데이터 API 호출 실패", e);
+        }
+    }
+
     // 출국장 데이터 동기화 (3분마다)
     @Scheduled(fixedDelay = 180000)
     public void syncDepartureData() {

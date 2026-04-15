@@ -1,8 +1,8 @@
-package com.example.chat.messaging.member.dto;
+package com.example.chat.member.dto;
 
 import com.example.chat.messaging.chatRoom.dto.ChatRoomResDto;
-import com.example.chat.messaging.member.Member;
-import com.example.chat.messaging.member.Role;
+import com.example.chat.member.Member;
+import com.example.chat.member.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

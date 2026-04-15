@@ -1,0 +1,22 @@
+[
+  {"terminal": "T1", "parkingName": "단기주차장", "zone": "A구역", "checkInCounter": "A", "travelSeconds": 420},
+  {"terminal": "T1", "parkingName": "단기주차장", "zone": "A구역", "checkInCounter": "B", "travelSeconds": 390},
+  {"terminal": "T1", "parkingName": "단기주차장", "zone": "A구역", "checkInCounter": "C", "travelSeconds": 360},
+  {"terminal": "T1", "parkingName": "단기주차장", "zone": "A구역", "checkInCounter": "D", "travelSeconds": 330},
+  {"terminal": "T1", "parkingName": "단기주차장", "zone": "A구역", "checkInCounter": "E", "travelSeconds": 300},
+  {"terminal": "T1", "parkingName": "단기주차장", "zone": "A구역", "checkInCounter": "F", "travelSeconds": 330},
+  {"terminal": "T1", "parkingName": "단기주차장", "zone": "H구역", "checkInCounter": "G", "travelSeconds": 360},
+  {"terminal": "T1", "parkingName": "단기주차장", "zone": "H구역", "checkInCounter": "H", "travelSeconds": 390},
+  {"terminal": "T1", "parkingName": "단기주차장", "zone": "H구역", "checkInCounter": "J", "travelSeconds": 420},
+  {"terminal": "T1", "parkingName": "단기주차장", "zone": "H구역", "checkInCounter": "K", "travelSeconds": 450},
+  {"terminal": "T1", "parkingName": "장기주차장", "zone": "서편", "checkInCounter": "A", "travelSeconds": 720},
+  {"terminal": "T1", "parkingName": "장기주차장", "zone": "서편", "checkInCounter": "B", "travelSeconds": 690},
+  {"terminal": "T1", "parkingName": "장기주차장", "zone": "동편", "checkInCounter": "L", "travelSeconds": 750},
+  {"terminal": "T1", "parkingName": "장기주차장", "zone": "동편", "checkInCounter": "M", "travelSeconds": 780},
+  {"terminal": "T2", "parkingName": "단기주차장", "zone": "A구역", "checkInCounter": "A", "travelSeconds": 300},
+  {"terminal": "T2", "parkingName": "단기주차장", "zone": "A구역", "checkInCounter": "B", "travelSeconds": 270},
+  {"terminal": "T2", "parkingName": "단기주차장", "zone": "A구역", "checkInCounter": "C", "travelSeconds": 240},
+  {"terminal": "T2", "parkingName": "단기주차장", "zone": "A구역", "checkInCounter": "D", "travelSeconds": 210},
+  {"terminal": "T2", "parkingName": "장기주차장", "zone": "서편", "checkInCounter": "A", "travelSeconds": 600},
+  {"terminal": "T2", "parkingName": "장기주차장", "zone": "동편", "checkInCounter": "G", "travelSeconds": 630}
+]

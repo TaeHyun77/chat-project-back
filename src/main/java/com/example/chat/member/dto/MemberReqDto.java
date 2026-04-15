@@ -1,6 +1,6 @@
-package com.example.chat.messaging.member.dto;
+package com.example.chat.member.dto;
 
-import com.example.chat.messaging.member.Role;
+import com.example.chat.member.Role;
 import lombok.Getter;
 
 @Getter

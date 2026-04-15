@@ -1,7 +1,7 @@
 package com.example.chat.messaging.chatRoom.dto;
 
 import com.example.chat.messaging.chatRoom.ChatRoom;
-import com.example.chat.messaging.member.Member;
+import com.example.chat.member.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

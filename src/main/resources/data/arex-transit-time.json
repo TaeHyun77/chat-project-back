@@ -1,0 +1,23 @@
+[
+  {"terminal": "T1", "stationName": "인천공항1터미널역", "checkInCounter": "A", "travelSeconds": 920},
+  {"terminal": "T1", "stationName": "인천공항1터미널역", "checkInCounter": "B", "travelSeconds": 900},
+  {"terminal": "T1", "stationName": "인천공항1터미널역", "checkInCounter": "C", "travelSeconds": 840},
+  {"terminal": "T1", "stationName": "인천공항1터미널역", "checkInCounter": "D", "travelSeconds": 780},
+  {"terminal": "T1", "stationName": "인천공항1터미널역", "checkInCounter": "E", "travelSeconds": 720},
+  {"terminal": "T1", "stationName": "인천공항1터미널역", "checkInCounter": "F", "travelSeconds": 660},
+  {"terminal": "T1", "stationName": "인천공항1터미널역", "checkInCounter": "G", "travelSeconds": 600},
+  {"terminal": "T1", "stationName": "인천공항1터미널역", "checkInCounter": "H", "travelSeconds": 660},
+  {"terminal": "T1", "stationName": "인천공항1터미널역", "checkInCounter": "J", "travelSeconds": 720},
+  {"terminal": "T1", "stationName": "인천공항1터미널역", "checkInCounter": "K", "travelSeconds": 780},
+  {"terminal": "T1", "stationName": "인천공항1터미널역", "checkInCounter": "L", "travelSeconds": 840},
+  {"terminal": "T1", "stationName": "인천공항1터미널역", "checkInCounter": "M", "travelSeconds": 900},
+  {"terminal": "T1", "stationName": "인천공항1터미널역", "checkInCounter": "N", "travelSeconds": 960},
+  {"terminal": "T2", "stationName": "인천공항2터미널역", "checkInCounter": "A", "travelSeconds": 540},
+  {"terminal": "T2", "stationName": "인천공항2터미널역", "checkInCounter": "B", "travelSeconds": 480},
+  {"terminal": "T2", "stationName": "인천공항2터미널역", "checkInCounter": "C", "travelSeconds": 420},
+  {"terminal": "T2", "stationName": "인천공항2터미널역", "checkInCounter": "D", "travelSeconds": 360},
+  {"terminal": "T2", "stationName": "인천공항2터미널역", "checkInCounter": "E", "travelSeconds": 360},
+  {"terminal": "T2", "stationName": "인천공항2터미널역", "checkInCounter": "F", "travelSeconds": 420},
+  {"terminal": "T2", "stationName": "인천공항2터미널역", "checkInCounter": "G", "travelSeconds": 480},
+  {"terminal": "T2", "stationName": "인천공항2터미널역", "checkInCounter": "H", "travelSeconds": 540}
+]

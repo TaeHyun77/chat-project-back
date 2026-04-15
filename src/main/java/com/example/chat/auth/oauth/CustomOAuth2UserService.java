@@ -1,8 +1,8 @@
 package com.example.chat.auth.oauth;
 
-import com.example.chat.messaging.member.Member;
-import com.example.chat.messaging.member.MemberRepository;
-import com.example.chat.messaging.member.Role;
+import com.example.chat.member.Member;
+import com.example.chat.member.MemberRepository;
+import com.example.chat.member.Role;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;

@@ -1,6 +1,7 @@
 package com.example.chat.airport;
 
 import com.example.chat.airport.departure.DepartureService;
+import com.example.chat.airport.parking.ParkingService;
 import com.example.chat.airport.plane.PlaneService;
 import com.example.chat.exception.ChatException;
 import com.example.chat.exception.ErrorCode;
@@ -37,6 +38,7 @@ public class ApiService {
 
     private final DepartureService departureService;
     private final PlaneService planeService;
+    private final ParkingService parkingService;
 
     private final ExecutorService executor = Executors.newFixedThreadPool(4);
 
@@ -89,6 +91,21 @@ public class ApiService {
 
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
 
+    }
+
+    // 주차장 실시간 현황 데이터를 공공 API를 통해 받아옴
+    public void getApiParking() throws URISyntaxException {
+        String parkingEndPoint = "http://apis.data.go.kr/B551177/StatusOfParking/getTrackingParking";
+
+        String url = parkingEndPoint + "?"
+                + "serviceKey=" + URLEncoder.encode(API_KEY, StandardCharsets.UTF_8)
+                + "&pageNo=" + URLEncoder.encode("1", StandardCharsets.UTF_8)
+                + "&numOfRows=" + URLEncoder.encode("9999", StandardCharsets.UTF_8)
+                + "&type=" + URLEncoder.encode("json", StandardCharsets.UTF_8);
+
+        String apiParkingData = restTemplate.getForObject(new URI(url), String.class);
+        JsonNode jsonParkingData = parseAndValidateJson(apiParkingData);
+        parkingService.upsertParkingData(jsonParkingData);
     }
 
     // OpenAPI 호출에 필요한 요청 URI를 반환

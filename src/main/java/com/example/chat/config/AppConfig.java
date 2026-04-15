@@ -1,12 +1,14 @@
 package com.example.chat.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
+@EnableCaching
 public class AppConfig {
 
     // LocalDate 직렬화를 위해 Jackson2ObjectMapperBuilder 설정
