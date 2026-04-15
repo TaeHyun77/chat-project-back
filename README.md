@@ -11,7 +11,7 @@ Frontend : React.js, JavaScript
 
 Database : MySQL
 
-ETC : Websocket, STOMP
+ETC : Websocket, STOMP, Kafka, Elasticsearch
 
 CI/CD : Docker, Aws Ec2<br><br>
 
