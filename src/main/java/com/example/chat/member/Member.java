@@ -1,13 +1,11 @@
-package com.example.chat.messaging.member;
+package com.example.chat.member;
 
-import com.example.chat.messaging.chat.Chat;
 import com.example.chat.messaging.chatRoom.ChatRoom;
 import com.example.chat.common.BaseTime;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +38,16 @@ public class Member extends BaseTime {
     // 해당 member가 만든 채팅 방 리스트
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatRoom> chatRooms = new ArrayList<>();
+
+    // 구독 항공편 목록
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PlaneSubscription> subscriptions = new ArrayList<>();
+
+    // 항공편 정보 변경 알림 ON/OFF
+    private boolean planeChangeAlertEnabled;
+
+    // 혼잡도 알림 ON/OFF
+    private boolean congestionAlertEnabled;
 
     @Builder
     public Member(String username, String name, String email, String nickName, Role role) {

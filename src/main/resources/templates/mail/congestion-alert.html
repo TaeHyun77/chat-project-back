@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: 'Malgun Gothic', sans-serif; margin: 0; padding: 0; background: #f4f6f9; }
+        .container { max-width: 600px; margin: 30px auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .header { background: #e53935; color: #fff; padding: 24px 32px; }
+        .header h1 { margin: 0; font-size: 20px; }
+        .content { padding: 32px; }
+        .info-box { background: #fff3e0; border-left: 4px solid #ff9800; padding: 16px; margin-bottom: 24px; border-radius: 4px; }
+        .congestion-table { border-collapse: collapse; width: 100%; }
+        .congestion-table th { background: #e53935; color: #fff; padding: 10px 16px; font-size: 13px; text-align: center; }
+        .congestion-table td { padding: 10px 16px; font-size: 13px; border-bottom: 1px solid #fce4e4; text-align: center; }
+        .terminal-label { font-weight: bold; color: #e53935; }
+        .footer { background: #f4f6f9; padding: 16px 32px; text-align: center; font-size: 12px; color: #888; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>⚠ 출국장 혼잡도 변경 알림</h1>
+    </div>
+    <div class="content">
+        <div class="info-box">
+            <p><strong>항공편</strong>: <span th:text="${flightId}"></span></p>
+            <p><strong>기준 날짜</strong>: <span th:text="${date}"></span></p>
+            <p><strong>시간대</strong>: <span th:text="${timeZone}"></span></p>
+        </div>
+
+        <h3 class="terminal-label">터미널 1 출국장 혼잡도</h3>
+        <table class="congestion-table">
+            <tr>
+                <th>1번 게이트</th>
+                <th>2번 게이트</th>
+                <th>3번 게이트</th>
+                <th>4번 게이트</th>
+                <th>5번 게이트</th>
+                <th>6번 게이트</th>
+            </tr>
+            <tr>
+                <td th:text="${t1Depart1}"></td>
+                <td th:text="${t1Depart2}"></td>
+                <td th:text="${t1Depart3}"></td>
+                <td th:text="${t1Depart4}"></td>
+                <td th:text="${t1Depart5}"></td>
+                <td th:text="${t1Depart6}"></td>
+            </tr>
+        </table>
+        <p>T1 합계: <strong th:text="${newT1Sum}"></strong>명</p>
+
+        <h3 class="terminal-label">터미널 2 출국장 혼잡도</h3>
+        <table class="congestion-table">
+            <tr>
+                <th>1번 게이트</th>
+                <th>2번 게이트</th>
+            </tr>
+            <tr>
+                <td th:text="${t2Depart1}"></td>
+                <td th:text="${t2Depart2}"></td>
+            </tr>
+        </table>
+        <p>T2 합계: <strong th:text="${newT2Sum}"></strong>명</p>
+    </div>
+    <div class="footer">
+        본 메일은 인천국제공항 항공편 정보 서비스에서 발송되었습니다.
+    </div>
+</div>
+</body>
+</html>

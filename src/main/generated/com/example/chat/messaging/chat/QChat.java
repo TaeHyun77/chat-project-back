@@ -16,7 +16,7 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QChat extends EntityPathBase<Chat> {
 
-    private static final long serialVersionUID = 466173213L;
+    private static final long serialVersionUID = 1687298335L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 

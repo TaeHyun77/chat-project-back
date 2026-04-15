@@ -2,11 +2,10 @@ package com.example.chat.messaging.chat.dto;
 
 import com.example.chat.messaging.chat.Chat;
 import com.example.chat.messaging.chat.ChatType;
-import com.example.chat.messaging.member.dto.MemberResDto;
+import com.example.chat.member.dto.MemberResDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 

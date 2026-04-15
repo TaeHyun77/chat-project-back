@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: 'Malgun Gothic', sans-serif; margin: 0; padding: 0; background: #f4f6f9; }
+        .container { max-width: 600px; margin: 30px auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .header { background: #003087; color: #fff; padding: 24px 32px; }
+        .header h1 { margin: 0; font-size: 20px; }
+        .content { padding: 32px; }
+        .flight-info { background: #f0f4ff; border-radius: 6px; padding: 16px; margin-bottom: 24px; }
+        .flight-info p { margin: 4px 0; color: #333; font-size: 14px; }
+        .changes { border-collapse: collapse; width: 100%; margin-top: 8px; }
+        .changes th { background: #003087; color: #fff; padding: 10px 16px; font-size: 13px; text-align: left; }
+        .changes td { padding: 10px 16px; font-size: 13px; border-bottom: 1px solid #e8eaf6; }
+        .changed { color: #e53935; font-weight: bold; }
+        .footer { background: #f4f6f9; padding: 16px 32px; text-align: center; font-size: 12px; color: #888; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>✈ 항공편 상태 변경 알림</h1>
+    </div>
+    <div class="content">
+        <div class="flight-info">
+            <p><strong>항공편</strong>: <span th:text="${flightId}"></span></p>
+            <p><strong>항공사</strong>: <span th:text="${airLine}"></span></p>
+            <p><strong>목적지</strong>: <span th:text="${airport}"></span></p>
+            <p><strong>예정 출발</strong>: <span th:text="${scheduleDateTime}"></span></p>
+        </div>
+
+        <table class="changes">
+            <tr>
+                <th>항목</th>
+                <th>변경 전</th>
+                <th>변경 후</th>
+            </tr>
+            <tr>
+                <td>상태(Remark)</td>
+                <td th:text="${prevRemark}"></td>
+                <td class="changed" th:text="${remark}"></td>
+            </tr>
+            <tr>
+                <td>변경 출발시각</td>
+                <td th:text="${prevEstimatedDateTime}"></td>
+                <td class="changed" th:text="${estimatedDateTime}"></td>
+            </tr>
+            <tr>
+                <td>게이트 번호</td>
+                <td th:text="${prevGatenumber}"></td>
+                <td class="changed" th:text="${gatenumber}"></td>
+            </tr>
+        </table>
+    </div>
+    <div class="footer">
+        본 메일은 인천국제공항 항공편 정보 서비스에서 발송되었습니다.
+    </div>
+</div>
+</body>
+</html>

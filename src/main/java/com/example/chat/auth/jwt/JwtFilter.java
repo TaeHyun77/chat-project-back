@@ -2,8 +2,8 @@ package com.example.chat.auth.jwt;
 
 import com.example.chat.exception.ChatException;
 import com.example.chat.exception.ErrorCode;
-import com.example.chat.messaging.member.Member;
-import com.example.chat.messaging.member.Role;
+import com.example.chat.member.Member;
+import com.example.chat.member.Role;
 import com.example.chat.auth.oauth.CustomOAuth2User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

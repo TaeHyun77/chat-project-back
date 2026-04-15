@@ -3,7 +3,7 @@ package com.example.chat.messaging.chat.dto;
 import com.example.chat.messaging.chat.Chat;
 import com.example.chat.messaging.chat.ChatType;
 import com.example.chat.messaging.chatRoom.ChatRoom;
-import com.example.chat.messaging.member.Member;
+import com.example.chat.member.Member;
 import lombok.Getter;
 import lombok.Setter;
 

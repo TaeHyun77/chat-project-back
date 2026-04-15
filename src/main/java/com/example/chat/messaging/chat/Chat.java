@@ -2,7 +2,7 @@ package com.example.chat.messaging.chat;
 
 import com.example.chat.messaging.chatRoom.ChatRoom;
 import com.example.chat.common.BaseTime;
-import com.example.chat.messaging.member.Member;
+import com.example.chat.member.Member;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

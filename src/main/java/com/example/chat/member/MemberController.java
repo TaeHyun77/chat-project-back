@@ -1,10 +1,11 @@
-package com.example.chat.messaging.member;
+package com.example.chat.member;
 
+import com.example.chat.airport.plane.dto.PlaneResDto;
 import com.example.chat.auth.oauth.CustomOAuth2User;
 import com.example.chat.exception.ChatException;
 import com.example.chat.exception.ErrorCode;
 import com.example.chat.messaging.chatRoom.dto.ChatRoomResDto;
-import com.example.chat.messaging.member.dto.MemberResDto;
+import com.example.chat.member.dto.MemberResDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -71,5 +73,30 @@ public class MemberController {
     @PostMapping("/googleLogout")
     public ResponseEntity<String> googleLogout(HttpServletRequest request, HttpServletResponse response) {
         return memberService.googleLogout(request, response);
+    }
+
+    // 항공편 구독
+    @PostMapping("/flight/subscribe")
+    public ResponseEntity<Void> subscribePlane(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestBody Map<String, Long> body) {
+        memberService.subscribePlane(userDetails.getUsername(), body.get("planeId"));
+        return ResponseEntity.ok().build();
+    }
+
+    // 항공편 구독 해제
+    @DeleteMapping("/flight/subscribe/{planeId}")
+    public ResponseEntity<Void> unsubscribePlane(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable Long planeId) {
+        memberService.unsubscribePlane(userDetails.getUsername(), planeId);
+        return ResponseEntity.noContent().build();
+    }
+
+    // 구독 항공편 목록 조회
+    @GetMapping("/flight/subscriptions")
+    public ResponseEntity<List<PlaneResDto>> getSubscribedPlanes(
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(memberService.getSubscribedPlanes(userDetails.getUsername()));
     }
 }

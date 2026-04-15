@@ -2,8 +2,6 @@ package com.example.chat.member;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.example.chat.messaging.member.Member;
-import com.example.chat.messaging.member.Role;
 import com.querydsl.core.types.dsl.*;
 
 import com.querydsl.core.types.PathMetadata;
@@ -26,7 +24,7 @@ public class QMember extends EntityPathBase<Member> {
 
     public final ListPath<com.example.chat.messaging.chatRoom.ChatRoom, com.example.chat.messaging.chatRoom.QChatRoom> chatRooms = this.<com.example.chat.messaging.chatRoom.ChatRoom, com.example.chat.messaging.chatRoom.QChatRoom>createList("chatRooms", com.example.chat.messaging.chatRoom.ChatRoom.class, com.example.chat.messaging.chatRoom.QChatRoom.class, PathInits.DIRECT2);
 
-    public final ListPath<com.example.chat.messaging.chat.Chat, com.example.chat.messaging.chat.QChat> chats = this.<com.example.chat.messaging.chat.Chat, com.example.chat.messaging.chat.QChat>createList("chats", com.example.chat.messaging.chat.Chat.class, com.example.chat.messaging.chat.QChat.class, PathInits.DIRECT2);
+    public final BooleanPath congestionAlertEnabled = createBoolean("congestionAlertEnabled");
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
@@ -42,7 +40,11 @@ public class QMember extends EntityPathBase<Member> {
 
     public final StringPath nickName = createString("nickName");
 
+    public final BooleanPath planeChangeAlertEnabled = createBoolean("planeChangeAlertEnabled");
+
     public final EnumPath<Role> role = createEnum("role", Role.class);
+
+    public final ListPath<PlaneSubscription, QPlaneSubscription> subscriptions = this.<PlaneSubscription, QPlaneSubscription>createList("subscriptions", PlaneSubscription.class, QPlaneSubscription.class, PathInits.DIRECT2);
 
     public final StringPath username = createString("username");
 

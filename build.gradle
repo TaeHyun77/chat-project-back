@@ -53,6 +53,18 @@ dependencies {
 	// Spring AOP
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
 
+	// Kafka
+	implementation 'org.springframework.kafka:spring-kafka'
+
+	// Mail (SMTP)
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	// Thymeleaf (이메일 템플릿)
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+	// Elasticsearch
+	implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+
 	// Redis의 LocalDateTime 직렬화를 위한 의존성
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
