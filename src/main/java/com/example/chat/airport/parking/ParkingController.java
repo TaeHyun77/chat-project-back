@@ -17,7 +17,7 @@ public class ParkingController {
     private final ParkingService parkingService;
 
     @GetMapping("/parking")
-    public ResponseEntity<List<ParkingResDto>> getParkingStatus() {
-        return ResponseEntity.ok(parkingService.getParkingStatus());
+    public List<ParkingResDto> getParkingStatus() {
+        return parkingService.getParkingStatus();
     }
 }

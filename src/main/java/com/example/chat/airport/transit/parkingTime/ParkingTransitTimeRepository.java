@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ParkingTransitTimeRepository extends JpaRepository<ParkingTransitTime, Long> {
-
     List<ParkingTransitTime> findByTerminalAndParkingNameAndZoneAndCheckInCounter(
             String terminal, String parkingName, String zone, String checkInCounter);
 

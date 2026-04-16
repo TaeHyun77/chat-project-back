@@ -1,0 +1,6 @@
+src/main/generated
+build
+.gradle
+.git
+.idea
+.DS_Store

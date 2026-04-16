@@ -176,9 +176,9 @@ public class PlaneService {
 
     // 스케줄러를 통해 매 자정에 어제 항공편 삭제 ( 어제 날짜이면서 출발 완료 상태의 항공편만 삭제 )
     @Transactional
-    public void cleanUpPlaneData() {
-        String yesterday = LocalDate.now().minusDays(1).format(formatter);
+    public void cleanUpPlaneDataOlderThanTwoDays() {
+        String twoDaysAgoData = LocalDate.now().minusDays(2).format(formatter);
 
-        planeRepository.deleteYesterdayDepartedPlanes(yesterday);
+        planeRepository.deleteBySearchDateAndRemark(twoDaysAgoData, "출발");
     }
 }

@@ -20,10 +20,4 @@ public class PlaneController {
     ) {
         return planeService.getSlicePlanesBySearchDate(date, page, size);
     }
-
-    // 항공편 데이터 정리
-    @DeleteMapping("/delete/cleanUpPlaneData")
-    public void cleanUpPlaneData() {
-        planeService.cleanUpPlaneData();
-    }
 }
