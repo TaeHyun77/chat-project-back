@@ -19,12 +19,8 @@ public class TransitTimeService {
     private final ParkingTransitTimeRepository parkingRepository;
 
     // 공항철도 소요시간 조회
-    public List<TransitTimeResDto> getArexTransitTime(String terminal, String counter) {
-        List<ArexTransitTime> results = (counter != null && !counter.isBlank())
-                ? arexRepository.findByTerminalAndCheckInCounter(terminal, counter)
-                : arexRepository.findAll().stream()
-                    .filter(t -> t.getTerminal().equalsIgnoreCase(terminal))
-                    .toList();
+    public List<TransitTimeResDto> getArexTransitTime() {
+        List<ArexTransitTime> results = arexRepository.findAll();
 
         return results.stream()
                 .map(TransitTimeResDto::fromArex)
@@ -32,19 +28,9 @@ public class TransitTimeService {
     }
 
     // 주차장 소요시간 조회
-    public List<TransitTimeResDto> getParkingTransitTime(
-            String terminal, String parking, String zone, String counter) {
+    public List<TransitTimeResDto> getParkingTransitTime() {
 
-        List<ParkingTransitTime> results;
-
-        if (parking != null && !parking.isBlank() && zone != null && !zone.isBlank()
-                && counter != null && !counter.isBlank()) {
-            results = parkingRepository.findByTerminalAndParkingNameAndZoneAndCheckInCounter(
-                    terminal, parking, zone, counter);
-        } else {
-            results = parkingRepository.findByTerminalAndCheckInCounter(terminal,
-                    counter != null ? counter : "");
-        }
+        List<ParkingTransitTime> results = parkingRepository.findAll();
 
         return results.stream()
                 .map(TransitTimeResDto::fromParking)

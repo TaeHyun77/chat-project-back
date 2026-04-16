@@ -19,6 +19,7 @@ Java + Spring Boot 기반 공공 API 기반 인천공항 정보 제공 및 STOMP
 
 
 ## 코딩 컨벤션
+- 엔티티 목록은 반드시 DTO 형식으로 반환한다.
 
 
 

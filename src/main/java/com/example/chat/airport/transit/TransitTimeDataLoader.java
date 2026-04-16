@@ -22,9 +22,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Component
 public class TransitTimeDataLoader implements ApplicationRunner {
-
-    private final ArexTransitTimeRepository arexRepository;
-    private final ParkingTransitTimeRepository parkingRepository;
+    private final ArexTransitTimeRepository arexTransitTimeRepository;
+    private final ParkingTransitTimeRepository parkingTransitTimeRepository;
     private final ObjectMapper objectMapper;
 
     @Override
@@ -35,8 +34,8 @@ public class TransitTimeDataLoader implements ApplicationRunner {
     }
 
     private void loadArexTransitTime() {
-        if (arexRepository.count() > 0) {
-            log.info("공항철도 소요시간 데이터 이미 존재, 로딩 건너뜀");
+        if (arexTransitTimeRepository.count() > 0) {
+            log.info("공항철도 소요시간 데이터 이미 존재");
             return;
         }
 
@@ -58,15 +57,15 @@ public class TransitTimeDataLoader implements ApplicationRunner {
                         .build());
             }
 
-            arexRepository.saveAll(list);
-            log.info("공항철도 소요시간 데이터 {}건 로딩 완료", list.size());
+            arexTransitTimeRepository.saveAll(list);
+            log.debug("공항철도 소요시간 데이터 {}건 로딩 완료", list.size());
         } catch (Exception e) {
             log.error("공항철도 소요시간 데이터 로딩 실패", e);
         }
     }
 
     private void loadParkingTransitTime() {
-        if (parkingRepository.count() > 0) {
+        if (parkingTransitTimeRepository.count() > 0) {
             log.info("주차장 소요시간 데이터 이미 존재, 로딩 건너뜀");
             return;
         }
@@ -91,8 +90,8 @@ public class TransitTimeDataLoader implements ApplicationRunner {
                         .build());
             }
 
-            parkingRepository.saveAll(list);
-            log.info("주차장 소요시간 데이터 {}건 로딩 완료", list.size());
+            parkingTransitTimeRepository.saveAll(list);
+            log.debug("주차장 소요시간 데이터 {}건 로딩 완료", list.size());
         } catch (Exception e) {
             log.error("주차장 소요시간 데이터 로딩 실패", e);
         }

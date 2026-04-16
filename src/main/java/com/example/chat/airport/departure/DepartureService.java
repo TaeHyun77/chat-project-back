@@ -109,7 +109,7 @@ public class DepartureService {
     // 모든 출국장 데이터 조회
     public List<DepartureResDto> getDepartures() {
 
-        List<Departure> departures = departureRepository.findAllCustom();
+        List<Departure> departures = departureRepository.findAll();
 
         return departures.stream()
                 .map(DepartureResDto::from)

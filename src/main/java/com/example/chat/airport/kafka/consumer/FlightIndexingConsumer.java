@@ -1,4 +1,4 @@
-package com.example.chat.airport.kafka;
+package com.example.chat.airport.kafka.consumer;
 
 import com.example.chat.airport.kafka.message.PlaneIndexingMessage;
 import com.example.chat.airport.search.FlightDocument;

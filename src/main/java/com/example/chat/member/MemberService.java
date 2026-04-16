@@ -67,7 +67,6 @@ public class MemberService {
     // nickName 수정
     @Transactional
     public void editNickName(Long id, String editNickName) {
-
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.NOT_FOUND_MEMBER));
 
@@ -97,15 +96,14 @@ public class MemberService {
                 .orElseThrow(() -> new ChatException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_MEMBER));
 
         Plane plane = planeRepository.findById(planeId)
-                .orElseThrow(() -> new ChatException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_MEMBER));
+                .orElseThrow(() -> new ChatException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_PLANE));
 
-        Optional<PlaneSubscription> existing = planeSubscriptionRepository.findByMemberAndPlane(member, plane);
-        if (existing.isEmpty()) {
-            planeSubscriptionRepository.save(PlaneSubscription.builder()
-                    .member(member)
-                    .plane(plane)
-                    .build());
+        if (planeSubscriptionRepository.existsByMemberAndPlane(member, plane)) {
+            throw new ChatException(HttpStatus.CONFLICT, ErrorCode.ALREADY_SUBSCRIBED);
         }
+
+        planeSubscriptionRepository.save(PlaneSubscription.builder()
+                .member(member).plane(plane).build());
     }
 
     // 항공편 구독 해제
@@ -115,7 +113,7 @@ public class MemberService {
                 .orElseThrow(() -> new ChatException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_MEMBER));
 
         Plane plane = planeRepository.findById(planeId)
-                .orElseThrow(() -> new ChatException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_MEMBER));
+                .orElseThrow(() -> new ChatException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_PLANE));
 
         planeSubscriptionRepository.deleteByMemberAndPlane(member, plane);
     }

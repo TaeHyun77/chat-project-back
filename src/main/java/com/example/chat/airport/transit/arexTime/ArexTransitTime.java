@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "arex_transit_time", uniqueConstraints = @UniqueConstraint(columnNames = {"terminal", "stationName", "checkInCounter"}))
 public class ArexTransitTime {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

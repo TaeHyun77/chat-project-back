@@ -17,21 +17,15 @@ public class TransitTimeController {
 
     private final TransitTimeService transitTimeService;
 
-    // 공항철도 소요시간 조회
+    // 공항철도 소요시간 목록 조회
     @GetMapping("/arex")
-    public ResponseEntity<List<TransitTimeResDto>> getArexTransitTime(
-            @RequestParam String terminal,
-            @RequestParam(required = false) String counter) {
-        return ResponseEntity.ok(transitTimeService.getArexTransitTime(terminal, counter));
+    public List<TransitTimeResDto> getArexTransitTime() {
+        return transitTimeService.getArexTransitTime();
     }
 
-    // 주차장 소요시간 조회
+    // 주차장 소요시간 목록 조회
     @GetMapping("/parking")
-    public ResponseEntity<List<TransitTimeResDto>> getParkingTransitTime(
-            @RequestParam String terminal,
-            @RequestParam(required = false) String parking,
-            @RequestParam(required = false) String zone,
-            @RequestParam(required = false) String counter) {
-        return ResponseEntity.ok(transitTimeService.getParkingTransitTime(terminal, parking, zone, counter));
+    public List<TransitTimeResDto> getParkingTransitTime() {
+        return transitTimeService.getParkingTransitTime();
     }
 }

@@ -28,9 +28,6 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @Value("${app.base-url}")
-    private String baseUrl;
-
     // 로그인 사용자 정보
     @GetMapping("/info")
     public MemberResDto memberInfo(@AuthenticationPrincipal CustomOAuth2User user) {
@@ -43,29 +40,25 @@ public class MemberController {
     // 닉네임 중복 여부 파악
     @GetMapping("/isNickName/{editNickName}")
     public boolean isNickName(@PathVariable("editNickName") String editNickName) {
-
-        log.info("editNickName : {}", editNickName);
-
         return memberService.isNickName(editNickName);
     }
 
     // 닉네임 수정
     @PostMapping("/edit/{id}/{editNickName}")
     public void editUsername(@PathVariable("id") Long id, @PathVariable("editNickName") String editNickName) {
-
-        log.info("id : {} , editNickName : {}", id, editNickName);
         memberService.editNickName(id, editNickName);
     }
 
+    // 사용자가 생성한 채팅방 목록 조회
     @GetMapping("/member/{id}/chatRooms")
     public List<ChatRoomResDto> memberChatRooms(@PathVariable("id") Long memberId) {
         return memberService.memberChatRooms(memberId);
     }
 
+    // 구글 로그인 & 로그아웃
     @GetMapping("/googleLogin")
     public ResponseEntity<?> googleLogin(HttpServletResponse response) {
-        log.info("Login request success");
-        String redirectUrl = baseUrl + "/oauth2/authorization/google";
+        String redirectUrl = "http://localhost:8080/oauth2/authorization/google";
 
         return ResponseEntity.ok().body(Map.of("url", redirectUrl));
     }
@@ -76,12 +69,13 @@ public class MemberController {
     }
 
     // 항공편 구독
-    @PostMapping("/flight/subscribe")
+    @PostMapping("/flight/{planeId}/subscribe")
     public ResponseEntity<Void> subscribePlane(
             @AuthenticationPrincipal UserDetails userDetails,
-            @RequestBody Map<String, Long> body) {
-        memberService.subscribePlane(userDetails.getUsername(), body.get("planeId"));
-        return ResponseEntity.ok().build();
+            @PathVariable("planeId") Long planeId) {
+
+        memberService.subscribePlane(userDetails.getUsername(), planeId);
+        return ResponseEntity.noContent().build();
     }
 
     // 항공편 구독 해제
@@ -95,8 +89,7 @@ public class MemberController {
 
     // 구독 항공편 목록 조회
     @GetMapping("/flight/subscriptions")
-    public ResponseEntity<List<PlaneResDto>> getSubscribedPlanes(
-            @AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(memberService.getSubscribedPlanes(userDetails.getUsername()));
+    public List<PlaneResDto> getSubscribedPlanes(@AuthenticationPrincipal UserDetails userDetails) {
+        return memberService.getSubscribedPlanes(userDetails.getUsername());
     }
 }
