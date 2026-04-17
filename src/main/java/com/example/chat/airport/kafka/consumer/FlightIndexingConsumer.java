@@ -17,6 +17,8 @@ public class FlightIndexingConsumer {
 
     @KafkaListener(topics = "airport.plane.indexing", groupId = "flight-es-indexer")
     public void onPlaneIndexing(PlaneIndexingMessage message) {
+        log.info("항공편 인덱싱 메시지 수신: flightId={}, searchDate={}", message.getFlightId(), message.getSearchDate());
+
         try {
             String docId = message.getFlightId() + "_" + message.getScheduleDateTime();
             String suggest = message.getFlightId() + " " + message.getAirLine()
