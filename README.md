@@ -1,3 +1,5 @@
+### 인천공항 정보 및 채팅 프로젝트
+---
 인천공항 출국에 필요한 항공편·출국장·주차장·날씨 정보를 실시간으로 제공하고, 채팅을 통해 사용자 간 정보 교환을 지원하는 풀스택 프로젝트입니다.<br><br>
 
 개발 과정 블로그
@@ -6,6 +8,7 @@ https://velog.io/@ayeah77/series/%EA%B3%B5%ED%95%AD%EC%A0%95%EB%B3%B4-%EC%B1%84%
 
 
 ### 기술 스택
+---
 - Framework : Spring Boot 3.4, Spring Security, Spring WebSocket (STOMP)
 - Frontend : React.js, JavaScript
 - ORM / Query : JPA, QueryDSL 5.0
@@ -18,7 +21,7 @@ https://velog.io/@ayeah77/series/%EA%B3%B5%ED%95%AD%EC%A0%95%EB%B3%B4-%EC%B1%84%
 
 
 ### 주요 기능
-
+---
 **항공편 정보**
 - 인천공항 공공 API를 통해 어제 ~ 모레까지 출발 항공편을 자동 동기화
 - 날짜별 차등 주기: 오늘·내일(2분) / 어제(10분) / 모레(30분)
@@ -50,7 +53,7 @@ https://velog.io/@ayeah77/series/%EA%B3%B5%ED%95%AD%EC%A0%95%EB%B3%B4-%EC%B1%84%
 - 자동 토큰 재발급<br><br>
 
 ### 개발 포인트
-
+---
 - JPA Join Fetch로 N+1 문제 해결, 조회 시간 713ms → 263ms (약 63% 단축)
 - Slice 기반 페이징으로 불필요한 전체 데이터 로딩 방지
 - set_option/commit 부수 쿼리로 인한 DB 오버헤드를 식별하고, 불필요한 트랜잭션 제거
