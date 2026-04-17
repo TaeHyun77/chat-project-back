@@ -39,8 +39,6 @@ public class ApiService {
     private final PlaneService planeService;
     private final ParkingService parkingService;
 
-    private final ExecutorService executor = Executors.newFixedThreadPool(4);
-
     private static final String DEPARTURE_ENDPOINT =
             "https://apis.data.go.kr/B551177/passgrAnncmt/getPassgrAnncmt";
 
@@ -50,8 +48,16 @@ public class ApiService {
     private static final String PARKING_ENDPOINT =
             "http://apis.data.go.kr/B551177/StatusOfParking/getTrackingParking";
 
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
     private final List<String> departureSearchDates = List.of("0", "1");
+
+    // 단일 날짜 항공편 동기화
+    public void fetchAndSyncPlaneData(String searchDate) {
+        URI uri = buildAirportUri("plane", PLANE_ENDPOINT, searchDate);
+        String response = restTemplate.getForObject(uri, String.class);
+        JsonNode json = parseAndValidateJson(response);
+
+        planeService.upsertPlaneData(json, searchDate);
+    }
 
     // 공항 출국장 혼잡도 데이터를 인천공항 API를 통해 받아옴
     public void getApiDeparture() {
@@ -63,29 +69,6 @@ public class ApiService {
 
             departureService.upsertDepartureData(jsonDepartureData);
         }
-    }
-
-    // 공항 항공편 현황 데이터를 인천공항 API를 통해 받아옴
-    public void getApiPlane() {
-        LocalDateTime today = LocalDateTime.now();
-        List<String> searchDates = List.of(
-                today.minusDays(1).format(formatter), // 어제
-                today.format(formatter),              // 오늘
-                today.plusDays(1).format(formatter),  // 내일
-                today.plusDays(2).format(formatter)   // 모레
-        );
-
-        List<CompletableFuture<Void>> futures = searchDates.stream()
-                .map(searchDate -> CompletableFuture.runAsync(() -> {
-                    URI uri = buildAirportUri("plane", PLANE_ENDPOINT, searchDate);
-                    String apiPlaneData = restTemplate.getForObject(uri, String.class);
-                    JsonNode jsonPlaneData = parseAndValidateJson(apiPlaneData);
-
-                    planeService.upsertPlaneData(jsonPlaneData, searchDate);
-                }, executor))
-                .toList();
-
-        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
     }
 
     // 주차장 실시간 현황 데이터를 공공 API를 통해 받아옴
