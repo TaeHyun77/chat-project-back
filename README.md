@@ -1,21 +1,20 @@
-인천공항 출국에 필요한 항공편·출국장·주차장·날씨 정보를 실시간으로 제공하고, 채팅을 통해 사용자 간 정보 교환을 지원하는 풀스택 프로젝트입니다.
+인천공항 출국에 필요한 항공편·출국장·주차장·날씨 정보를 실시간으로 제공하고, 채팅을 통해 사용자 간 정보 교환을 지원하는 풀스택 프로젝트입니다.<br><br>
 
-개발 과정 블로그: https://velog.io/@ayeah77/series/%EA%B3%B5%ED%95%AD%EC%A0%95%EB%B3%B4-%EC%B1%84%ED%8C%85-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8
+개발 과정 블로그
+
+https://velog.io/@ayeah77/series/%EA%B3%B5%ED%95%AD%EC%A0%95%EB%B3%B4-%EC%B1%84%ED%8C%85-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8<br><br>
 
 
 ### 기술 스택
-
-| 분류 | 기술 |
-|------|------|
-| Framework | Spring Boot 3.4, Spring Security, Spring WebSocket (STOMP) |
-| ORM / 쿼리 | JPA, QueryDSL 5.0 |
-| Database | MySQL 8.0 |
-| 메시징 | Apache Kafka 3.7 |
-| 검색엔진 | Elasticsearch (Nori 한글 형태소 분석기) |
-| 인증 | OAuth2 (Google, Kakao) + JWT |
-| 메일 | Spring Mail + Thymeleaf 템플릿 |
-| 인프라 | Docker Compose, AWS EC2, Nginx |
-| Frontend | React.js, JavaScript |
+- Framework : Spring Boot 3.4, Spring Security, Spring WebSocket (STOMP)
+- Frontend : React.js, JavaScript
+- ORM / Query : JPA, QueryDSL 5.0
+- Database : MySQL 8.0
+- Messaging : Apache Kafka 3.7
+- Search Engine : Elasticsearch (Nori Analyzer)
+- Authentication : OAuth2 (Google, Kakao), JWT
+- Mail : Spring Mail, Thymeleaf
+- Infrastructure : Docker Compose, AWS EC2, Nginx<br><br>
 
 
 ### 주요 기능
@@ -48,7 +47,7 @@
 **인증**
 - OAuth2 소셜 로그인 (Google, Kakao)
 - JWT Access Token + Refresh Token 기반 인증
-- 자동 토큰 재발급
+- 자동 토큰 재발급<br><br>
 
 ### 개발 포인트
 
