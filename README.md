@@ -1,5 +1,3 @@
-# Integrated Queueing System
-
 인천공항 출국에 필요한 항공편·출국장·주차장·날씨 정보를 실시간으로 제공하고, 채팅을 통해 사용자 간 정보 교환을 지원하는 풀스택 프로젝트입니다.
 
 개발 과정 블로그: https://velog.io/@ayeah77/series/%EA%B3%B5%ED%95%AD%EC%A0%95%EB%B3%B4-%EC%B1%84%ED%8C%85-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8
