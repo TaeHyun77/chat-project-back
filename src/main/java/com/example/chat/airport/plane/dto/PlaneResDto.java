@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PlaneResDto {
 
+    private String id;
+
     private String searchDate;
 
     private String flightId;
@@ -38,6 +40,7 @@ public class PlaneResDto {
 
     public static PlaneResDto from(Plane plane){
         return PlaneResDto.builder()
+                .id(String.valueOf(plane.getId()))
                 .flightId(plane.getFlightId())
                 .airLine(plane.getAirLine())
                 .airport(plane.getAirport())

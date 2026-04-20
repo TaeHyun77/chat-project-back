@@ -8,6 +8,7 @@ import lombok.Getter;
 @Builder
 public class FlightSearchResDto {
 
+    private String planeId;
     private String flightId;
     private String airLine;
     private String airport;
@@ -21,6 +22,7 @@ public class FlightSearchResDto {
 
     public static FlightSearchResDto from(FlightDocument doc) {
         return FlightSearchResDto.builder()
+                .planeId(doc.getPlaneId())
                 .flightId(doc.getFlightId())
                 .airLine(doc.getAirLine())
                 .airport(doc.getAirport())

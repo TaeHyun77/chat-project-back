@@ -17,8 +17,6 @@ public class FlightIndexingConsumer {
 
     @KafkaListener(topics = "airport.plane.indexing", groupId = "flight-es-indexer")
     public void onPlaneIndexing(PlaneIndexingMessage message) {
-        log.info("항공편 인덱싱 메시지 수신: flightId={}, searchDate={}", message.getFlightId(), message.getSearchDate());
-
         try {
             String docId = message.getFlightId() + "_" + message.getScheduleDateTime();
             String suggest = message.getFlightId() + " " + message.getAirLine()
@@ -26,6 +24,7 @@ public class FlightIndexingConsumer {
 
             FlightDocument document = FlightDocument.builder()
                     .id(docId)
+                    .planeId(message.getPlaneId())
                     .flightId(message.getFlightId())
                     .airLine(message.getAirLine())
                     .airport(message.getAirport())
@@ -40,7 +39,7 @@ public class FlightIndexingConsumer {
                     .build();
 
             flightSearchRepository.save(document);
-            log.debug("항공편 ES 인덱싱 완료: {}", docId);
+            log.info("항공편 ES 인덱싱 완료: {}", docId);
         } catch (Exception e) {
             log.error("항공편 ES 인덱싱 실패: flightId={}", message.getFlightId(), e);
         }
