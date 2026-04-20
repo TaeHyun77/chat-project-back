@@ -10,6 +10,8 @@ import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.stereotype.Service;
 
+import org.springframework.data.elasticsearch.core.query.ByQueryResponse;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +23,7 @@ public class FlightSearchService {
     private final ElasticsearchOperations esOperations;
 
     // 복합 조건 + fuzzy 검색
-    public List<FlightSearchResDto> search(String q, String terminal, String date, String airline) {
+    public List<FlightSearchResDto> search(String q, String terminal, String date, String airline, boolean subscribable) {
         BoolQuery.Builder boolBuilder = new BoolQuery.Builder();
 
         // 키워드 fuzzy 검색 (flightId, airport 필드)
@@ -59,6 +61,12 @@ public class FlightSearchService {
             );
         }
 
+        if (subscribable) { // 출발 상태인 항공편은 필터링
+            boolBuilder.mustNot(
+                    Query.of(qb -> qb.term(t -> t.field("remark").value("출발")))
+            );
+        }
+
         NativeQuery nativeQuery = NativeQuery.builder()
                 .withQuery(Query.of(qb -> qb.bool(boolBuilder.build())))
                 .withMaxResults(50)
@@ -73,17 +81,24 @@ public class FlightSearchService {
     }
 
     // 자동완성 (flightId, airLine prefix)
-    public List<String> autocomplete(String prefix) {
+    public List<String> autocomplete(String prefix, boolean subscribable) {
         if (prefix == null || prefix.isBlank()) return List.of();
 
         List<String> suggestions = new ArrayList<>();
 
+        BoolQuery.Builder boolBuilder = new BoolQuery.Builder()
+                .should(Query.of(q -> q.prefix(p -> p.field("flightId").value(prefix.toUpperCase()))))
+                .should(Query.of(q -> q.prefix(p -> p.field("airLine.keyword").value(prefix))))
+                .minimumShouldMatch("1");
+
+        if (subscribable) { // 출발 상태인 항공편은 필터링
+            boolBuilder.mustNot(
+                    Query.of(q -> q.term(t -> t.field("remark").value("출발")))
+            );
+        }
+
         NativeQuery nativeQuery = NativeQuery.builder()
-                .withQuery(Query.of(qb -> qb.bool(b -> b
-                        .should(Query.of(q -> q.prefix(p -> p.field("flightId").value(prefix.toUpperCase()))))
-                        .should(Query.of(q -> q.prefix(p -> p.field("airLine.keyword").value(prefix))))
-                        .minimumShouldMatch("1")
-                )))
+                .withQuery(Query.of(qb -> qb.bool(boolBuilder.build())))
                 .withMaxResults(10)
                 .build();
 
@@ -94,5 +109,18 @@ public class FlightSearchService {
         });
 
         return suggestions;
+    }
+
+    // 특정 날짜 + remark 조건으로 ES 문서 삭제
+    public long deleteBySearchDateAndRemark(String searchDate, String remark) {
+        NativeQuery query = NativeQuery.builder()
+                .withQuery(Query.of(qb -> qb.bool(b -> b
+                        .filter(Query.of(f -> f.term(t -> t.field("searchDate").value(searchDate))))
+                        .filter(Query.of(f -> f.term(t -> t.field("remark").value(remark))))
+                )))
+                .build();
+
+        ByQueryResponse response = esOperations.delete(query, FlightDocument.class);
+        return response.getDeleted();
     }
 }

@@ -4,6 +4,7 @@ import com.example.chat.airport.plane.dto.PlaneResDto;
 import com.example.chat.airport.kafka.message.PlaneChangedMessage;
 import com.example.chat.airport.kafka.message.PlaneIndexingMessage;
 import com.example.chat.airport.plane.repository.PlaneRepository;
+import com.example.chat.airport.search.FlightSearchService;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,7 @@ public class PlaneService {
 
     private final PlaneRepository planeRepository;
     private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final FlightSearchService flightSearchService;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 
     // API를 통해 조회한 공항 항공편 현황 데이터를 DB에 저장 및 갱신
@@ -52,6 +54,12 @@ public class PlaneService {
         processPlaneItems(jsonPlaneData, existPlaneDbMap, searchDate, toSave);
 
         planeRepository.saveAll(toSave);
+
+        // 신규 항공편 ES 인덱싱용 Kafka 메시지 발행 (saveAll 이후 ID가 생성된 상태)
+        for (Plane plane : toSave) {
+            kafkaTemplate.send(TOPIC_INDEXING, plane.getFlightId(),
+                    PlaneIndexingMessage.from(plane));
+        }
     }
 
     /*
@@ -137,10 +145,6 @@ public class PlaneService {
                         .build();
 
                 planesToSave.add(newPlane);
-
-                // ES 인덱싱용 Kafka 메시지 즉시 발행
-                kafkaTemplate.send(TOPIC_INDEXING, newPlane.getFlightId(),
-                        PlaneIndexingMessage.from(newPlane));
             }
         }
     }
@@ -174,11 +178,39 @@ public class PlaneService {
         return slicePlane.map(PlaneResDto::from);
     }
 
-    // 스케줄러를 통해 매 자정에 어제 항공편 삭제 ( 어제 날짜이면서 출발 완료 상태의 항공편만 삭제 )
+    // DB의 모든 항공편 데이터를 Kafka로 재발행하여 ES 재인덱싱
+    public int reindexAll() {
+        List<Plane> allPlanes = planeRepository.findAll();
+
+        for (Plane plane : allPlanes) {
+            kafkaTemplate.send(TOPIC_INDEXING, plane.getFlightId(), PlaneIndexingMessage.from(plane));
+        }
+
+        log.info("ES 재인덱싱 Kafka 메시지 발행 완료: {}건", allPlanes.size());
+        return allPlanes.size();
+    }
+
+    // 스케줄러를 통해 매 자정에 이틀 전 항공편 삭제 ( 출발 상태의 항공편만 삭제 )
     @Transactional
     public void cleanUpPlaneDataOlderThanTwoDays() {
-        String twoDaysAgoData = LocalDate.now().minusDays(2).format(formatter);
+        String twoDaysAgo = LocalDate.now().minusDays(2).format(formatter);
+        String yesterday = LocalDate.now().minusDays(1).format(formatter);
 
-        planeRepository.deleteBySearchDateAndRemark(twoDaysAgoData, "출발");
+        // DB: 이틀 전 & 출발 상태 항공편 삭제
+        planeRepository.deleteBySearchDateAndRemark(twoDaysAgo, "출발");
+        log.debug("{} 날짜의 출발 완료 항공편 데이터 정리 완료", twoDaysAgo);
+
+        // ES: 어제 출발 완료 항공편 문서 삭제
+        try {
+            long deleted = flightSearchService.deleteBySearchDateAndRemark(yesterday, "출발");
+            log.debug("{} 날짜 ES 인덱스 문서 {}건 삭제 완료", yesterday, deleted);
+        } catch (Exception e) {
+            log.error("{} 날짜 ES 인덱스 문서 삭제 실패", yesterday, e);
+        }
+    }
+
+    @Transactional
+    public void deleteAll() {
+        planeRepository.deleteAll();
     }
 }

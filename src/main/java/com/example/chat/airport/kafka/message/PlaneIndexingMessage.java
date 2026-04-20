@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PlaneIndexingMessage {
 
+    private String planeId;
     private String flightId;
     private String airLine;
     private String airport;
@@ -26,6 +27,7 @@ public class PlaneIndexingMessage {
 
     public static PlaneIndexingMessage from(Plane plane) {
         return PlaneIndexingMessage.builder()
+                .planeId(String.valueOf(plane.getId()))
                 .flightId(plane.getFlightId())
                 .airLine(plane.getAirLine())
                 .airport(plane.getAirport())

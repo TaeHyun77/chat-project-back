@@ -24,6 +24,9 @@ public class FlightDocument {
     private String id; // flightId + "_" + scheduleDateTime
 
     @Field(type = FieldType.Keyword)
+    private String planeId;
+
+    @Field(type = FieldType.Keyword)
     private String flightId;
 
     @MultiField(
