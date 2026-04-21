@@ -3,6 +3,8 @@ package com.example.chat.member;
 import com.example.chat.airport.plane.Plane;
 import com.example.chat.airport.plane.dto.PlaneResDto;
 import com.example.chat.airport.plane.repository.PlaneRepository;
+import com.example.chat.airport.weather.WeatherService;
+import com.example.chat.airport.weather.dto.WeatherForecastResDto;
 import com.example.chat.messaging.chatRoom.dto.ChatRoomResDto;
 import com.example.chat.messaging.chatRoom.repository.ChatRoomRepository;
 import com.example.chat.exception.ChatException;
@@ -19,8 +21,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -31,6 +35,7 @@ public class MemberService {
     private final ChatRoomRepository chatRoomRepository;
     private final PlaneRepository planeRepository;
     private final PlaneSubscriptionRepository planeSubscriptionRepository;
+    private final WeatherService weatherService;
 
     // 사용자 정보 반환
     public MemberResDto info(String username) {
@@ -60,7 +65,6 @@ public class MemberService {
 
     // nickName이 이미 존재하는지 여부
     public boolean isNickName(String editNickName) {
-
         return memberRepository.existsByNickName(editNickName);
     }
 
@@ -112,10 +116,7 @@ public class MemberService {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new ChatException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_MEMBER));
 
-        Plane plane = planeRepository.findById(planeId)
-                .orElseThrow(() -> new ChatException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_PLANE));
-
-        planeSubscriptionRepository.deleteByMemberAndPlane(member, plane);
+        planeSubscriptionRepository.deleteByMemberIdAndPlaneId(member.getId(), planeId);
     }
 
     // 구독 항공편 목록 조회
@@ -127,5 +128,31 @@ public class MemberService {
         return planeSubscriptionRepository.findByMember(member).stream()
                 .map(sub -> PlaneResDto.from(sub.getPlane()))
                 .toList();
+    }
+
+    // 구독 항공편 도착 공항 시간별 날씨 예보 조회
+    public List<WeatherForecastResDto> getSubscribedFlightWeather(String username) {
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new ChatException(HttpStatus.NOT_FOUND, ErrorCode.NOT_FOUND_MEMBER));
+
+        List<PlaneSubscription> subscriptions = planeSubscriptionRepository.findByMember(member);
+
+        // airportCode 기준 중복 제거
+        Map<String, String> airportMap = new LinkedHashMap<>();
+        for (PlaneSubscription sub : subscriptions) {
+            Plane plane = sub.getPlane();
+            airportMap.putIfAbsent(plane.getAirportCode(), plane.getAirport());
+        }
+
+        List<WeatherForecastResDto> result = new ArrayList<>();
+        for (Map.Entry<String, String> entry : airportMap.entrySet()) {
+            try {
+                result.add(weatherService.getHourlyForecast(entry.getKey(), entry.getValue()));
+            } catch (ChatException e) {
+                log.warn("날씨 예보 조회 건너뜀: airportCode={}, 사유={}", entry.getKey(), e.getMessage());
+            }
+        }
+
+        return result;
     }
 }

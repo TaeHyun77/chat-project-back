@@ -28,6 +28,7 @@ public class Member extends BaseTime {
     private String name;
 
     // 사용자 별명
+    @Column(unique = true)
     private String nickName;
 
     private String email;

@@ -27,8 +27,8 @@ public class ParkingService {
 
             parkingRepository.findByFloor(floor)
                     .ifPresentOrElse(
-                            exists -> exists.updateParking(parking, parkingarea, datetm),
-                            () -> parkingRepository.save(Parking.builder()
+                            exists -> exists.updateParking(parking, parkingarea, datetm), // 이미 존재하는 데이터면
+                            () -> parkingRepository.save(Parking.builder() // 새로운 데이터면
                                     .floor(floor)
                                     .parking(parking)
                                     .parkingarea(parkingarea)

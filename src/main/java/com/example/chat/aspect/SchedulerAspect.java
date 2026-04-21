@@ -7,18 +7,19 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component // Spring AOP는 스프링이 관리하는 빈에서만 작동하기에
+@Component
 @Aspect
-public class PlaneDataAspect {
+public class SchedulerAspect {
 
-    @Around("execution(* com.example.chat.airport.ApiService.getApiPlane(..))")
-    public Object loadingPlaneApi(ProceedingJoinPoint joinPoint) throws Throwable{
+    @Around("execution(* com.example.chat.airport.AirportScheduler.sync*(..))")
+    public Object measureSchedulerSync(ProceedingJoinPoint joinPoint) throws Throwable {
+        String methodName = joinPoint.getSignature().getName();
 
         long start = System.currentTimeMillis();
         Object proceed = joinPoint.proceed();
         long executionTime = System.currentTimeMillis() - start;
 
-        log.info("항공편 데이터 불러오기 완료 - API 로딩 시간 : {}ms", executionTime);
+        log.info("[스케줄러] {} 완료 - 소요 시간: {}ms", methodName, executionTime);
 
         return proceed;
     }

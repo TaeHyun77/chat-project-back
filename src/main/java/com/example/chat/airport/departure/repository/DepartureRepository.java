@@ -9,5 +9,5 @@ public interface DepartureRepository extends JpaRepository<Departure, Long> {
 
     Optional<Departure> findByDateAndTimeZone(String date, String timeZone);
 
-    void deleteByDate(String date);
+    void deleteByDateBefore(String date);
 }

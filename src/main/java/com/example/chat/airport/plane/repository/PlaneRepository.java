@@ -14,11 +14,7 @@ public interface PlaneRepository extends JpaRepository<Plane, Long> {
 
     List<Plane> findBySearchDate(String searchDate);
 
-    @Modifying
-    @Query("DELETE FROM Plane p WHERE p.scheduleDateTime LIKE CONCAT(:today, '%') AND p.remark = :remark")
-    int deletePlanes(@Param("today") String today, @Param("remark") String remark);
-
-    // 2일전 날짜의 출발 완료 항공편 삭제
+    // searchDate, remark를 지정하여 항공편 삭제
     void deleteBySearchDateAndRemark(String searchDate, String remark);
 
     Slice<Plane> findBySearchDate(String searchDate, Pageable pageable);

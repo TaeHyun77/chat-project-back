@@ -1,4 +1,4 @@
-package com.example.chat.airport.kafka;
+package com.example.chat.kafka;
 
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Bean;

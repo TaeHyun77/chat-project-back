@@ -1,0 +1,962 @@
+[
+  {
+    "code": "KUL",
+    "name": "쿠알라룸푸르 국제공항",
+    "latitude": 2.7456,
+    "longitude": 101.71
+  },
+  {
+    "code": "ADD",
+    "name": "아디스아바바 볼레 국제공항",
+    "latitude": 8.9779,
+    "longitude": 38.7993
+  },
+  {
+    "code": "TAO",
+    "name": "칭다오 자오둥 국제공항",
+    "latitude": 36.362,
+    "longitude": 120.0882
+  },
+  {
+    "code": "TPE",
+    "name": "타이완 타오위안 국제공항",
+    "latitude": 25.0777,
+    "longitude": 121.233
+  },
+  {
+    "code": "DOH",
+    "name": "하마드 국제공항",
+    "latitude": 25.2731,
+    "longitude": 51.6081
+  },
+  {
+    "code": "UBN",
+    "name": "울란바토르 칭기즈 칸 국제공항",
+    "latitude": 47.6469,
+    "longitude": 106.8198
+  },
+  {
+    "code": "HKG",
+    "name": "홍콩 국제공항",
+    "latitude": 22.3118,
+    "longitude": 113.9149
+  },
+  {
+    "code": "MNL",
+    "name": "니노이 아키노 국제공항",
+    "latitude": 14.5086,
+    "longitude": 121.02
+  },
+  {
+    "code": "PQC",
+    "name": "푸꾸옥 국제공항",
+    "latitude": 10.1698,
+    "longitude": 103.9935
+  },
+  {
+    "code": "KIX",
+    "name": "간사이 국제공항",
+    "latitude": 34.4273,
+    "longitude": 135.244
+  },
+  {
+    "code": "BKI",
+    "name": "코타키나발루 국제공항",
+    "latitude": 5.9327,
+    "longitude": 116.0493
+  },
+  {
+    "code": "FUK",
+    "name": "후쿠오카 공항",
+    "latitude": 33.5859,
+    "longitude": 130.451
+  },
+  {
+    "code": "PUS",
+    "name": "김해 국제공항",
+    "latitude": 35.1795,
+    "longitude": 128.938
+  },
+  {
+    "code": "CXR",
+    "name": "캄란 국제공항 / 캄란 공군기지",
+    "latitude": 11.9982,
+    "longitude": 109.219
+  },
+  {
+    "code": "YNT",
+    "name": "옌타이 펑라이 국제공항",
+    "latitude": 37.6597,
+    "longitude": 120.9781
+  },
+  {
+    "code": "MYJ",
+    "name": "마쓰야마 공항",
+    "latitude": 33.8269,
+    "longitude": 132.7001
+  },
+  {
+    "code": "DAD",
+    "name": "다낭 국제공항",
+    "latitude": 16.0439,
+    "longitude": 108.199
+  },
+  {
+    "code": "FSZ",
+    "name": "후지산 시즈오카 공항",
+    "latitude": 34.795,
+    "longitude": 138.191
+  },
+  {
+    "code": "BKK",
+    "name": "수완나품 공항",
+    "latitude": 13.6811,
+    "longitude": 100.747
+  },
+  {
+    "code": "NRT",
+    "name": "나리타 국제공항",
+    "latitude": 35.7686,
+    "longitude": 140.3887
+  },
+  {
+    "code": "HPH",
+    "name": "깟비 국제공항",
+    "latitude": 20.8174,
+    "longitude": 106.7243
+  },
+  {
+    "code": "NGO",
+    "name": "주부 센트레아 국제공항",
+    "latitude": 34.8584,
+    "longitude": 136.805
+  },
+  {
+    "code": "KMQ",
+    "name": "고마쓰 공항 / 항공자위대 고마쓰 기지",
+    "latitude": 36.3934,
+    "longitude": 136.4069
+  },
+  {
+    "code": "SGN",
+    "name": "탄손누트 국제공항",
+    "latitude": 10.8188,
+    "longitude": 106.652
+  },
+  {
+    "code": "KMG",
+    "name": "쿤밍 창수이 국제공항",
+    "latitude": 25.1103,
+    "longitude": 102.9367
+  },
+  {
+    "code": "HIJ",
+    "name": "히로시마 공항",
+    "latitude": 34.4361,
+    "longitude": 132.919
+  },
+  {
+    "code": "LHR",
+    "name": "런던 히드로 공항",
+    "latitude": 51.4707,
+    "longitude": -0.4599
+  },
+  {
+    "code": "MFM",
+    "name": "마카오 국제공항",
+    "latitude": 22.1496,
+    "longitude": 113.592
+  },
+  {
+    "code": "KMJ",
+    "name": "구마모토 공항",
+    "latitude": 32.8373,
+    "longitude": 130.855
+  },
+  {
+    "code": "RMQ",
+    "name": "타이중 국제공항 / 칭촨강 공군기지",
+    "latitude": 24.2647,
+    "longitude": 120.621
+  },
+  {
+    "code": "CGO",
+    "name": "정저우 신정 국제공항",
+    "latitude": 34.5265,
+    "longitude": 113.8492
+  },
+  {
+    "code": "HAN",
+    "name": "노이바이 국제공항",
+    "latitude": 21.2212,
+    "longitude": 105.807
+  },
+  {
+    "code": "SHE",
+    "name": "선양 타오셴 국제공항",
+    "latitude": 41.6398,
+    "longitude": 123.4837
+  },
+  {
+    "code": "FOC",
+    "name": "푸저우 창러 국제공항",
+    "latitude": 25.9293,
+    "longitude": 119.6725
+  },
+  {
+    "code": "WAW",
+    "name": "바르샤바 쇼팽 공항",
+    "latitude": 52.1657,
+    "longitude": 20.9671
+  },
+  {
+    "code": "PEK",
+    "name": "베이징 수도 국제공항",
+    "latitude": 40.0773,
+    "longitude": 116.5967
+  },
+  {
+    "code": "SHI",
+    "name": "시모지시마 공항",
+    "latitude": 24.8267,
+    "longitude": 125.145
+  },
+  {
+    "code": "PVG",
+    "name": "상하이 푸둥 국제공항",
+    "latitude": 31.1434,
+    "longitude": 121.805
+  },
+  {
+    "code": "KLO",
+    "name": "칼리보 국제공항",
+    "latitude": 11.6794,
+    "longitude": 122.376
+  },
+  {
+    "code": "CAN",
+    "name": "광저우 바이윈 국제공항",
+    "latitude": 23.3924,
+    "longitude": 113.299
+  },
+  {
+    "code": "TNA",
+    "name": "지난 야오창 국제공항",
+    "latitude": 36.8572,
+    "longitude": 117.216
+  },
+  {
+    "code": "SZX",
+    "name": "선전 바오안 국제공항",
+    "latitude": 22.6395,
+    "longitude": 113.8033
+  },
+  {
+    "code": "ATL",
+    "name": "하츠필드-잭슨 애틀랜타 국제공항",
+    "latitude": 33.6367,
+    "longitude": -84.4281
+  },
+  {
+    "code": "TAK",
+    "name": "다카마쓰 공항",
+    "latitude": 34.215,
+    "longitude": 134.0155
+  },
+  {
+    "code": "WUH",
+    "name": "우한 톈허 국제공항",
+    "latitude": 30.7748,
+    "longitude": 114.2137
+  },
+  {
+    "code": "JFK",
+    "name": "존 F. 케네디 국제공항",
+    "latitude": 40.6394,
+    "longitude": -73.7793
+  },
+  {
+    "code": "TSN",
+    "name": "톈진 빈하이 국제공항",
+    "latitude": 39.1244,
+    "longitude": 117.346
+  },
+  {
+    "code": "SIN",
+    "name": "싱가포르 창이 공항",
+    "latitude": 1.3502,
+    "longitude": 103.994
+  },
+  {
+    "code": "AOJ",
+    "name": "아오모리 공항",
+    "latitude": 40.7338,
+    "longitude": 140.6895
+  },
+  {
+    "code": "DLC",
+    "name": "다롄 저우수이쯔 국제공항",
+    "latitude": 38.9657,
+    "longitude": 121.5385
+  },
+  {
+    "code": "CGQ",
+    "name": "창춘 룽자 국제공항",
+    "latitude": 43.9962,
+    "longitude": 125.685
+  },
+  {
+    "code": "XIY",
+    "name": "시안 셴양 국제공항",
+    "latitude": 34.4471,
+    "longitude": 108.752
+  },
+  {
+    "code": "ISG",
+    "name": "신 이시가키 공항",
+    "latitude": 24.3964,
+    "longitude": 124.245
+  },
+  {
+    "code": "CTS",
+    "name": "신치토세 공항",
+    "latitude": 42.7748,
+    "longitude": 141.6904
+  },
+  {
+    "code": "UKB",
+    "name": "고베 공항",
+    "latitude": 34.6328,
+    "longitude": 135.224
+  },
+  {
+    "code": "OKA",
+    "name": "나하 국제공항",
+    "latitude": 26.1924,
+    "longitude": 127.6398
+  },
+  {
+    "code": "PKX",
+    "name": "베이징 다싱 국제공항",
+    "latitude": 39.5013,
+    "longitude": 116.414
+  },
+  {
+    "code": "YNJ",
+    "name": "옌지 차오양촨 공항",
+    "latitude": 42.8828,
+    "longitude": 129.451
+  },
+  {
+    "code": "DFW",
+    "name": "댈러스 포트워스 국제공항",
+    "latitude": 32.8968,
+    "longitude": -97.038
+  },
+  {
+    "code": "BOS",
+    "name": "보스턴 로건 국제공항",
+    "latitude": 42.362,
+    "longitude": -71.0079
+  },
+  {
+    "code": "YYZ",
+    "name": "토론토 피어슨 국제공항",
+    "latitude": 43.6759,
+    "longitude": -79.6294
+  },
+  {
+    "code": "SDJ",
+    "name": "센다이 공항",
+    "latitude": 38.1397,
+    "longitude": 140.917
+  },
+  {
+    "code": "KIJ",
+    "name": "니가타 공항",
+    "latitude": 37.9542,
+    "longitude": 139.1122
+  },
+  {
+    "code": "FRA",
+    "name": "프랑크푸르트 암마인 공항",
+    "latitude": 50.0267,
+    "longitude": 8.5584
+  },
+  {
+    "code": "MAD",
+    "name": "아돌포 수아레스 마드리드-바라하스 공항",
+    "latitude": 40.4934,
+    "longitude": -3.5722
+  },
+  {
+    "code": "OIT",
+    "name": "오이타 공항",
+    "latitude": 33.4794,
+    "longitude": 131.737
+  },
+  {
+    "code": "DTW",
+    "name": "디트로이트 메트로폴리탄 웨인 카운티 공항",
+    "latitude": 42.2138,
+    "longitude": -83.3538
+  },
+  {
+    "code": "XMN",
+    "name": "샤먼 가오치 국제공항",
+    "latitude": 24.5439,
+    "longitude": 118.1275
+  },
+  {
+    "code": "IAD",
+    "name": "워싱턴 덜레스 국제공항",
+    "latitude": 38.9445,
+    "longitude": -77.4558
+  },
+  {
+    "code": "IST",
+    "name": "이스탄불 공항",
+    "latitude": 41.2749,
+    "longitude": 28.7321
+  },
+  {
+    "code": "TAS",
+    "name": "타슈켄트 국제공항",
+    "latitude": 41.2579,
+    "longitude": 69.2812
+  },
+  {
+    "code": "WEH",
+    "name": "웨이하이 다수이보 공항",
+    "latitude": 37.1871,
+    "longitude": 122.229
+  },
+  {
+    "code": "NGS",
+    "name": "나가사키 공항",
+    "latitude": 32.9169,
+    "longitude": 129.914
+  },
+  {
+    "code": "CGK",
+    "name": "수카르노하타 국제공항",
+    "latitude": -6.1256,
+    "longitude": 106.656
+  },
+  {
+    "code": "ORD",
+    "name": "시카고 오헤어 국제공항",
+    "latitude": 41.9786,
+    "longitude": -87.9048
+  },
+  {
+    "code": "VTE",
+    "name": "와타이 국제공항",
+    "latitude": 17.9851,
+    "longitude": 102.5667
+  },
+  {
+    "code": "PRG",
+    "name": "바츨라프 하벨 프라하 공항",
+    "latitude": 50.1009,
+    "longitude": 14.2599
+  },
+  {
+    "code": "ZRH",
+    "name": "취리히 공항",
+    "latitude": 47.4581,
+    "longitude": 8.5481
+  },
+  {
+    "code": "ALA",
+    "name": "알마티 국제공항",
+    "latitude": 43.3543,
+    "longitude": 77.0428
+  },
+  {
+    "code": "CDG",
+    "name": "샤를 드골 국제공항",
+    "latitude": 49.009,
+    "longitude": 2.5541
+  },
+  {
+    "code": "SFO",
+    "name": "샌프란시스코 국제공항",
+    "latitude": 37.6198,
+    "longitude": -122.3748
+  },
+  {
+    "code": "MEX",
+    "name": "멕시코시티 베니토 후아레스 국제공항",
+    "latitude": 19.4358,
+    "longitude": -99.0703
+  },
+  {
+    "code": "BCN",
+    "name": "조셉 타라델라스 바르셀로나-엘프라트 공항",
+    "latitude": 41.2971,
+    "longitude": 2.0785
+  },
+  {
+    "code": "HGH",
+    "name": "항저우 샤오산 국제공항",
+    "latitude": 30.2361,
+    "longitude": 120.4289
+  },
+  {
+    "code": "AMS",
+    "name": "암스테르담 스키폴 공항",
+    "latitude": 52.3086,
+    "longitude": 4.7639
+  },
+  {
+    "code": "KHH",
+    "name": "가오슝 국제공항",
+    "latitude": 22.5771,
+    "longitude": 120.35
+  },
+  {
+    "code": "DEL",
+    "name": "인디라 간디 국제공항",
+    "latitude": 28.5556,
+    "longitude": 77.0952
+  },
+  {
+    "code": "NKG",
+    "name": "난징 루커우 국제공항",
+    "latitude": 31.735,
+    "longitude": 118.8659
+  },
+  {
+    "code": "HRB",
+    "name": "하얼빈 타이핑 국제공항",
+    "latitude": 45.6234,
+    "longitude": 126.25
+  },
+  {
+    "code": "DYG",
+    "name": "장자제 허화 국제공항",
+    "latitude": 29.1047,
+    "longitude": 110.4428
+  },
+  {
+    "code": "DMK",
+    "name": "돈므앙 국제공항",
+    "latitude": 13.9126,
+    "longitude": 100.607
+  },
+  {
+    "code": "TOY",
+    "name": "도야마 키토키토 공항",
+    "latitude": 36.6484,
+    "longitude": 137.1874
+  },
+  {
+    "code": "FCO",
+    "name": "로마 피우미치노 레오나르도 다 빈치 국제공항",
+    "latitude": 41.8045,
+    "longitude": 12.252
+  },
+  {
+    "code": "BUD",
+    "name": "부다페스트 리스트 페렌츠 국제공항",
+    "latitude": 47.4302,
+    "longitude": 19.2624
+  },
+  {
+    "code": "LAX",
+    "name": "로스앤젤레스 국제공항",
+    "latitude": 33.9425,
+    "longitude": -118.408
+  },
+  {
+    "code": "HFE",
+    "name": "허페이 신차오 국제공항",
+    "latitude": 31.9878,
+    "longitude": 116.9769
+  },
+  {
+    "code": "YGJ",
+    "name": "요나고 기타로 공항 / 항공자위대 미호 기지",
+    "latitude": 35.4922,
+    "longitude": 133.236
+  },
+  {
+    "code": "TKS",
+    "name": "도쿠시마 아와오도리 공항 / 해상자위대 도쿠시마 기지",
+    "latitude": 34.1326,
+    "longitude": 134.6078
+  },
+  {
+    "code": "MXP",
+    "name": "밀라노 말펜사 국제공항",
+    "latitude": 45.6306,
+    "longitude": 8.7281
+  },
+  {
+    "code": "HKD",
+    "name": "하코다테 공항",
+    "latitude": 41.77,
+    "longitude": 140.822
+  },
+  {
+    "code": "CKG",
+    "name": "충칭 장베이 국제공항",
+    "latitude": 29.7123,
+    "longitude": 106.6519
+  },
+  {
+    "code": "TFU",
+    "name": "청두 톈푸 국제공항",
+    "latitude": 30.3125,
+    "longitude": 104.4413
+  },
+  {
+    "code": "NQZ",
+    "name": "누르술탄 나자르바예프 국제공항",
+    "latitude": 51.027,
+    "longitude": 71.4671
+  },
+  {
+    "code": "DPS",
+    "name": "응우라라이 국제공항",
+    "latitude": -8.7484,
+    "longitude": 115.1671
+  },
+  {
+    "code": "KKJ",
+    "name": "기타큐슈 공항",
+    "latitude": 33.8459,
+    "longitude": 131.035
+  },
+  {
+    "code": "KOJ",
+    "name": "가고시마 공항",
+    "latitude": 31.8034,
+    "longitude": 130.719
+  },
+  {
+    "code": "SEA",
+    "name": "시애틀-터코마 국제공항",
+    "latitude": 47.4479,
+    "longitude": -122.3103
+  },
+  {
+    "code": "HKT",
+    "name": "푸껫 국제공항",
+    "latitude": 8.1133,
+    "longitude": 98.3174
+  },
+  {
+    "code": "YVR",
+    "name": "밴쿠버 국제공항",
+    "latitude": 49.1939,
+    "longitude": -123.184
+  },
+  {
+    "code": "AUH",
+    "name": "자예드 국제공항",
+    "latitude": 24.441,
+    "longitude": 54.6492
+  },
+  {
+    "code": "CNX",
+    "name": "치앙마이 국제공항",
+    "latitude": 18.7668,
+    "longitude": 98.9626
+  },
+  {
+    "code": "KTI",
+    "name": "테초 국제공항",
+    "latitude": 11.36,
+    "longitude": 104.9213
+  },
+  {
+    "code": "TAE",
+    "name": "대구 국제공항",
+    "latitude": 35.8944,
+    "longitude": 128.657
+  },
+  {
+    "code": "SYD",
+    "name": "시드니 킹스퍼드 스미스 국제공항",
+    "latitude": -33.9461,
+    "longitude": 151.177
+  },
+  {
+    "code": "SLC",
+    "name": "솔트레이크시티 국제공항",
+    "latitude": 40.7889,
+    "longitude": -111.9799
+  },
+  {
+    "code": "WUX",
+    "name": "쑤난 슈오팡 국제공항",
+    "latitude": 31.497,
+    "longitude": 120.4304
+  },
+  {
+    "code": "MSP",
+    "name": "미니애폴리스-세인트폴 국제공항 / 월드-체임벌린 필드",
+    "latitude": 44.8801,
+    "longitude": -93.2217
+  },
+  {
+    "code": "CEB",
+    "name": "막탄 세부 국제공항",
+    "latitude": 10.3093,
+    "longitude": 123.9797
+  },
+  {
+    "code": "MDC",
+    "name": "삼 라툴랑이 국제공항",
+    "latitude": 1.5486,
+    "longitude": 124.9262
+  },
+  {
+    "code": "HND",
+    "name": "도쿄 하네다 국제공항",
+    "latitude": 35.5497,
+    "longitude": 139.787
+  },
+  {
+    "code": "YYC",
+    "name": "캘거리 국제공항",
+    "latitude": 51.1188,
+    "longitude": -114.0099
+  },
+  {
+    "code": "TAG",
+    "name": "보홀-팡라오 국제공항",
+    "latitude": 9.573,
+    "longitude": 123.7701
+  },
+  {
+    "code": "LAS",
+    "name": "해리 리드 국제공항",
+    "latitude": 36.0834,
+    "longitude": -115.1518
+  },
+  {
+    "code": "HNL",
+    "name": "다니엘 K. 이노우에 국제공항",
+    "latitude": 21.3184,
+    "longitude": -157.9257
+  },
+  {
+    "code": "CSX",
+    "name": "창사 황화 국제공항",
+    "latitude": 28.1892,
+    "longitude": 113.22
+  },
+  {
+    "code": "CRK",
+    "name": "클라크 국제공항 / 클라크 공군기지",
+    "latitude": 15.186,
+    "longitude": 120.56
+  },
+  {
+    "code": "EWR",
+    "name": "뉴어크 리버티 국제공항",
+    "latitude": 40.6894,
+    "longitude": -74.1705
+  },
+  {
+    "code": "BNE",
+    "name": "브리즈번 국제공항",
+    "latitude": -27.3842,
+    "longitude": 153.117
+  },
+  {
+    "code": "HEL",
+    "name": "헬싱키 반타 공항",
+    "latitude": 60.3184,
+    "longitude": 24.9633
+  },
+  {
+    "code": "KWL",
+    "name": "구이린 량장 국제공항",
+    "latitude": 25.2198,
+    "longitude": 110.0396
+  },
+  {
+    "code": "DXB",
+    "name": "두바이 국제공항",
+    "latitude": 25.2498,
+    "longitude": 55.371
+  },
+  {
+    "code": "CIT",
+    "name": "심켄트 국제공항",
+    "latitude": 42.365,
+    "longitude": 69.4756
+  },
+  {
+    "code": "GUM",
+    "name": "안토니오 B. 원 팻 국제공항",
+    "latitude": 13.485,
+    "longitude": 144.7973
+  },
+  {
+    "code": "WRO",
+    "name": "코페르니쿠스 브로츠와프 공항",
+    "latitude": 51.1037,
+    "longitude": 16.8821
+  },
+  {
+    "code": "HSG",
+    "name": "규슈 사가 국제공항",
+    "latitude": 33.1497,
+    "longitude": 130.302
+  },
+  {
+    "code": "KMI",
+    "name": "미야자키 공항",
+    "latitude": 31.8772,
+    "longitude": 131.449
+  },
+  {
+    "code": "SJW",
+    "name": "스자좡 정딩 국제공항",
+    "latitude": 38.2807,
+    "longitude": 114.697
+  },
+  {
+    "code": "OKJ",
+    "name": "오카야마 모모타로 공항",
+    "latitude": 34.7569,
+    "longitude": 133.855
+  },
+  {
+    "code": "VIE",
+    "name": "빈 국제공항",
+    "latitude": 48.1103,
+    "longitude": 16.5697
+  },
+  {
+    "code": "MUC",
+    "name": "뮌헨 공항",
+    "latitude": 48.3538,
+    "longitude": 11.7861
+  },
+  {
+    "code": "IBR",
+    "name": "이바라키 공항",
+    "latitude": 36.1815,
+    "longitude": 140.4144
+  },
+  {
+    "code": "LIS",
+    "name": "리스본 움베르투 델가두 공항",
+    "latitude": 38.7813,
+    "longitude": -9.1359
+  },
+  {
+    "code": "WNZ",
+    "name": "원저우 룽완 국제공항",
+    "latitude": 27.9106,
+    "longitude": 120.8535
+  },
+  {
+    "code": "RGN",
+    "name": "양곤 국제공항",
+    "latitude": 16.9073,
+    "longitude": 96.1332
+  },
+  {
+    "code": "AKL",
+    "name": "오클랜드 국제공항",
+    "latitude": -37.012,
+    "longitude": 174.7863
+  },
+  {
+    "code": "SPN",
+    "name": "사이판 국제공항",
+    "latitude": 15.1194,
+    "longitude": 145.7288
+  },
+  {
+    "code": "HAK",
+    "name": "하이커우 메이란 국제공항",
+    "latitude": 19.9349,
+    "longitude": 110.459
+  },
+  {
+    "code": "CPH",
+    "name": "코펜하겐 카스트루프 공항",
+    "latitude": 55.6179,
+    "longitude": 12.656
+  },
+  {
+    "code": "DWC",
+    "name": "알 막툼 국제공항",
+    "latitude": 24.8962,
+    "longitude": 55.1624
+  },
+  {
+    "code": "YNZ",
+    "name": "옌청 난양 국제공항",
+    "latitude": 33.4283,
+    "longitude": 120.2054
+  },
+  {
+    "code": "YIH",
+    "name": "이창 싼샤 공항",
+    "latitude": 30.5541,
+    "longitude": 111.4826
+  },
+  {
+    "code": "TXN",
+    "name": "황산 툰시 국제공항",
+    "latitude": 29.7333,
+    "longitude": 118.256
+  },
+  {
+    "code": "KTM",
+    "name": "트리부반 국제공항",
+    "latitude": 27.6966,
+    "longitude": 85.3591
+  },
+  {
+    "code": "BTH",
+    "name": "항 나딤 국제공항",
+    "latitude": 1.121,
+    "longitude": 104.119
+  },
+  {
+    "code": "LJG",
+    "name": "리장 산이 국제공항",
+    "latitude": 26.6775,
+    "longitude": 100.2449
+  },
+  {
+    "code": "BWN",
+    "name": "브루나이 국제공항",
+    "latitude": 4.9442,
+    "longitude": 114.928
+  },
+  {
+    "code": "ENH",
+    "name": "언스 쉬자핑 공항",
+    "latitude": 30.3203,
+    "longitude": 109.485
+  },
+  {
+    "code": "YTY",
+    "name": "양저우 타이저우 공항",
+    "latitude": 32.5634,
+    "longitude": 119.7198
+  },
+  {
+    "code": "CMB",
+    "name": "반다라나이케 국제 콜롬보 공항",
+    "latitude": 7.1808,
+    "longitude": 79.8841
+  },
+  {
+    "code": "ASB",
+    "name": "아슈하바트 국제공항",
+    "latitude": 37.9868,
+    "longitude": 58.361
+  }
+]
