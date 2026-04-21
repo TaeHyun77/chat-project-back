@@ -1,6 +1,7 @@
-package com.example.chat.airport.kafka.consumer;
+package com.example.chat.kafka.consumer;
 
-import com.example.chat.airport.kafka.message.CongestionMessage;
+import com.example.chat.common.DateUtils;
+import com.example.chat.kafka.message.CongestionMessage;
 import com.example.chat.member.Member;
 import com.example.chat.member.PlaneSubscriptionRepository;
 import jakarta.mail.internet.MimeMessage;
@@ -12,9 +13,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
@@ -26,14 +25,12 @@ public class CongestionAlertConsumer {
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
 
-    private static final DateTimeFormatter DT_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
-
     @KafkaListener(topics = "airport.congestion.changed", groupId = "congestion-alerter")
     public void onCongestionChanged(CongestionMessage message) {
         // 혼잡도 알림 ON + 출발 임박(6시간 이내) 항공편 보유 회원 조회
         LocalDateTime now = LocalDateTime.now();
-        String start = now.format(DT_FORMATTER);
-        String end = now.plusHours(6).format(DT_FORMATTER);
+        String start = now.format(DateUtils.BASIC_DATE_TIME);
+        String end = now.plusHours(6).format(DateUtils.BASIC_DATE_TIME);
 
         List<Member> subscribers = planeSubscriptionRepository.findCongestionAlertEnabledMembersWithImminentFlights(start, end);
 

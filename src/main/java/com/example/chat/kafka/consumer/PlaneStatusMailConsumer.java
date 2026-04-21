@@ -1,6 +1,6 @@
-package com.example.chat.airport.kafka.consumer;
+package com.example.chat.kafka.consumer;
 
-import com.example.chat.airport.kafka.message.PlaneChangedMessage;
+import com.example.chat.kafka.message.PlaneChangedMessage;
 import com.example.chat.member.Member;
 import com.example.chat.member.PlaneSubscriptionRepository;
 import jakarta.mail.internet.MimeMessage;

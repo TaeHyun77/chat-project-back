@@ -54,3 +54,4 @@ public class Plane extends BaseBatch {
         this.chkinrange = chkinrange;
     }
 }
+

@@ -1,6 +1,7 @@
 package com.example.chat.member;
 
 import com.example.chat.airport.plane.dto.PlaneResDto;
+import com.example.chat.airport.weather.dto.WeatherForecastResDto;
 import com.example.chat.auth.oauth.CustomOAuth2User;
 import com.example.chat.exception.ChatException;
 import com.example.chat.exception.ErrorCode;
@@ -10,7 +11,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,11 +30,8 @@ public class MemberController {
 
     // 로그인 사용자 정보
     @GetMapping("/info")
-    public MemberResDto memberInfo(@AuthenticationPrincipal CustomOAuth2User user) {
-        if (user == null) {
-            throw new ChatException(HttpStatus.UNAUTHORIZED, ErrorCode.ACCESSTOKEN_IS_EXPIRED);
-        }
-        return memberService.info(user.getUsername());
+    public MemberResDto memberInfo(@AuthenticationPrincipal UserDetails userDetails) {
+        return memberService.info(userDetails.getUsername());
     }
 
     // 닉네임 중복 여부 파악
@@ -69,7 +66,7 @@ public class MemberController {
     }
 
     // 항공편 구독
-    @PostMapping("/flight/{planeId}/subscribe")
+    @PostMapping("/flight/subscribe/{planeId}")
     public ResponseEntity<Void> subscribePlane(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("planeId") Long planeId) {
@@ -79,7 +76,7 @@ public class MemberController {
     }
 
     // 항공편 구독 해제
-    @DeleteMapping("/flight/subscribe/{planeId}")
+    @DeleteMapping("/flight/subscribe/cancel/{planeId}")
     public ResponseEntity<Void> unsubscribePlane(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable Long planeId) {
@@ -91,5 +88,11 @@ public class MemberController {
     @GetMapping("/flight/subscriptions")
     public List<PlaneResDto> getSubscribedPlanes(@AuthenticationPrincipal UserDetails userDetails) {
         return memberService.getSubscribedPlanes(userDetails.getUsername());
+    }
+
+    // 구독 항공편 도착 공항 시간별 날씨 예보 조회
+    @GetMapping("/flight/subscriptions/weather")
+    public List<WeatherForecastResDto> getSubscribedFlightWeather(@AuthenticationPrincipal UserDetails userDetails) {
+        return memberService.getSubscribedFlightWeather(userDetails.getUsername());
     }
 }

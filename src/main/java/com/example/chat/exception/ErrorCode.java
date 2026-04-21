@@ -34,6 +34,10 @@ ErrorCode {
 
     ERROR_TO_CALL_DEPARTURE_API("ERROR_TO_CALL_DEPARTURE_API", "출국장 데이터 API 호출 실패"),
 
+    UNSUPPORTED_AIRPORT_CODE("UNSUPPORTED_AIRPORT_CODE", "지원하지 않는 공항 코드입니다."),
+
+    ERROR_TO_CALL_WEATHER_API("ERROR_TO_CALL_WEATHER_API", "날씨 API 호출 중 오류가 발생했습니다."),
+
 
     // DATA
     FAIL_TO_DELETE_PLANE_DATA("FAIL_TO_DELETE_PLANE_DATA", "항공편 데이터 삭제 에러"),

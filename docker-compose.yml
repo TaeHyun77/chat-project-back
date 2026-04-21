@@ -14,9 +14,9 @@ services:
       elasticsearch:
         condition: service_started
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/airport-chat-mysql?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul&rewriteBatchedStatements=true
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/airport_chat_mysql?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul&rewriteBatchedStatements=true
+      SPRING_DATASOURCE_USERNAME: chatuser
+      SPRING_DATASOURCE_PASSWORD: chatpass
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       SPRING_ELASTICSEARCH_URIS: http://elasticsearch:9200
@@ -40,16 +40,17 @@ services:
       - airport-chat-net
     environment:
       MYSQL_ROOT_PASSWORD: "0136"
-      MYSQL_DATABASE: airport-chat-mysql
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: airport_chat_mysql
+      MYSQL_USER: chatuser
+      MYSQL_PASSWORD: chatpass
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p0136"]
       interval: 10s
       timeout: 5s
       retries: 5
     ports:
       - "3307:3306"
-    volumes:
-      - mysql-data:/var/lib/mysql
 
   kafka:
     image: apache/kafka:3.7.0
@@ -80,9 +81,6 @@ services:
       - discovery.type=single-node
       - xpack.security.enabled=false
       - ES_JAVA_OPTS=-Xms256m -Xmx256m
-
-volumes:
-  mysql-data:
 
 networks:
   airport-chat-net:

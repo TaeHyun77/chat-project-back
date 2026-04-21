@@ -16,6 +16,7 @@ public class ParkingController {
 
     private final ParkingService parkingService;
 
+    // 주차장 이용 수치 데이터 목록 조회
     @GetMapping("/parking")
     public List<ParkingResDto> getParkingStatus() {
         return parkingService.getParkingStatus();

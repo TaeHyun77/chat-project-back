@@ -1,4 +1,4 @@
-package com.example.chat.airport.kafka.message;
+package com.example.chat.kafka.message;
 
 import com.example.chat.airport.plane.Plane;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,6 @@
-package com.example.chat.airport.kafka.consumer;
+package com.example.chat.kafka.consumer;
 
-import com.example.chat.airport.kafka.message.PlaneIndexingMessage;
+import com.example.chat.kafka.message.PlaneIndexingMessage;
 import com.example.chat.airport.search.FlightDocument;
 import com.example.chat.airport.search.FlightSearchRepository;
 import lombok.RequiredArgsConstructor;

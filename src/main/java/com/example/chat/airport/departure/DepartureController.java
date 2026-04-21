@@ -14,7 +14,7 @@ public class DepartureController {
 
     private final DepartureService departureService;
 
-    // 출국장 혼잡도 데이터 조회
+    // 출국장 혼잡도 데이터 목록 조회
     @GetMapping("/departures")
     public List<DepartureResDto> getDepartures() {
         return departureService.getDepartures();
