@@ -80,3 +80,16 @@ com.example.chat/
 - WebSocket + STOMP + SockJS
 - Lombok (`@Slf4j`, `@Builder`, etc.)
 - Docker (Alpine-based, resource-limited: 0.4 CPU / 400MB RAM)
+
+## 문서 동기화 규칙
+
+- 코드 변경 작업이 완료된 후, 아래 문서에 영향이 있는지 반드시 확인하고 사용자에게 업데이트 여부를 질문한다.
+
+  - `CLAUDE.md` — 기술 스택, 모듈 구조, 패턴 등 개요 수준 변경
+  - `rules/architecture.md` — 디렉터리 구조, 로직 흐름
+  - `rules/pattern.md` — 코딩 패턴, DTO/엔티티/Repository 규칙 등의 변경
+  - `rules/errorHandler.md` — 에러 핸들링 방식 변경
+  - `rules/commit.md` — 커밋 규칙 변경
+
+- 질문 형식: "이번 변경으로 인해 [문서명]에 반영할 내용이 있습니다. 문서를 업데이트할까요?"
+- 문서에 영향이 없는 단순 버그 수정이나 기존 패턴을 따르는 변경은 질문을 생략할 수 있다.
