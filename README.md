@@ -1,4 +1,7 @@
 
+<img width="595" height="316" alt="image" src="https://github.com/user-attachments/assets/391915e3-5910-42b4-9b7e-ebda193f56c5" />
+
+
 - JDBC Batch Insert(batch_size=100)로 대량 항공편 데이터 효율적 저장/갱신
 - JPQL → QueryDSL 전환으로 타입 안정성과 가독성 개선
 - Kafka 이벤트 기반 비동기 처리로 항공편 인덱싱과 메일 알림을 서비스 로직에서 분리
