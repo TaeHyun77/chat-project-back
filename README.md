@@ -4,7 +4,8 @@
 
 ### 아키텍처
 ---
-<img width="800" height="400" alt="image" src="https://github.com/user-attachments/assets/391915e3-5910-42b4-9b7e-ebda193f56c5" /><br><br>
+<p align="center">
+<img width="800" height="400" alt="image" src="https://github.com/user-attachments/assets/391915e3-5910-42b4-9b7e-ebda193f56c5" /></p><br><br>
 
 ### 사용 기술
 ---
