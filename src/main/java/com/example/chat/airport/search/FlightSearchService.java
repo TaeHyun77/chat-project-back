@@ -4,6 +4,7 @@ import com.example.chat.airport.search.dto.FlightSearchResDto;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
@@ -22,48 +23,38 @@ public class FlightSearchService {
 
     private final ElasticsearchOperations esOperations;
 
-    // 복합 조건 + fuzzy 검색
-    public List<FlightSearchResDto> search(String q, String terminal, String date, String airline) {
+    // 복합 조건 검색
+    // q: 항공편 번호(flightId) 또는 항공사명(airLine) 검색 키워드
+    public List<FlightSearchResDto> search(String q, String date) {
         BoolQuery.Builder boolBuilder = new BoolQuery.Builder();
 
-        // 키워드 fuzzy 검색 (flightId, airport 필드)
         if (q != null && !q.isBlank()) {
             boolBuilder.should(
-                    Query.of(qb -> qb.fuzzy(f -> f.field("flightId").value(q).fuzziness("AUTO")))
+                    Query.of(qb -> qb.prefix(p -> p.field("flightId").value(q.toUpperCase()).boost(3.0f)))
             );
             boolBuilder.should(
-                    Query.of(qb -> qb.match(m -> m.field("airport").query(q)))
+                    Query.of(qb -> qb.match(m -> m.field("airLine").query(q).boost(2.0f)))
             );
             boolBuilder.should(
-                    Query.of(qb -> qb.match(m -> m.field("airLine").query(q)))
+                    Query.of(qb -> qb.prefix(p -> p.field("airLine.keyword").value(q).boost(2.0f)))
+            );
+            boolBuilder.should(
+                    Query.of(qb -> qb.fuzzy(f -> f.field("airLine").value(q).fuzziness("AUTO").boost(1.2f)))
             );
             boolBuilder.minimumShouldMatch("1");
         }
 
-        // 터미널 필터
-        if (terminal != null && !terminal.isBlank()) {
-            boolBuilder.filter(
-                    Query.of(qb -> qb.term(t -> t.field("terminalid").value(terminal)))
-            );
-        }
-
-        // 날짜 필터
+        // date로 필터링 - date 값이 존재한다면 이 값에 해당되는 데이터만 허용하도록
         if (date != null && !date.isBlank()) {
             boolBuilder.filter(
                     Query.of(qb -> qb.term(t -> t.field("searchDate").value(date)))
             );
         }
 
-        // 항공사 필터
-        if (airline != null && !airline.isBlank()) {
-            boolBuilder.filter(
-                    Query.of(qb -> qb.term(t -> t.field("airLine.keyword").value(airline)))
-            );
-        }
-
         NativeQuery nativeQuery = NativeQuery.builder()
                 .withQuery(Query.of(qb -> qb.bool(boolBuilder.build())))
-                .withMaxResults(50)
+                .withSort(Sort.by(Sort.Direction.ASC, "scheduleDateTime"))
+                .withMaxResults(1000)
                 .build();
 
         SearchHits<FlightDocument> hits = esOperations.search(nativeQuery, FlightDocument.class);
@@ -74,7 +65,8 @@ public class FlightSearchService {
                 .collect(Collectors.toList());
     }
 
-    // 자동완성은 flightId와 airLine prefix로만 가능
+    // 자동완성
+    // flightId와 airLine prefix로만 가능
     public List<String> autocomplete(
             String prefix,
             String date
@@ -101,7 +93,8 @@ public class FlightSearchService {
         // 검색 조건과 결과 개수 제한을 정의하는 쿼리 객체
         NativeQuery nativeQuery = NativeQuery.builder()
                 .withQuery(Query.of(qb -> qb.bool(boolBuilder.build())))
-                .withMaxResults(10) // 최대 10개
+                .withSort(Sort.by(Sort.Direction.ASC, "scheduleDateTime"))
+                .withMaxResults(100) // 최대 100개
                 .build();
 
         // 실제 Elasticsearch 검색 실행
@@ -112,18 +105,5 @@ public class FlightSearchService {
         });
 
         return suggestions;
-    }
-
-    // 특정 날짜 + remark 조건으로 ES 문서 삭제
-    public long deleteBySearchDateAndRemark(String searchDate, String remark) {
-        NativeQuery query = NativeQuery.builder()
-                .withQuery(Query.of(qb -> qb.bool(b -> b
-                        .filter(Query.of(f -> f.term(t -> t.field("searchDate").value(searchDate))))
-                        .filter(Query.of(f -> f.term(t -> t.field("remark").value(remark))))
-                )))
-                .build();
-
-        ByQueryResponse response = esOperations.delete(query, FlightDocument.class);
-        return response.getDeleted();
     }
 }

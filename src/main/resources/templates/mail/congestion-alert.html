@@ -39,15 +39,15 @@
                 <th>6번 게이트</th>
             </tr>
             <tr>
-                <td th:text="${t1Depart1}"></td>
-                <td th:text="${t1Depart2}"></td>
-                <td th:text="${t1Depart3}"></td>
-                <td th:text="${t1Depart4}"></td>
-                <td th:text="${t1Depart5}"></td>
-                <td th:text="${t1Depart6}"></td>
+                <td th:text="${t1Gates.gate1}"></td>
+                <td th:text="${t1Gates.gate2}"></td>
+                <td th:text="${t1Gates.gate3}"></td>
+                <td th:text="${t1Gates.gate4}"></td>
+                <td th:text="${t1Gates.gate5}"></td>
+                <td th:text="${t1Gates.gate6}"></td>
             </tr>
         </table>
-        <p>T1 합계: <strong th:text="${newT1Sum}"></strong>명</p>
+        <p>T1 합계: <strong th:text="${t1Gates.sum()}"></strong>명</p>
 
         <h3 class="terminal-label">터미널 2 출국장 혼잡도</h3>
         <table class="congestion-table">
@@ -56,11 +56,11 @@
                 <th>2번 게이트</th>
             </tr>
             <tr>
-                <td th:text="${t2Depart1}"></td>
-                <td th:text="${t2Depart2}"></td>
+                <td th:text="${t2Gates.gate1}"></td>
+                <td th:text="${t2Gates.gate2}"></td>
             </tr>
         </table>
-        <p>T2 합계: <strong th:text="${newT2Sum}"></strong>명</p>
+        <p>T2 합계: <strong th:text="${t2Gates.sum()}"></strong>명</p>
     </div>
     <div class="footer">
         본 메일은 인천국제공항 항공편 정보 서비스에서 발송되었습니다.

@@ -19,7 +19,6 @@ import org.springframework.data.elasticsearch.annotations.Setting;
 @Document(indexName = "flights")
 @Setting(settingPath = "elasticsearch/flight-index-settings.json")
 public class FlightDocument {
-
     @Id
     private String id; // flightId + "_" + scheduleDateTime
 

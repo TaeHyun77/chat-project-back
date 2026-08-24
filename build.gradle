@@ -20,7 +20,9 @@ configurations {
 }
 
 repositories {
+	mavenLocal()
 	mavenCentral()
+	flatDir { dirs 'libs' }
 }
 
 dependencies {
@@ -53,9 +55,6 @@ dependencies {
 	// Spring AOP
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
 
-	// Kafka
-	implementation 'org.springframework.kafka:spring-kafka'
-
 	// Mail (SMTP)
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
@@ -78,6 +77,9 @@ dependencies {
 
 	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+	// Error Monitor SDK
+	implementation name: 'error-monitor-sdk-0.1.0', ext: 'jar'
 }
 
 def querydslDir = "src/main/generated"

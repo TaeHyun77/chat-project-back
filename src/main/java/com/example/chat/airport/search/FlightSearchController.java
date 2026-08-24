@@ -26,12 +26,10 @@ public class FlightSearchController {
     @GetMapping("/search")
     public ResponseEntity<List<FlightSearchResDto>> search(
             @RequestParam(required = false) String q,
-            @RequestParam(required = false) String terminal,
-            @RequestParam(required = false) String date,
-            @RequestParam(required = false) String airline
+            @RequestParam(required = false) String date
     ) {
 
-        return ResponseEntity.ok(flightSearchService.search(q, terminal, date, airline));
+        return ResponseEntity.ok(flightSearchService.search(q, date));
     }
 
     // 자동완성
