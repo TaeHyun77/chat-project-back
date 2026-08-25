@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 @Component
 @Aspect
 public class SchedulerAspect {
-
     @Around("execution(* com.example.chat.airport.AirportScheduler.sync*(..))")
     public Object measureSchedulerSync(ProceedingJoinPoint joinPoint) throws Throwable {
         String methodName = joinPoint.getSignature().getName();

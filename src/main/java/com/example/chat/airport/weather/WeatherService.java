@@ -1,8 +1,8 @@
 package com.example.chat.airport.weather;
 
-import com.example.chat.airport.weather.dto.WeatherForecastResDto;
-import com.example.chat.airport.weather.dto.WeatherForecastResDto.HourlyWeather;
-import com.example.chat.airport.weather.dto.WeatherResDto;
+import com.example.chat.airport.weather.WeatherForecastResDto;
+import com.example.chat.airport.weather.WeatherForecastResDto.HourlyWeather;
+import com.example.chat.airport.weather.WeatherResDto;
 import com.example.chat.exception.ChatException;
 import com.example.chat.exception.ErrorCode;
 import com.fasterxml.jackson.databind.JsonNode;

@@ -1,8 +1,8 @@
 package com.example.chat.airport;
 
-import com.example.chat.airport.departure.DepartureService;
-import com.example.chat.airport.parking.ParkingService;
-import com.example.chat.airport.plane.PlaneService;
+import com.example.chat.airport.departure.application.DepartureService;
+import com.example.chat.airport.parking.application.ParkingService;
+import com.example.chat.airport.plane.application.PlaneService;
 import com.example.chat.common.DateUtils;
 import com.example.chat.exception.ChatException;
 import com.example.chat.exception.ErrorCode;
@@ -25,7 +25,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class ApiService {
-
     @Value("${data.api.key}") // 공공 데이터 API 키
     private String apiKey;
 
@@ -52,21 +51,32 @@ public class ApiService {
         for (int offset = -1; offset <= 2; offset++) {
             String date = LocalDate.now().plusDays(offset).format(DateUtils.BASIC_DATE);
             try {
-                fetchAndSyncPlaneData(date);
-                log.info("{}일({}) 항공편 수동 동기화 완료", offset, date);
+                if (offset == -1) { // 어제 데이터
+                    fetchAndUpdatePlaneStatus(date);
+                } else {
+                    fetchAndSyncPlaneData(date);
+                }
+                log.info("{} 항공편 동기화 완료", date);
             } catch (Exception e) {
-                log.error("{}일({}) 항공편 수동 동기화 실패", offset, date, e);
+                log.error("{} 항공편 동기화 실패", date, e);
             }
         }
     }
 
-    // 단일 날짜 항공편 동기화
+    // 단일 날짜 항공편 동기화 (insert + update)
     public void fetchAndSyncPlaneData(String searchDate) {
         URI uri = buildAirportUri("plane", PLANE_ENDPOINT, searchDate);
         String response = restTemplate.getForObject(uri, String.class);
         JsonNode json = parseAndValidateJson(response);
-
         planeService.upsertPlaneData(json, searchDate);
+    }
+
+    // 어제 날짜 항공편 상태만 갱신 (지연/결항 추적용)
+    public void fetchAndUpdatePlaneStatus(String searchDate) {
+        URI uri = buildAirportUri("plane", PLANE_ENDPOINT, searchDate);
+        String response = restTemplate.getForObject(uri, String.class);
+        JsonNode json = parseAndValidateJson(response);
+        planeService.updatePlaneStatus(json, searchDate);
     }
 
     // 공항 출국장 혼잡도 데이터를 인천공항 API를 통해 받아옴

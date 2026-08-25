@@ -1,6 +1,6 @@
 package com.example.chat.airport.weather;
 
-import com.example.chat.airport.weather.dto.WeatherResDto;
+import com.example.chat.airport.weather.WeatherResDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
