@@ -1,0 +1,25 @@
+package com.example.chat.airport.parking.ui;
+
+import com.example.chat.airport.parking.domain.Parking;
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+@Builder
+public class ParkingResDto {
+    private String floor;
+    private int parking;
+    private int parkingarea;
+    private int availableRate;
+    private String datetm;
+
+    public static ParkingResDto from(Parking parking) {
+        return ParkingResDto.builder()
+                .floor(parking.getFloor())
+                .parking(parking.getCapacity().getParking())
+                .parkingarea(parking.getCapacity().getParkingarea())
+                .availableRate(parking.getCapacity().getAvailableRate())
+                .datetm(parking.getDatetm())
+                .build();
+    }
+}

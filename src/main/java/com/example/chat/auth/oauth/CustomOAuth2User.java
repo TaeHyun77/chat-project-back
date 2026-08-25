@@ -1,6 +1,6 @@
 package com.example.chat.auth.oauth;
 
-import com.example.chat.member.Member;
+import com.example.chat.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
