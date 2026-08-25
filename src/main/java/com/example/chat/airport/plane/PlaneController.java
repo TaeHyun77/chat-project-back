@@ -2,16 +2,11 @@ package com.example.chat.airport.plane;
 
 import com.example.chat.airport.ApiService;
 import com.example.chat.airport.plane.dto.PlaneResDto;
-import com.example.chat.common.DateUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Slice;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -34,19 +29,11 @@ public class PlaneController {
     // 어제~모레 항공편 동기화
     @PostMapping("/planes/sync")
     public void syncAllPlanes() {
-        for (int offset = -1; offset <= 2; offset++) {
-            String date = LocalDate.now().plusDays(offset).format(DateUtils.BASIC_DATE);
-
-            try {
-                apiService.fetchAndSyncPlaneData(date);
-                log.info("{}일({}) 항공편 수동 동기화 완료", offset, date);
-            } catch (Exception e) {
-                log.error("{}일({}) 항공편 수동 동기화 실패", offset, date, e);
-            }
-        }
+        apiService.syncPlaneDataForDays();
     }
 
     // 모든 항공편 데이터 삭제
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/planes/deleteAll")
     public void deleteAllPlanes() {
         planeService.deleteAll();

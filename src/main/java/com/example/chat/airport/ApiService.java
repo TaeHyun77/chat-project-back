@@ -3,6 +3,7 @@ package com.example.chat.airport;
 import com.example.chat.airport.departure.DepartureService;
 import com.example.chat.airport.parking.ParkingService;
 import com.example.chat.airport.plane.PlaneService;
+import com.example.chat.common.DateUtils;
 import com.example.chat.exception.ChatException;
 import com.example.chat.exception.ErrorCode;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -17,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -44,6 +46,19 @@ public class ApiService {
             "http://apis.data.go.kr/B551177/StatusOfParking/getTrackingParking";
 
     private final List<String> departureSearchDates = List.of("0", "1");
+
+    // 어제~모레(4일치) 항공편 일괄 동기화
+    public void syncPlaneDataForDays() {
+        for (int offset = -1; offset <= 2; offset++) {
+            String date = LocalDate.now().plusDays(offset).format(DateUtils.BASIC_DATE);
+            try {
+                fetchAndSyncPlaneData(date);
+                log.info("{}일({}) 항공편 수동 동기화 완료", offset, date);
+            } catch (Exception e) {
+                log.error("{}일({}) 항공편 수동 동기화 실패", offset, date, e);
+            }
+        }
+    }
 
     // 단일 날짜 항공편 동기화
     public void fetchAndSyncPlaneData(String searchDate) {
