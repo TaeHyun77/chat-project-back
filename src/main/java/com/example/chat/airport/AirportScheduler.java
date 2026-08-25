@@ -90,16 +90,4 @@ public class AirportScheduler {
             throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.FAIL_TO_DELETE_DEPARTURE_DATA);
         }
     }
-
-    // 매 자정에 유효하지 않은 항공편 삭제 ( searchDate 값이 이틀 전이고, remark 값이 "출발"인 데이터 삭제 )
-    @Scheduled(cron = "0 0 0 * * *")
-    public void cleanUpExpiredPlaneData() {
-        try {
-            planeService.cleanUpPlaneData();
-            log.debug("유효하지 않은 항공편 삭제 완료");
-        } catch (Exception e) {
-            log.error("유효하지 않은 항공편 삭제 실패", e);
-            throw new ChatException(HttpStatus.BAD_REQUEST, ErrorCode.FAIL_TO_DELETE_PLANE_DATA);
-        }
-    }
 }

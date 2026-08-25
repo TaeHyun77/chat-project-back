@@ -1,4 +1,4 @@
-package com.example.chat.kafka.message;
+package com.example.chat.airport.plane.event;
 
 import com.example.chat.airport.plane.Plane;
 import lombok.AllArgsConstructor;
@@ -6,12 +6,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * 항공편 신규/변경 시 Elasticsearch 인덱싱을 요청하는 도메인 이벤트.
+ * 커밋 이후 리스너에서 ES에 반영된다.
+ */
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PlaneIndexingMessage {
-
+public class FlightIndexingEvent {
     private String planeId;
     private String flightId;
     private String airLine;
@@ -25,8 +28,8 @@ public class PlaneIndexingMessage {
     private String searchDate;
     private String chkinrange;
 
-    public static PlaneIndexingMessage from(Plane plane) {
-        return PlaneIndexingMessage.builder()
+    public static FlightIndexingEvent from(Plane plane) {
+        return FlightIndexingEvent.builder()
                 .planeId(String.valueOf(plane.getId()))
                 .flightId(plane.getFlightId())
                 .airLine(plane.getAirLine())

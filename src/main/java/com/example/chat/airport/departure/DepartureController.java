@@ -11,7 +11,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 public class DepartureController {
-
     private final DepartureService departureService;
 
     // 출국장 혼잡도 데이터 목록 조회

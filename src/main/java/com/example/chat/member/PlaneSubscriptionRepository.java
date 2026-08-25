@@ -23,12 +23,14 @@ public interface PlaneSubscriptionRepository extends JpaRepository<PlaneSubscrip
     @Query("SELECT ps.member FROM PlaneSubscription ps WHERE ps.plane.flightId = :flightId")
     List<Member> findMembersByPlaneFlightId(@Param("flightId") String flightId);
 
-    // congestionAlertEnabled가 true ( 혼잡도 알림을 허용한 ) 이고 항공편 출발 시각이 start ~ end 사이인 항공편을 구독한 사용자 목록 조회
+    // congestionAlertEnabled가 true이고, 해당 터미널에서 start ~ end 사이 출발 항공편을 구독한 사용자 목록 조회
     @Query("SELECT DISTINCT ps.member FROM PlaneSubscription ps " +
             "WHERE ps.member.congestionAlertEnabled = true " +
+            "AND ps.plane.terminalid = :terminal " +
             "AND ps.plane.scheduleDateTime BETWEEN :start AND :end")
     List<Member> findCongestionAlertEnabledMembersWithImminentFlights(
             @Param("start") String start,
-            @Param("end") String end
+            @Param("end") String end,
+            @Param("terminal") String terminal
     );
 }

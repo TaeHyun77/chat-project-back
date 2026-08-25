@@ -13,7 +13,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/airport")
 public class ParkingController {
-
     private final ParkingService parkingService;
 
     // 주차장 이용 수치 데이터 목록 조회

@@ -1,18 +1,19 @@
 package com.example.chat.airport.departure;
 
 import com.example.chat.airport.departure.dto.DepartureResDto;
-import com.example.chat.common.DateUtils;
-import com.example.chat.kafka.message.CongestionMessage;
+import com.example.chat.airport.departure.event.CongestionAlertEvent;
 import com.example.chat.airport.departure.repository.DepartureRepository;
+import com.example.chat.airport.departure.vo.T1GateStatus;
+import com.example.chat.airport.departure.vo.T2GateStatus;
+import com.example.chat.common.DateUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,14 +21,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class DepartureService {
-
-    // 혼잡도 합계 변화 임계값 (이 값 이상 변화 시 이벤트 발행)
+    // 혼잡도 합계 변화 임계값 (이 값 이상 변화 시 이벤트 발행 - 공식 값)
     private static final long BUSY_THRESHOLD = 8200;
 
-    private static final String TOPIC_CONGESTION = "airport.congestion.changed";
-
     private final DepartureRepository departureRepository;
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final ApplicationEventPublisher eventPublisher;
 
     // 공항 출국장 현황 데이터를 DB에 갱신
     @Transactional
@@ -36,76 +34,64 @@ public class DepartureService {
             String date = item.path("adate").asText();
             String timeZone = item.path("atime").asText();
 
+            // 합계 데이터는 건너띔
             if (date.equals("합계")) continue;
 
-            long newT1d1 = item.path("t1dg1").asLong();
-            long newT1d2 = item.path("t1dg2").asLong();
-            long newT1d3 = item.path("t1dg3").asLong();
-            long newT1d4 = item.path("t1dg4").asLong();
-            long newT1d5 = item.path("t1dg5").asLong();
-            long newT1d6 = item.path("t1dg6").asLong();
-            long newT2d1 = item.path("t2dg1").asLong();
-            long newT2d2 = item.path("t2dg2").asLong();
-
-            long newT1Sum = newT1d1 + newT1d2 + newT1d3 + newT1d4 + newT1d5 + newT1d6;
-            long newT2Sum = newT2d1 + newT2d2;
+            T1GateStatus newT1Gates = new T1GateStatus(
+                    item.path("t1dg1").asLong(),
+                    item.path("t1dg2").asLong(),
+                    item.path("t1dg3").asLong(),
+                    item.path("t1dg4").asLong(),
+                    item.path("t1dg5").asLong(),
+                    item.path("t1dg6").asLong()
+            );
+            T2GateStatus newT2Gates = new T2GateStatus(
+                    item.path("t2dg1").asLong(),
+                    item.path("t2dg2").asLong()
+            );
 
             departureRepository.findByDateAndTimeZone(date, timeZone)
-                    // 이미 존재하는 데이터라면, 업데이트 ( 더티 체킹 )
                     .ifPresentOrElse(
-                            exists -> {
-                                long prevT1Sum = exists.getT1Depart1() + exists.getT1Depart2()
-                                        + exists.getT1Depart3() + exists.getT1Depart4()
-                                        + exists.getT1Depart5() + exists.getT1Depart6();
-                                long prevT2Sum = exists.getT2Depart1() + exists.getT2Depart2();
-
-                                exists.updateDeparture(
-                                        newT1d1, newT1d2, newT1d3, newT1d4, newT1d5, newT1d6,
-                                        newT2d1, newT2d2
-                                );
-
-                                boolean prevT1Busy = prevT1Sum >= BUSY_THRESHOLD;
-                                boolean newT1Busy = newT1Sum >= BUSY_THRESHOLD;
-
-                                boolean prevT2Busy = prevT2Sum >= BUSY_THRESHOLD;
-                                boolean newT2Busy = newT2Sum >= BUSY_THRESHOLD;
-
-                                // 이전에는 혼잡 기준 미만이었지만 현재 기준을 초과하여 혼잡 상태로 진입한 경우 (T1 또는 T2)
-                                if ((!prevT1Busy && newT1Busy) || (!prevT2Busy && newT2Busy)) {
-                                    kafkaTemplate.send(TOPIC_CONGESTION, date + "_" + timeZone,
-                                            CongestionMessage.builder()
-                                                    .date(date)
-                                                    .timeZone(timeZone)
-                                                    .t1Depart1(newT1d1)
-                                                    .t1Depart2(newT1d2)
-                                                    .t1Depart3(newT1d3)
-                                                    .t1Depart4(newT1d4)
-                                                    .t1Depart5(newT1d5)
-                                                    .t1Depart6(newT1d6)
-                                                    .t2Depart1(newT2d1)
-                                                    .t2Depart2(newT2d2)
-                                                    .prevT1Sum(prevT1Sum)
-                                                    .newT1Sum(newT1Sum)
-                                                    .prevT2Sum(prevT2Sum)
-                                                    .newT2Sum(newT2Sum)
-                                                    .build());
-                                }
-                            },
-                            // 신규 데이터라면, 단순 저장
+                            // 이미 존재하는 경우 update
+                            exists -> updateWithCongestionCheck(exists, date, timeZone, newT1Gates, newT2Gates),
                             () -> departureRepository.save(Departure.builder()
                                     .date(date)
                                     .timeZone(timeZone)
-                                    .t1Depart1(newT1d1)
-                                    .t1Depart2(newT1d2)
-                                    .t1Depart3(newT1d3)
-                                    .t1Depart4(newT1d4)
-                                    .t1Depart5(newT1d5)
-                                    .t1Depart6(newT1d6)
-                                    .t2Depart1(newT2d1)
-                                    .t2Depart2(newT2d2)
+                                    .t1Gates(newT1Gates)
+                                    .t2Gates(newT2Gates)
                                     .build())
                     );
         }
+    }
+
+    // update & 조건에 맞으면 혼잡도 알림
+    private void updateWithCongestionCheck(Departure exists, String date, String timeZone,
+                                            T1GateStatus newT1Gates, T2GateStatus newT2Gates) {
+        boolean prevT1Busy = exists.getT1Gates().isBusy(BUSY_THRESHOLD);
+        boolean prevT2Busy = exists.getT2Gates().isBusy(BUSY_THRESHOLD);
+
+        exists.updateDeparture(newT1Gates, newT2Gates);
+
+        // 터미널별로 독립적으로 판단 - 혼잡 상태로 진입한 터미널의 구독자에게만 발송
+        if (!prevT1Busy && newT1Gates.isBusy(BUSY_THRESHOLD)) {
+            publishCongestionAlert(date, timeZone, "T1", newT1Gates, newT2Gates);
+        }
+        if (!prevT2Busy && newT2Gates.isBusy(BUSY_THRESHOLD)) {
+            publishCongestionAlert(date, timeZone, "T2", newT1Gates, newT2Gates);
+        }
+    }
+
+    // 커밋 이후 리스너에서 혼잡 터미널 구독자에게 알림 메일 발송
+    private void publishCongestionAlert(String date, String timeZone, String busyTerminal,
+                                        T1GateStatus newT1Gates, T2GateStatus newT2Gates) {
+        eventPublisher.publishEvent(
+                CongestionAlertEvent.builder()
+                        .date(date)
+                        .timeZone(timeZone)
+                        .busyTerminal(busyTerminal)
+                        .t1Gates(newT1Gates)
+                        .t2Gates(newT2Gates)
+                        .build());
     }
 
     // 모든 출국장 데이터 조회
