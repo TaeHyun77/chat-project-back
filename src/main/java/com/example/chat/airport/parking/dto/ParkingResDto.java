@@ -16,9 +16,9 @@ public class ParkingResDto {
     public static ParkingResDto from(Parking parking) {
         return ParkingResDto.builder()
                 .floor(parking.getFloor())
-                .parking(parking.getParking())
-                .parkingarea(parking.getParkingarea())
-                .availableRate(parking.getAvailableRate())
+                .parking(parking.getCapacity().getParking())
+                .parkingarea(parking.getCapacity().getParkingarea())
+                .availableRate(parking.getCapacity().getAvailableRate())
                 .datetm(parking.getDatetm())
                 .build();
     }

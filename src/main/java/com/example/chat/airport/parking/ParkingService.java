@@ -1,6 +1,7 @@
 package com.example.chat.airport.parking;
 
 import com.example.chat.airport.parking.dto.ParkingResDto;
+import com.example.chat.airport.parking.vo.ParkingCapacity;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,24 +15,24 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class ParkingService {
-
     private final ParkingRepository parkingRepository;
 
     @Transactional
     public void upsertParkingData(JsonNode items) {
         for (JsonNode item : items) {
             String floor = item.path("floor").asText();
-            int parking = item.path("parking").asInt();
-            int parkingarea = item.path("parkingarea").asInt();
+            ParkingCapacity capacity = new ParkingCapacity(
+                    item.path("parking").asInt(),
+                    item.path("parkingarea").asInt()
+            );
             String datetm = item.path("datetm").asText();
 
             parkingRepository.findByFloor(floor)
                     .ifPresentOrElse(
-                            exists -> exists.updateParking(parking, parkingarea, datetm), // 이미 존재하는 데이터면
-                            () -> parkingRepository.save(Parking.builder() // 새로운 데이터면
+                            exists -> exists.updateParking(capacity, datetm),
+                            () -> parkingRepository.save(Parking.builder()
                                     .floor(floor)
-                                    .parking(parking)
-                                    .parkingarea(parkingarea)
+                                    .capacity(capacity)
                                     .datetm(datetm)
                                     .build())
                     );

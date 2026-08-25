@@ -1,10 +1,9 @@
 package com.example.chat.airport.departure;
 
+import com.example.chat.airport.departure.vo.T1GateStatus;
+import com.example.chat.airport.departure.vo.T2GateStatus;
 import com.example.chat.common.BaseTime;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +15,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 public class Departure extends BaseTime {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,31 +23,26 @@ public class Departure extends BaseTime {
 
     private String timeZone;
 
-    private Long t1Depart1;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "gate1", column = @Column(name = "t1_depart1")),
+            @AttributeOverride(name = "gate2", column = @Column(name = "t1_depart2")),
+            @AttributeOverride(name = "gate3", column = @Column(name = "t1_depart3")),
+            @AttributeOverride(name = "gate4", column = @Column(name = "t1_depart4")),
+            @AttributeOverride(name = "gate5", column = @Column(name = "t1_depart5")),
+            @AttributeOverride(name = "gate6", column = @Column(name = "t1_depart6")),
+    })
+    private T1GateStatus t1Gates;
 
-    private Long t1Depart2;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "gate1", column = @Column(name = "t2_depart1")),
+            @AttributeOverride(name = "gate2", column = @Column(name = "t2_depart2")),
+    })
+    private T2GateStatus t2Gates;
 
-    private Long t1Depart3;
-
-    private Long t1Depart4;
-
-    private Long t1Depart5;
-
-    private Long t1Depart6;
-
-    private Long t2Depart1;
-
-    private Long t2Depart2;
-
-    public void updateDeparture(long t1Depart1, long t1Depart2, long t1Depart3, long t1Depart4,
-                                long t1Depart5, long t1Depart6, long t2Depart1, long t2Depart2) {
-        this.t1Depart1 = t1Depart1;
-        this.t1Depart2 = t1Depart2;
-        this.t1Depart3 = t1Depart3;
-        this.t1Depart4 = t1Depart4;
-        this.t1Depart5 = t1Depart5;
-        this.t1Depart6 = t1Depart6;
-        this.t2Depart1 = t2Depart1;
-        this.t2Depart2 = t2Depart2;
+    public void updateDeparture(T1GateStatus t1Gates, T2GateStatus t2Gates) {
+        this.t1Gates = t1Gates;
+        this.t2Gates = t2Gates;
     }
 }
