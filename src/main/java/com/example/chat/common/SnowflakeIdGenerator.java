@@ -37,6 +37,7 @@ public class SnowflakeIdGenerator {
      */
     public synchronized long nextId() {
         long currentTimestamp = Instant.now().toEpochMilli();
+        // 시계가 뒤로 가면 이미 발급한 ID와 충돌할 수 있으므로 생성을 거부한다
         if (currentTimestamp < lastTimestamp) {
             throw new RuntimeException("Clock moved backwards. Refusing to generate id");
         }
